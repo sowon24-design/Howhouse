@@ -1,4 +1,4 @@
-[user_testing_analysis_summary.md](https://github.com/user-attachments/files/33348167/user_testing_analysis_summary.md)<img width="758" height="1883" alt="claudeAI사용자테스트영상_초별분석" src="https://github.com/user-attachments/assets/543ff180-3074-485f-be69-fbf07868d650" />## 5주차
+## 5주차
 ### 맡은 역할 :
 개인 프로토타입 제작 및 비교 분석을 통한 메인 프로토타입 시안 개발
 
