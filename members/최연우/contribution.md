@@ -12,8 +12,11 @@
 
 ### 결과 (커밋/PR/이슈 링크로 근거 남기기):
 -메인 프로토타입으로 채택된 개인 시안 및 디벨롭 결과물 이미지 첨부<img width="4825" height="2052" alt="디자인" src="https://github.com/user-attachments/assets/213a798b-f9ba-4cf1-b6ce-50b6cff80e91" />
+
 -개인 프로토타입 깃허브 링크[https://github.com/sowon24-design/Howhouse/tree/YEONWOOCHOI-maker-patch-1/design]
+
 -피그마 프로토타입 링크: [https://www.figma.com/make/3XY5eBpinwzeqvwjYR80ly/Mobile-Prototype-for-%EC%96%B4%EC%A9%8C%EC%A7%91?t=FXhxVomo63wY7uct-1]
+
 -관련 커밋/PR 링크: [<img width="2057" height="917" alt="스크린샷 2026-10-13 013524" src="https://github.com/user-attachments/assets/4f95def4-8b98-4ed8-bf18-fa630193a68c" />]
 
 ## 6주차
@@ -39,6 +42,7 @@
 
 
 - 팀원들과 도출한 사용성 개선점 및 수정 사항[https://github.com/sowon24-design/Howhouse/tree/main/design/w6%20design]
+
 - 페이지별 프로토타입 PNG 이미지 첨부<img width="2790" height="1182" alt="W6_Figma Make 프로토타입 UI 및 기능 개선" src="https://github.com/user-attachments/assets/7b657c78-0643-4ecd-a510-329503e11614" />
 
 - 관련 커밋/PR 링크: <img width="1918" height="266" alt="image" src="https://github.com/user-attachments/assets/b4698cf9-88c8-4462-b860-2d257efd6dfe" />
