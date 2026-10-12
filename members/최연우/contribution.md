@@ -1,4 +1,4 @@
-## 5주차
+[user_testing_analysis_summary.md](https://github.com/user-attachments/files/33348167/user_testing_analysis_summary.md)<img width="758" height="1883" alt="claudeAI사용자테스트영상_초별분석" src="https://github.com/user-attachments/assets/543ff180-3074-485f-be69-fbf07868d650" />## 5주차
 ### 맡은 역할 :
 개인 프로토타입 제작 및 비교 분석을 통한 메인 프로토타입 시안 개발
 
@@ -32,8 +32,11 @@
 - 페이지별 프로토타입 화면을 PNG 이미지로 정리하여 GitHub에 첨부
 
 ### 결과 (커밋/PR/이슈 링크로 근거 남기기):
-- 참여자 3명의 사용자 테스트 녹화 자료 및 AI 분석 결과
-- 팀원들과 도출한 사용성 개선점 및 수정 사항
+- 사용자 테스트 녹화 자료 및 AI 분석 결과<img width="758" height="1883" alt="claudeAI사용자테스트영상_초별분석" src="https://github.com/user-attachments/assets/b0fe57f7-8052-4192-aa11-190689e9002e" />
+[Uploading user_testing_analysis_summary.md…]()
+
+
+- 팀원들과 도출한 사용성 개선점 및 수정 사항[https://github.com/sowon24-design/Howhouse/tree/main/design/w6%20design]
 - 페이지별 프로토타입 PNG 이미지 첨부<img width="2790" height="1182" alt="W6_Figma Make 프로토타입 UI 및 기능 개선" src="https://github.com/user-attachments/assets/7b657c78-0643-4ecd-a510-329503e11614" />
 
 - 관련 커밋/PR 링크: [<img width="1918" height="266" alt="image" src="https://github.com/user-attachments/assets/b4698cf9-88c8-4462-b860-2d257efd6dfe" />
