@@ -90,7 +90,7 @@ GitHub 저장소 세팅, 기술 타당성 검토, PRD 정리, 디자인 통합 �
   2. PRD: https://github.com/sowon24-design/Howhouse/commits/PRD
   3. W6-Usability-Test: https://github.com/sowon24-design/Howhouse/commits/W6-Usability-Test
   4. contribution: https://github.com/sowon24-design/Howhouse/commits/contribution
-- UT 분석 기록 (내 브랜치 'yeseul/usability-test/Usability Test/허예슬_UT 분석 문서): https://github.com/sowon24-design/Howhouse/tree/yeseul/usability-test/Usability%20Test/%ED%97%88%EC%98%88%EC%8A%AC_UT%20%EB%B6%84%EC%84%9D%20%EB%AC%B8%EC%84%9C
+- UT 분석 기록 (내 브랜치 'yeseul/usability-test/Usability Test/허예슬_UT 분석 문서'): https://github.com/sowon24-design/Howhouse/tree/yeseul/usability-test/Usability%20Test/%ED%97%88%EC%98%88%EC%8A%AC_UT%20%EB%B6%84%EC%84%9D%20%EB%AC%B8%EC%84%9C
 - 사용성 테스트 템플릿 기록 (구글 독스, 공동 업무): https://docs.google.com/document/d/1o35ro-qQkY2Kp1yOX1RPo5dv-gCnscj-b2y2-6C21IE/edit?tab=t.0
 - UT 기록물 (드라이브): https://drive.google.com/drive/folders/1ah5hECdTXkZMfvGoauoKEmGQuanYvnLg?usp=drive_link
 
