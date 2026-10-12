@@ -29,7 +29,11 @@ GitHub 저장소 세팅, 기술 타당성 검토, PRD 정리, 디자인 통합 �
 - PR #11 "Delete docs/decisions" (병합): https://github.com/sowon24-design/Howhouse/pull/11
 - PR #12 "add design decision.md" (병합): https://github.com/sowon24-design/Howhouse/pull/12
 - PR #7 "wireframe-v1 pr" (리뷰 승인 없이 닫힘): https://github.com/sowon24-design/Howhouse/pull/7
-- 내 커밋 목록: https://github.com/sowon24-design/Howhouse/commits?author=xamxam33
+- 브랜치별 내 커밋 목록:
+- 1. main: https://github.com/sowon24-design/Howhouse/commits?author=xamxam33
+  2. yeseul/design: https://github.com/sowon24-design/Howhouse/commits/yeseul/design
+  3. yeseul/wireframe: https://github.com/sowon24-design/Howhouse/commits/yeseul/wireframe
+  4. design-decision: https://github.com/sowon24-design/Howhouse/commits/design-decision
 - 와이어프레임·프로토타입(Figma): https://www.figma.com/make/g3ZdCXZXOMinHk1c0Isjgf/Design-Wireframe-for-App?t=DFpoN6exd781E325-1
 - 와이어프레임 (내 브랜치): https://github.com/sowon24-design/Howhouse/tree/yeseul/wireframe/wireframes/%ED%97%88%EC%98%88%EC%8A%AC
 - 디자인 (내 브랜치): https://github.com/sowon24-design/Howhouse/tree/yeseul/design/design
