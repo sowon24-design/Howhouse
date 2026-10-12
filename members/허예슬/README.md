@@ -1,4 +1,4 @@
-## 5주차
+<details> <summary><h2>5주차</h2></summary>
 
 ### 사용한 도구
 - Claude: 기술 타당성 검토, PRD 프롬프트 작성, 폴더 구조·README 문서 정리
