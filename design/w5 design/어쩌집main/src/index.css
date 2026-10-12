@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Apple SD Gothic Neo', sans-serif;
+  --color-bg: #f5f7fb;
+  --color-brand: #3478f6;
+  --color-brand-soft: #eaf2ff;
+  --color-navy: #18202d;
+  --color-line: #e8ecf2;
+  --color-sos: #eb5056;
+  --color-sos-soft: #ffe8ea;
+  --color-calm: #f3f7ff;
+  --radius-xl: 15px;
+  --radius-2xl: 18px;
+  --radius-3xl: 22px;
+  --shadow-sm: 0 6px 16px rgba(43, 61, 87, .07);
+  --shadow-md: 0 8px 20px rgba(52, 120, 246, .25);
+  --shadow-lg: 0 8px 20px rgba(235, 80, 86, .24);
+  --shadow-xl: 0 12px 32px rgba(37, 68, 113, .10);
+  --shadow-2xl: 0 12px 32px rgba(37, 68, 113, .10);
+}
+
+html, body { background: #e9eef7; color: #18202d; font-family: var(--font-sans); letter-spacing: -0.01em; word-break: keep-all; }
+@media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; } }
+button { cursor: pointer; }
+* { scrollbar-width: none; }
+::selection { background: #cfe0ff; }
+@keyframes bar { from { width: 0 } to { width: 100% } }
+@keyframes pulse-ring { 0% { transform: scale(1); opacity: .5 } 100% { transform: scale(1.8); opacity: 0 } }
+@keyframes fadeup { from { opacity: 0 } to { opacity: 1 } }
+@keyframes rise { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
+@keyframes load { from { transform: translateX(-100%) } to { transform: translateX(260%) } }
+.fadeup { animation: fadeup .3s ease both; }
+@keyframes wave { 0%, 100% { transform: scaleY(.25) } 50% { transform: scaleY(1) } }
+@keyframes scan { from { top: 0 } to { top: 100% } }
+@keyframes flash { from { opacity: 1 } to { opacity: 0 } }
