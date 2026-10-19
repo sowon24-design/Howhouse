@@ -1,4 +1,4 @@
-<img width="708" height="655" alt="Frame 427319709" src="https://github.com/user-attachments/assets/9c96b1ea-6de4-4d8b-80b3-93dd8d03237a" />## 5주차
+## 5주차
 ### 맡은 역할 :
 개인 프로토타입 제작 및 비교 분석을 통한 메인 프로토타입 시안 개발
 
