@@ -130,8 +130,8 @@ GitHub 저장소 세팅, 기술 타당성 검토, PRD 정리, 디자인 통합 �
 - 각자 맡은 파트를 발표하며 프로젝트 진행 과정과 결과 공유
 
 ### 결과 (커밋/PR/이슈 링크로 근거 남기기)
-- 개인 디자인 시안 1, 2 (내 브랜치): 
-- 팀 디자인 시안 1, 2: 
-- 발표 PDF: 
+- 개인 디자인 시안 1, 2 (내 브랜치): https://github.com/sowon24-design/Howhouse/tree/yeseul/design/design/w7%20design
+- 팀 디자인 시안 1, 2: https://github.com/sowon24-design/Howhouse/tree/main/design/w7%20design
+- 발표 PDF: https://www.figma.com/deck/2iw0u6sn1xJmAuFOetZ63E
 
 </details>
