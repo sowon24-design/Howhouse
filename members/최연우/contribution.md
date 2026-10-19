@@ -84,5 +84,6 @@ iOS 출시 준비 체크리스트 사이트 제작 및 배포
 
 - ChatGPT 이미지 생성 기능을 활용해 앱 화면에 적용할 3D 오브젝트를 직접 생성하고 수정<img width="807" height="1181" alt="스크린샷 2026-10-20 013358" src="https://github.com/user-attachments/assets/f0b3bd5b-e8c8-4027-b229-0865e96c90fc" />
 
-- Claude AI를 활용해 iOS 앱 출시를 위한 단계별 체크리스트 사이트 제작[Uploading 어쩌집 출시 준비 관리 (1).html…]()
+- Claude AI를 활용해 iOS 앱 출시를 위한 단계별 체크리스트 사이트 제작 [어쩌집 출시 준비 관리.md](https://github.com/user-attachments/files/33675914/default.md)
+
 
