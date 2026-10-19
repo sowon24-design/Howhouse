@@ -80,9 +80,9 @@ iOS 출시 준비 체크리스트 사이트 제작 및 배포
 ### 결과 (커밋/PR/이슈 링크로 근거 남기기):
 - 메인 홈, 해결 방법 제시 페이지, 커뮤니티 페이지 총 3개 화면의 초기 스케치 제작 <img width="708" height="655" alt="Frame 427319709" src="https://github.com/user-attachments/assets/c919de32-978b-4fb9-810d-ebec0e63070b" />
 
-- 메인 홈 화면의 시각적 방향 구체화과정 이미지 첨부<img width="1781" height="993" alt="스크린샷 2026-10-20 012616" src="https://github.com/user-attachments/assets/5544cfa5-f47f-408e-99c6-8eb71d778486" />
+- 메인 홈 화면의 시각적 방향 구체화과정 이미지 첨부(공동)<img width="1781" height="993" alt="스크린샷 2026-10-20 012616" src="https://github.com/user-attachments/assets/5544cfa5-f47f-408e-99c6-8eb71d778486" />
 
-- ChatGPT 이미지 생성 기능을 활용해 앱 화면에 적용할 3D 오브젝트를 직접 생성하고 수정<img width="807" height="1181" alt="스크린샷 2026-10-20 013358" src="https://github.com/user-attachments/assets/f0b3bd5b-e8c8-4027-b229-0865e96c90fc" />
+- ChatGPT 이미지 생성 기능을 활용해 앱 화면에 적용할 3D 오브젝트를 직접 생성하고 수정(공동)<img width="807" height="1181" alt="스크린샷 2026-10-20 013358" src="https://github.com/user-attachments/assets/f0b3bd5b-e8c8-4027-b229-0865e96c90fc" />
 
 - Claude AI를 활용해 iOS 앱 출시를 위한 단계별 체크리스트 사이트 제작 [어쩌집 출시 준비 관리.md](https://github.com/user-attachments/files/33675914/default.md)
 
