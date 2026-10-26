@@ -33,7 +33,7 @@
 - 3D 이미지를 AI로 생성 : 여러 버전의 소라게, 누수/누전/곰팡이 등 문제들을 표현하는 3D 이미지
 - 피그마 디자인 시안 제작 참여
 - 디자인 시안 AA 테스트
-- 8주차 PPT 작성 참여
+- 8주차 PPT 작성 참여, 목차~페르소나 설정 전까지 발표 담당 
 ### 결과 : 
 <img width="4080" height="2296" alt="KakaoTalk_20261016_134302937" src="https://github.com/user-attachments/assets/9590d854-f244-46fb-8449-514c4c27ec39" />
 <img width="4080" height="2296" alt="KakaoTalk_20261016_134302937_01" src="https://github.com/user-attachments/assets/48f476f5-1479-4d44-bdea-66f40ecf2c66" />
@@ -46,4 +46,20 @@
 <img width="157" height="530" alt="image" src="https://github.com/user-attachments/assets/72f2adcf-92ec-4d98-8b61-704a0d5367ee" />
 <img width="1337" height="758" alt="image" src="https://github.com/user-attachments/assets/d0f2a02b-a6c8-40fb-8916-00a8043dee2a" />
 
-
+--------------
+-----------------------
+## 8주차
+### 한 일 : 
+- 화면 디자인 :
+  - 분류체계 정립: 문제별 해결 사례를 직관적인 카테고리로 분류하고, 카테고리별 핵심 예시 데이터 구조화. 각 카테고리에 해당하는 아이콘 일부 제작, 각 카테고리에 들어갈 사례 예시 정리
+  - 글 입력시 첨부 가능한 사진 예시 구성
+  - 마이홈 내에서 확인 가능한 내가 작성한 글, 댓글 단 글, 내가 해결한 문제, 최근 열람한 사례 구현
+  - 서비스 아이덴티티를 반영한 핵심 그래픽 요소(소라게, 집 이미지 등) 디자인 참여
+- 구현 가능성 검토 :
+  - 기본 카메라 앱 연동(Intent/Activity Call) 방식 검토 및 효율화
+  - 문제 인식 및 착안: 카카오톡 등 주요 모바일 앱이 사진 첨부 시 스마트폰의 기본 카메라를 호출하여 사용하는 패턴 분석
+  - 기술적 검토: 앱 내에 커스텀 카메라(Camera API)를 처음부터 자체 구현하는 대신, OS에 설치된 기본 카메라 앱을 호출(Intent/Activity 연동)하고 촬영 결과물(사진 파일/Bitmap)의 URI 및 데이터를 전달받는 방식 타당성 검토
+  - 기대 효과: 카메라 커스텀 개발에 소요되는 공수를 대폭 절감하고, 사용자에게 이미 익숙한 촬영 UX 제공 및 기기별 카메라 호환성 문제 사전 방지
+  - <img width="1173" height="487" alt="image" src="https://github.com/user-attachments/assets/348cc398-dcef-4688-a949-fe0e892b6e23" />
+### 결과 : 
+[피그마 작업물 링크](https://www.figma.com/design/iO6q06mMYF3TtmCSBBYfG6/W8-%EC%88%98%EC%A0%95-%EB%94%94%EC%9E%90%EC%9D%B8-%EA%B3%B5%EC%9C%A0%EC%9A%A9?node-id=0-1&p=f&t=KJSVF3BYXKf6vxAi-0)
