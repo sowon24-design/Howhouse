@@ -1,0 +1,1 @@
+피그마 파일 링크: [https://www.figma.com/design/iO6q06mMYF3TtmCSBBYfG6/%EB%94%94%EC%9E%90%EC%9D%B8-%EA%B3%B5%EC%9C%A0%EC%9A%A9?node-id=0-1&t=vyO2k4x8vp9mWpzZ-1](https://www.figma.com/design/iO6q06mMYF3TtmCSBBYfG6/%EB%94%94%EC%9E%90%EC%9D%B8-%EA%B3%B5%EC%9C%A0%EC%9A%A9?node-id=0-1&t=vyO2k4x8vp9mWpzZ-1)
