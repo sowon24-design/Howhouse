@@ -63,3 +63,6 @@
   - <img width="1173" height="487" alt="image" src="https://github.com/user-attachments/assets/348cc398-dcef-4688-a949-fe0e892b6e23" />
 ### 결과 : 
 [피그마 작업물 링크](https://www.figma.com/design/iO6q06mMYF3TtmCSBBYfG6/W8-%EC%88%98%EC%A0%95-%EB%94%94%EC%9E%90%EC%9D%B8-%EA%B3%B5%EC%9C%A0%EC%9A%A9?node-id=0-1&p=f&t=KJSVF3BYXKf6vxAi-0)
+<img width="1069" height="313" alt="image" src="https://github.com/user-attachments/assets/ea00b576-6563-4f3c-9851-0b6fbd0921b2" />
+<img width="1263" height="653" alt="image" src="https://github.com/user-attachments/assets/a9597a5c-2d15-4a83-be05-c5ea9b2609e5" />
+
