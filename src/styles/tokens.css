@@ -1,0 +1,42 @@
+/* DESIGN.md + Figma 462:8452, verified 2026-10-30.
+   Light only. Dark values do not imply a released dark theme. */
+:root {
+  --font-family: Pretendard, sans-serif;
+  --color-neutral: #f5f7fb;
+  --color-surface: #ffffff;
+  --color-primary: #365eff;
+  --color-primary-pressed: #1b43e4;
+  --color-on-surface: #19212e;
+  --color-secondary: #5f6979;
+  --color-border: #d7dee7;
+  --color-disabled: #898f98;
+  --color-error: #ff0000;
+
+  /* Component colors intentionally differ from the general tokens. */
+  --button-primary-hover: #234fff;
+  --button-primary-pressed: #1b45f0;
+  --button-pale: #e8f0ff;
+  --button-pale-hover: #e0ebff;
+  --button-pale-pressed: #d9e6ff;
+  --button-disabled-background: #d7dee7;
+  --list-neutral-hover: #f1f4fa;
+  --list-neutral-pressed: #ebeff7;
+
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 26px;
+  --text-2xl: 32px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-64: 64px;
+  --rounded-sm: 12px;
+  --rounded-lg: 24px;
+  --rounded-full: 100px;
+}
