@@ -141,15 +141,19 @@
 | --- | --- | --- | --- | --- | --- |
 | 어쩌집/Body rg | Pretendard | Regular | 16 | 150% | 24 |
 | 어쩌집/Body md | Pretendard | Medium | 16 | 150% | 24 |
-| 어쩌집/Body sb | Noto Sans KR | SemiBold | 16 | 150% | 24 |
+| 어쩌집/Body sb | Pretendard | SemiBold | 16 | 150% | 24 |
 | 어쩌집/Heading | Pretendard | SemiBold | 20 | 150% | 30 |
 | 어쩌집/Display bd | Pretendard | Bold | 26 | 140% | 36.4 |
 | 어쩌집/Caption md | Pretendard | Medium | 14 | 140% | 19.6 |
 | 어쩌집/Caption rg | Pretendard | Regular | 14 | 140% | 19.6 |
 
-`어쩌집/Body sb`는 현재 **Noto Sans KR SemiBold**로 등록되어 있다. 나머지 스타일의 Pretendard로 임의 대체하지 않는다. `Type/text-2xl`(32px)은 변수로 존재하지만 이번 포함 대상 텍스트 스타일에는 32px 스타일이 없다.
+`어쩌집/Body sb`는 2026-10-30 사용자 정정에 따라 **Pretendard SemiBold**를 사용한다. 이전 Noto Sans KR 표기를 정정한다. `Type/text-2xl`(32px)은 변수로 존재하지만 이번 포함 대상 텍스트 스타일에는 32px 스타일이 없다.
 
 ## 컴포넌트
+
+2026-10-30 사용자 확정: Search, Navigation Bar, Community_Post는 출시 화면에서 사용하지 않으며 Figma의 미사용 섹션으로 이동했다. 아래 원본 명세는 참조용으로 보존하고 출시 구현 대상에서는 제외한다. 기존 미사용 Chip·태그·썸네일도 출시 화면의 실제 구성과 혼동하지 않는다.
+
+아이콘은 우선 시각 요소로만 구현한다. 클릭·버튼 역할을 기본 부여하지 않으며, 화면 구현 시 상호작용이 필요한 아이콘만 버튼과 동작을 연결한다. 공통 컴포넌트는 사용자 요청에 따라 한 번에 구현하고 최신 Figma의 실제 화면·상태와 시각적으로 대조한다.
 
 아래 치수는 메인 컴포넌트의 현재 크기이며 모든 화면에서 고정 폭으로 강제할 값은 아니다. 변형 이름과 상태명은 Figma 원문을 따른다. `of`, `Disable` 등의 표기도 임의로 수정하지 않았다.
 
