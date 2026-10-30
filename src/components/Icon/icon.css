@@ -1,0 +1,25 @@
+.figma-icon { position: relative; display: inline-block; flex: none; vertical-align: middle; }
+.figma-icon__placement { position: absolute; top: 0; left: 0; }
+/* SVG intrinsic dimensions are preserved; only the original placement is applied. */
+.figma-icon img { display: block; max-width: none; }
+.figma-icon--408-3930 .figma-icon__placement { top: 18.75%; left: 46.43%; }
+.figma-icon--408-3833 .figma-icon__placement,
+.figma-icon--431-14740 .figma-icon__placement { top: 7.9%; left: 7.9%; }
+.figma-icon--431-14740 img { transform: rotate(180deg) scaleX(-1); }
+.figma-icon--stroke:is(.figma-icon--408-3833, .figma-icon--431-14740) .figma-icon__placement {
+  top: calc(10.94% - 78.12% * var(--stroke-outset));
+  left: calc(10.94% - 78.12% * var(--stroke-outset));
+}
+.figma-icon[data-size='28'] { --stroke-outset: 0.0389; }
+.figma-icon[data-size='24'] { --stroke-outset: 0.0453; }
+.figma-icon[data-size='20'] { --stroke-outset: 0.048; }
+.figma-icon[data-size='16'] { --stroke-outset: 0.052; }
+.figma-icon--408-4579 .figma-icon__placement { top: 9.02%; left: 8.39%; }
+.figma-icon--408-4579.figma-icon--stroke .figma-icon__placement {
+  top: calc(10.6% - 78.58% * var(--setting-top-outset));
+  left: calc(10.71% - 78.58% * var(--setting-side-outset));
+}
+.figma-icon[data-size='28'] { --setting-top-outset: 0.0293; --setting-side-outset: 0.0386; }
+.figma-icon[data-size='24'] { --setting-top-outset: 0.0341; --setting-side-outset: 0.0451; }
+.figma-icon[data-size='20'] { --setting-top-outset: 0.0343; --setting-side-outset: 0.0477; }
+.figma-icon[data-size='16'] { --setting-top-outset: 0.0343; --setting-side-outset: 0.0517; }

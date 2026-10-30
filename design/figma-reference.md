@@ -1,3 +1,5 @@
+> 이전 디자인 시스템 상세 조회 기록입니다. 현재 규칙은 [DESIGN.md](../DESIGN.md), 동작 계약은 [CONTRACT.md](../src/components/CONTRACT.md)를 확인하세요. 미사용 컴포넌트와 과거 검증 기록을 포함한 참고 자료입니다.
+
 # 어쩌집 Design System
 
 기준일: 2026-10-30 (Asia/Seoul). Figma 현재 등록값을 읽어 작성한 문서이며, 이 작업에서 Figma는 수정하지 않았다.
@@ -155,6 +157,8 @@
 
 아이콘은 우선 시각 요소로만 구현한다. 클릭·버튼 역할을 기본 부여하지 않으며, 화면 구현 시 상호작용이 필요한 아이콘만 버튼과 동작을 연결한다. 공통 컴포넌트는 사용자 요청에 따라 한 번에 구현하고 최신 Figma의 실제 화면·상태와 시각적으로 대조한다.
 
+4단계 구현: 사용 중인 13종은 `src/components/ui`에 있으며 상태 변경 미리보기는 `src/ComponentPreview.tsx`에 있다. 개발 후순위 섹션 `531:6862`의 6종은 제외한다. 공통 컴포넌트 사용법과 화면 연결 시 확인할 미정 사항은 `src/components/ui/README.md`를 따른다. 미리보기의 예시 초기 상태는 출시 화면의 초기 상태 확정이 아니다.
+
 아래 치수는 메인 컴포넌트의 현재 크기이며 모든 화면에서 고정 폭으로 강제할 값은 아니다. 변형 이름과 상태명은 Figma 원문을 따른다. `of`, `Disable` 등의 표기도 임의로 수정하지 않았다.
 
 ### [Overlay](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=436-15888)
@@ -294,19 +298,19 @@ Button은 모든 변형의 높이 56px, 라운드 12px이다. Style 2 기본 배
 
 | 아이콘 세트 | 등록 변형 및 실제 크기 |
 | --- | --- |
-| [Icon/Home](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=355-7094) | Size=24, Style=Fill → 24×24; Size=24, Style=Stroke → 24×24; Size=28, Style=Fill → 28×28; Size=28, Style=Stroke → 28×28; Size=20, Style=Fill → 20×20; Size=20, Style=Stroke → 20×20; Size=16, Style=Fill → 16×16; Size=1, Style=Stroke → 16×16 |
+| [Icon/Home](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=355-7094) | Size=24, Style=Fill → 24×24; Size=24, Style=Stroke → 24×24; Size=28, Style=Fill → 28×28; Size=28, Style=Stroke → 28×28; Size=20, Style=Fill → 20×20; Size=20, Style=Stroke → 20×20; Size=16, Style=Fill → 16×16; Size=16, Style=Stroke → 16×16 |
 | [Icon/Book](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=411-4291) | Size=28, Style=Fill → 28×28; Size=24, Style=Fill → 24×24; Size=20, Style=Fill → 20×20; Size=16, Style=Fill → 16×16; Size=28, Style=Stroke → 28×28; Size=24, Style=Stroke → 24×24; Size=20, Style=Stroke → 20×20; Size=16, Style=Stroke → 16×16 |
-| [Icon/Community](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=355-7404) | Size=24, Style=Fill → 24×24; Size=24, Style=Stroke → 24×24; Size=Size4, Style=Fill → 28×28; Size=28, Style=Stroke → 28×28; Size=20, Style=Fill → 20×20; Size=20, Style=Stroke → 20×20; Size=16, Style=Fill → 16×16; Size=16, Style=Stroke → 16×16 |
+| [Icon/Community](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=355-7404) | Size=24, Style=Fill → 24×24; Size=24, Style=Stroke → 24×24; Size=28, Style=Fill → 28×28; Size=28, Style=Stroke → 28×28; Size=20, Style=Fill → 20×20; Size=20, Style=Stroke → 20×20; Size=16, Style=Fill → 16×16; Size=16, Style=Stroke → 16×16 |
 | [Icon/Profile](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=355-7173) | Size=24, Style=Fill → 24×24; Size=24, Style=Stroke → 24×24; Size=20, Style=Fill → 20×20; Size=20, Style=Stroke → 20×20; Size=28, Style=Fill → 28×28; Size=28, Style=Stroke → 28×28; Size=16, Style=Fill → 16×16; Size=16, Style=Stroke → 16×16 |
 | [Icon/Write](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=355-7993) | Size=28, Style=Fill → 28×28; Size=28, Style=Stroke → 28×28; Size=24, Style=Fill → 24×24; Size=24, Style=Stroke → 24×24; Size=20, Style=Fill → 20×20; Size=20, Style=Stroke → 20×20; Size=16, Style=Fill → 16×16; Size=16, Style=Stroke → 16×16 |
 | [Icon/Heart](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=355-9050) | Size=28, Style=Fill → 28×28; Size=24, Style=Fill → 24×24; Size=20, Style=Fill → 20×20; Size=16, Style=Fill → 16×16; Size=28, Style=Stroke → 28×28; Size=24, Style=Stroke → 24×24; Size=20, Style=Stroke → 20×20; Size=16, Style=Stroke → 16×16 |
 | [Icon/Plus](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=369-9169) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
 | [Icon/X-mark](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=369-9226) | Property 1=28 → 28×28; Property 1=24 → 24×24; Property 1=20 → 20×20; Property 1=16 → 16×16 |
 | [Icon/Check](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=377-4743) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
-| [Icon/Arrow_Right](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3504) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
-| [Icon/Arrow_Left](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3506) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
+| [Icon/Arrow_Left](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3504) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
+| [Icon/Arrow_Right](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3506) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
 | [Icon/Arrow_Bottom](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3518) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
-| [Icon/Arrow_Bottom](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3530) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
+| [Icon/Arrow_Top](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3530) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
 | [Icon/Clock](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3668) | Size=28, Style=Fill → 28×28; Size=24, Style=Fill → 24×24; Size=20, Style=Fill → 20×20; Size=16, Style=Fill → 16×16; Size=28, Style=Stroke → 28×28; Size=24, Style=Stroke → 24×24; Size=20, Style=Stroke → 20×20; Size=16, Style=Stroke → 16×16 |
 | [Icon/Magnifier](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3711) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
 | [Icon/Warning](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3833) | Size=28, Style=Fill → 28×28; Size=24, Style=Fill → 24×24; Size=20, Style=Fill → 20×20; Size=16, Style=Fill → 16×16; Size=28, Style=Stroke → 28×28; Size=24, Style=Stroke → 24×24; Size=20, Style=Stroke → 20×20; Size=16, Style=Stroke → 16×16 |
@@ -324,7 +328,7 @@ Button은 모든 변형의 높이 56px, 라운드 12px이다. Style 2 기본 배
 | [Icon/Thums down](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=489-20379) | Size=28, Style=Fill → 28×28; Size=24, Style=Fill → 24×24; Size=20, Style=Fill → 20×20; Size=16, Style=Fill → 16×16; Size=28, Style=Stroke → 28×28; Size=24, Style=Stroke → 24×24; Size=20, Style=Stroke → 20×20; Size=16, Style=Stroke → 16×16 |
 | [Icon/Blank](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=408-3835) | Size=28 → 28×28; Size=24 → 24×24; Size=20 → 20×20; Size=16 → 16×16 |
 
-동일 이름의 `Icon/Arrow_Bottom` 세트가 2개이므로 링크의 노드 ID로 구분한다. `Icon/Home`의 `Size=1`, `Icon/Community`의 `Size=Size4` 등 등록명과 실제 크기의 차이는 원본 그대로 기록했으며, 자동으로 고치거나 추정해 합치지 않았다.
+2026-10-30 사용자 정정: 화살표 이름을 실제 방향 Left(408:3504), Right(408:3506), Bottom(408:3518), Top(408:3530)에 맞췄다. Home Stroke 16과 Community Fill 28의 크기 이름은 최신 Figma 수정값을 반영했다. Blank는 원본부터 16×16·20×20·24×24·28×28인 정사각형이며 그대로 유지한다. 좌우 이름은 사용자 요청에 따라 코드와 이 문서에 반영했으며 이번 작업에서 Figma 파일은 수정하지 않았다.
 
 ## 조회 및 검증 기준
 
@@ -333,3 +337,13 @@ Button은 모든 변형의 높이 56px, 라운드 12px이다. Style 2 기본 배
 - 컴포넌트·아이콘은 사용자가 지정한 두 섹션에 있는 원본을 기준으로 기록했다.
 - 상태 색상, 비정상적으로 보이는 이름, 모드별 값 차이를 임의 정규화하지 않았다.
 
+
+
+## 공통 모션 (사용자 요청 반영)
+
+- 로딩: 3초 순환, 1초마다 앞 원 축소와 다음 원 확대를 동시에 연결합니다.
+- 탭: 독립된 흰색 배경 레이어가 320ms로 좌우 이동합니다.
+- 아코디언: 내용 높이·투명도와 화살표 180도 회전을 320ms로 전환합니다.
+- Action Sheet: 320ms 아래↔위 슬라이드와 배경 페이드. 닫기 완료 후 포커스·스크롤을 복원합니다.
+- Overlay: 열기·닫기 모두 100ms dissolve.
+- 공통 easing: cubic-bezier(.4, 0, .2, 1). 움직임 줄이기 설정에서는 전환을 생략합니다.
