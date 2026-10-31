@@ -16,6 +16,7 @@
 .hh-my-version { color:var(--color-secondary); flex:none; }
 .hh-my button { -webkit-tap-highlight-color:transparent; transition:filter 160ms var(--ui-ease); }
 .hh-my button:active:not(:disabled) { filter:brightness(.94); }
+.hh-my button:active:not(:disabled) { transition-duration:0ms; }
 .hh-my button:focus-visible { outline:2px solid var(--color-primary); outline-offset:3px; }
 .hh-my--leaving { animation:hh-my-out var(--ui-motion) var(--ui-ease) forwards; }
 @keyframes hh-my-in { from { transform:translateX(100%); } to { transform:translateX(0); } }

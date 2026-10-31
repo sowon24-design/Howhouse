@@ -16,6 +16,7 @@
 
 - Props: `ButtonHTMLAttributes<HTMLButtonElement>` + `variant?: 'primary' | 'pale'`, `loading?: boolean`.
 - 기본값: variant=`primary`, loading=`false`, type=`button`.
+- 누름 시작 시 pressed 색을 즉시 적용한다. 포인터를 놓으면 눌림 상태를 해제하며 최소 유지 시간이나 클릭·화면 이동 지연을 추가하지 않는다. 취소·영역 이탈·포커스 이탈·disabled/loading 전환에서는 해제한다. 화면이 즉시 교체되면 그 화면의 버튼도 함께 사라진다.
 - `disabled || loading`이면 native disabled로 클릭을 차단한다. loading 중에는 원래 버튼 색상을 유지한다.
 - loading이면 텍스트 대신 원 애니메이션을 보여주고, `aria-busy` 및 숨겨진 “처리 중” 텍스트를 제공한다.
 - 앞 원의 축소와 다음 원의 확대가 동시에 이어진다. 주기·easing은 DESIGN.md의 `motion`을 따른다.

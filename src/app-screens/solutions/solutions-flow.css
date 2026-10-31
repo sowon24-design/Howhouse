@@ -1,0 +1,6 @@
+.hh-solutions-frame { position:relative; overflow:hidden; --solutions-screen-height:min(910px, calc(100dvh - 32px)); }
+.hh-solutions-layer { position:absolute; inset:0; overflow-y:auto; overflow-x:hidden; scrollbar-width:none; overscroll-behavior-y:contain; background:var(--color-surface); }
+.hh-solutions-layer::-webkit-scrollbar { display:none; }
+.hh-solutions-layer :is(.solutions-b01,.solutions-b02,.solutions-b03) { min-height:var(--solutions-screen-height); }
+.hh-solutions-layer .solutions-b03__content { min-height:calc(var(--solutions-screen-height) - 56px); }
+.hh-solutions-front { box-shadow:-8px 0 24px #19212e14; }

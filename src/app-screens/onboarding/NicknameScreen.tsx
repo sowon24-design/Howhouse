@@ -1,4 +1,5 @@
 import { useId, useRef, useState } from 'react'
+import { useCtaPositionMotion } from '../use-cta-position-motion'
 import { Button, GNB } from '../../components/ui'
 import warning from './assets/nickname-warning.svg'
 import './nickname.css'
@@ -11,6 +12,7 @@ export function NicknameScreen({ onBack, onClose, onComplete, initialValue = '',
   onBack: () => void; onClose?: () => void; onComplete: (nickname: string) => void; initialValue?: string; mode?: 'create' | 'edit'
 }) {
   const [value, setValue] = useState(initialValue)
+  const cta = useCtaPositionMotion<HTMLElement>()
   const [composing, setComposing] = useState(false)
   const [spaceError, setSpaceError] = useState(false)
   const composingRef = useRef(false)
@@ -46,7 +48,7 @@ export function NicknameScreen({ onBack, onClose, onComplete, initialValue = '',
         </div>
         <p id={`${id}-error`} className="hh-nickname-error" data-visible={error} aria-hidden={!error} role="alert"><span className="hh-nickname-warning" aria-hidden="true"><img src={warning} alt="" /></span><span>{spaceError || value.trim().length === 0 ? '공백만으로는 닉네임을 만들 수 없어요.' : '한글·영어·숫자와 띄어쓰기로 10자 이내로 입력해 주세요.'}</span></p>
       </div>
-      <footer className="hh-nickname-next"><Button type="submit" disabled={!valid || !changed}>{mode === 'edit' ? '수정하기' : value.length === 0 ? '다음으로' : '시작하기'}</Button></footer>
+      <footer ref={cta} className="hh-nickname-next"><Button type="submit" disabled={!valid || !changed}>{mode === 'edit' ? '수정하기' : value.length === 0 ? '다음으로' : '시작하기'}</Button></footer>
     </form>
   </main>
 }

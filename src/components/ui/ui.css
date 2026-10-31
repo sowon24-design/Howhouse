@@ -128,3 +128,6 @@
 
 /* Show the pressed token immediately, then ease back on release. */
 .ui-button:active:not(:disabled) { transition-duration:0ms; }
+.ui-button[data-pressed=true]:not(:disabled) { transition-duration:0ms; }
+.ui-button--primary[data-pressed=true]:not(:disabled) { background:var(--button-primary-pressed); }
+.ui-button--pale[data-pressed=true]:not(:disabled) { background:var(--button-pale-pressed); color:#000; }

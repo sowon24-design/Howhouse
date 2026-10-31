@@ -1,3 +1,4 @@
+import { screenSlidesEnabled } from '../navigation-motion'
 import { useState } from 'react'
 import { Button, GNB } from '../../components/ui'
 import { AnalysisIllustration } from './AnalysisIllustration'
@@ -11,7 +12,7 @@ export function AnalysisScreen({ failed, onCancel, onBack, onHome }: {
   function leave(target: 'input' | 'home') {
     if (leaving) return
     onCancel(target) // Stop work immediately, before the visual transition finishes.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!screenSlidesEnabled || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       if (target === 'home') onHome(); else onBack()
     } else setLeaving(target)
   }
