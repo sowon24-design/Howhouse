@@ -3,22 +3,22 @@
 
 ## 팀원 개발 시작
 
-현재 공유 결과는 공통 컴포넌트 미리보기입니다. 실제 출시 화면 조립 검증은 사용자 결정으로 생략했으며, 화면별 이동·저장·입력 검증·API 연결은 후속 작업입니다.
+현재 공통 컴포넌트와 예슬 담당 A/D/E/F 화면 미리보기를 제공합니다. B 화면·실제 분석·영구 저장·Android 연결은 후속 통합 대상입니다. [현재 구현·PR 범위](src/app-screens/README.md)를 먼저 확인하세요.
 
-Git과 Node.js 24.15.0(npm 11.12.1)을 설치한 뒤 터미널에서 실행하세요. 저장소가 비공개이면 먼저 GitHub 접근 권한을 받아야 합니다.
+Git과 Node.js 24.15.0(npm 11.12.1)을 준비하세요. 이 변경이 main에 병합된 이후 처음 받는 팀원은 다음을 실행합니다.
 
 ```sh
-git clone --branch codex/initial-dev-and-component-setup https://github.com/sowon24-design/Howhouse.git
+git clone --branch main https://github.com/sowon24-design/Howhouse.git
 cd Howhouse
 npm ci
 npm run dev
 ```
 
-터미널에 표시되는 주소의 `/#components`를 열면 컴포넌트, `/#colors`에서 색상을 확인할 수 있습니다. 별도 폰트 설치나 API 키는 필요 없습니다. 종료는 Ctrl+C입니다.
+병합 전에는 clone의 브랜치를 feature/app-screens로 지정합니다. 원격에 push된 내용까지만 받을 수 있습니다. 터미널 주소 뒤에 /#components, /#home, /#problem, /#onboarding, /#my, /#system을 붙여 확인합니다. 폰트 설치나 API 키는 필요 없습니다.
 
-현재 안내는 main 병합 전 공유 브랜치를 받는 방법입니다. main에 PR·병합하는 일은 유소원이 진행합니다. 병합 이후 처음 받는 팀원은 `--branch codex/initial-dev-and-component-setup`을 생략해 main을 받으세요.
+기존 팀원은 다시 clone하지 않습니다. 자기 변경을 먼저 커밋하거나 안전하게 보관하고 원격 main을 fetch한 뒤 현재 담당 브랜치에 병합합니다. 충돌 시 양쪽 기능을 유지하고 빌드를 확인합니다. package-lock.json이 바뀌면 개발 서버를 종료하고 npm ci 후 다시 실행합니다.
 
-화면 개발을 시작할 때는 담당 화면을 정한 뒤 개인 작업 브랜치를 만드세요. 예: `git switch -c yeseul/home`. 공통 컴포넌트 변경은 유소원의 검토를 받고, 작업 전 `git status`로 다른 변경이 있는지 확인합니다.
+예슬은 A/D/E/F 화면·전체 연결·공통 코드 검토, 연우는 B 화면·사례 데이터, 소원은 분석·API를 담당합니다. 예슬 브랜치는 feature/app-screens이며 팀원은 각자 담당 브랜치를 유지합니다. 공유 파일 수정은 사전에 알리고 main 반영은 PR 검토·승인을 거칩니다.
 
 먼저 [DESIGN.md](DESIGN.md), [CONTRACT.md](src/components/CONTRACT.md), [컴포넌트 사용 예제](src/components/ui/README.md)를 읽으세요. 앱 코드는 `src/`에 두며 npm 명령은 저장소 루트에서 실행합니다. `preview.css`는 검토 화면 전용입니다.
 

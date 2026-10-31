@@ -1,0 +1,14 @@
+.hh-system-frame { overflow:hidden; }
+.hh-launch { height:100%; display:grid; place-items:center; background:linear-gradient(to bottom,#365eff 0%,#367dff 69.231%,#37a5ff 100%); }
+.hh-launch-brand { display:flex; flex-direction:column; align-items:center; gap:var(--space-5); }
+.hh-launch-brand img { display:block; flex:none; }
+.hh-offline { height:100%; display:flex; flex-direction:column; background:var(--color-surface); color:var(--color-on-surface); overflow-y:auto; }
+.hh-offline-header { height:56px; flex:none; }
+.hh-offline-content { flex:1; display:flex; flex-direction:column; padding:var(--space-3) var(--space-6) var(--space-6); min-height:360px; }
+.hh-offline h1 { flex:none; margin:0; font-size:var(--text-lg); font-weight:600; line-height:1.5; }
+.hh-offline-art { flex:1; min-height:164px; display:grid; place-items:center; margin-top:var(--space-1); }
+.hh-offline-art img { display:block; width:211px; height:140px; object-fit:cover; }
+.hh-offline footer { flex:none; padding-bottom:40px; }
+.hh-system-controls { display:flex; gap:8px; flex-wrap:wrap; }
+.hh-system-controls button { font:inherit; padding:6px 10px; cursor:pointer; }
+.hh-system-controls button:disabled { cursor:default; }

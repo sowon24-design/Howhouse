@@ -125,3 +125,6 @@
   .ui-button, .ui-list, .ui-message, .ui-arrow-button, .ui-tabs button, .ui-tab-indicator, .ui-accordion-panel, .ui-accordion-arrow { transition: none; }
   .ui-dialog[data-motion], .ui-dialog[data-motion]::backdrop { animation: none; }
 }
+
+/* Show the pressed token immediately, then ease back on release. */
+.ui-button:active:not(:disabled) { transition-duration:0ms; }
