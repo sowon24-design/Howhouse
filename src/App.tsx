@@ -13,6 +13,10 @@ import { ComponentPreview } from './ComponentPreview'
 import './preview.css'
 import { readProfile, writeProfile, resetProfile, type LocalProfile } from './app-screens/profile-storage'
 import { useAndroidBackBridge } from './app-screens/android-back'
+import { getSolutionById } from './solutions/data'
+import { AnalysisResultFlow } from './analysis/AnalysisResultFlow'
+import type { AnalysisResult, GeneratedSolution } from './analysis'
+import { ConnectivityBoundary } from './analysis/ConnectivityBoundary'
 
 const colors = [
   ['neutral', '화면 배경', '#F5F7FB'], ['surface', '카드·시트', '#FFFFFF'],
@@ -50,6 +54,9 @@ const iconNotes: Record<string, string> = {
 }
 
 export default function App() {
+  return <ConnectivityBoundary>{(suspended, onConnectionLost) => <AppContent suspended={suspended} onConnectionLost={onConnectionLost} />}</ConnectivityBoundary>
+}
+function AppContent({ suspended, onConnectionLost }: { suspended: boolean; onConnectionLost: () => void }) {
   useAndroidBackBridge()
   const [profile, setProfile] = useState<LocalProfile | undefined>(() => {
     try { return readProfile(window.localStorage) } catch { return undefined }
@@ -76,6 +83,7 @@ export default function App() {
   }
   const [onboardingKey, setOnboardingKey] = useState(0)
   const [draft, setDraft] = useState(emptyInput)
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult<GeneratedSolution> | null>(null)
   const [problemBackground, setProblemBackground] = useState<CategoryId>()
   const [hash, setHash] = useState(window.location.hash)
   useEffect(() => {
@@ -84,7 +92,7 @@ export default function App() {
   useEffect(() => {
     const update = () => {
       if (window.location.hash !== '#problem') setProblemBackground(undefined)
-      if (window.location.hash === '#home') setDraft(emptyInput())
+      if (window.location.hash === '#home') { setDraft(emptyInput()); setAnalysisResult(null) }
       setHash(window.location.hash)
     }
     window.addEventListener('hashchange', update)
@@ -95,13 +103,18 @@ export default function App() {
   const category = (hash === '#problem' ? problemBackground : undefined) ?? caseCategory ?? Object.values(categoryForHome).find(value => hash === `#solutions/${encodeURIComponent(value)}`)
   const frontOpen = hash === '#problem' || hash === '#my' || Boolean(category)
   if (hash === '#system') return <SystemPreview />
+  if (hash === '#analysis-result') {
+    const data = analysisResult?.source === 'existing' ? getSolutionById(analysisResult.caseId) : analysisResult?.solution
+    return data ? <AnalysisResultFlow data={data} onConnectionLost={onConnectionLost} onHome={() => {window.location.hash = 'home'}} />
+      : <HomePreview nickname={nickname} storageStatus="분석 결과는 메모리에만 보관되어 새로고침하면 사라집니다." onResetSetup={resetSetup} onProblem={id => {window.location.hash = `case/${encodeURIComponent(id)}`}} onCategory={key => {window.location.hash = `solutions/${encodeURIComponent(categoryForHome[key])}`}} />
+  }
   if (!hash || hash === '#') return null
   if (hash === '#onboarding') return <OnboardingPreview key={onboardingKey} storageStatus={storageStatus} onResetSetup={resetSetup} onComplete={name => { saveNickname(name, true); window.location.hash = 'home' }} />
   if (hash === '#home' || hash === '#problem' || hash === '#my' || category) return <div className="hh-screen-stack" data-problem-open={frontOpen}>
     <div inert={frontOpen} aria-hidden={frontOpen}><HomePreview nickname={nickname} storageStatus={storageStatus} onResetSetup={resetSetup} onProblem={id => {window.location.hash = `case/${encodeURIComponent(id)}`}} onCategory={key => { window.location.hash = `solutions/${encodeURIComponent(categoryForHome[key])}` }} /></div>
     <AnimatePresence>{category && <div key={`${category}-${selectedCase?.id ?? 'list'}`} className="hh-screen-stack-front" inert={hash === '#problem'} aria-hidden={hash === '#problem'}><SolutionsFlow active={hash !== '#problem'} category={category} initialCaseId={selectedCase?.id} onHome={() => {window.location.hash = 'home'}} onWriteProblem={() => {setProblemBackground(category); window.location.hash = 'problem'}} /></div>}</AnimatePresence>
     {hash === '#my' && <div className="hh-screen-stack-front"><MyPreview nickname={nickname} onNicknameChange={name => saveNickname(name)} /></div>}
-    {hash === '#problem' && <div className="hh-screen-stack-front"><ProblemPreview input={draft} onChange={setDraft} onSuccess={id => {window.location.hash = `case/${encodeURIComponent(id)}`}} onInputBack={() => {window.location.hash = problemBackground ? `solutions/${encodeURIComponent(problemBackground)}` : 'home'}} /></div>}
+    {hash === '#problem' && <div className="hh-screen-stack-front"><ProblemPreview suspended={suspended} onConnectionLost={onConnectionLost} input={draft} onChange={setDraft} onSuccess={result => {setAnalysisResult(result);window.location.hash = 'analysis-result'}} onInputBack={() => {window.location.hash = problemBackground ? `solutions/${encodeURIComponent(problemBackground)}` : 'home'}} /></div>}
   </div>
   return (
     <main className="foundation-preview">
