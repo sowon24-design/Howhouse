@@ -1,0 +1,42 @@
+/* A01 462:8453. Screen-specific overrides mirror its Figma instances. */
+.hh-home { width: 100%; background: var(--color-surface); color: var(--color-on-surface); padding-bottom: var(--space-64); }
+.hh-home h1, .hh-home h2, .hh-home p { margin: 0; }
+.hh-home button { -webkit-tap-highlight-color: transparent; }
+.hh-home button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+.hh-home-profile, .hh-home-banner, .hh-home-categories button { transition: filter 160ms var(--ui-ease); }
+.hh-home-profile:active:not(:disabled), .hh-home-banner:active:not(:disabled), .hh-home-categories button:active:not(:disabled) { filter: brightness(.94); }
+@media (prefers-reduced-motion: reduce) {
+  .hh-home-profile, .hh-home-banner, .hh-home-categories button { transition: none; }
+}
+.hh-home-header { height: 56px; padding: 0 var(--space-5); display: flex; justify-content: space-between; align-items: center; }
+.hh-home-header > img, .hh-home img { display: block; flex-shrink: 0; }
+.hh-home-profile { border: 0; padding: 0; width: 40px; height: 40px; border-radius: 28px; background: linear-gradient(rgba(217,223,234,.5),rgba(215,222,231,.35)); display: grid; place-items: center; cursor: pointer; }
+.hh-home-content { padding: var(--space-3) var(--space-6); display: flex; flex-direction: column; gap: 36px; background-image: radial-gradient(ellipse 184px 144px at 111.2% 46.47%,rgba(212,248,255,.1),rgba(130,246,255,.05) 50%,rgba(48,245,255,0)),radial-gradient(ellipse 210px 230px at 1.7% 54.46%,rgba(0,81,255,.06),rgba(54,154,255,0)); }
+.hh-home-greeting h1 { font-size: var(--text-2xl); line-height: 1.5; font-weight: 700; overflow-wrap: anywhere; }
+.hh-home-greeting h1 span, .hh-home-section h2 > span { color: var(--color-primary); }
+.hh-home-greeting p { font-size: var(--text-lg); line-height: 29px; font-weight: 500; color: var(--color-secondary); }
+.hh-home-help { display: flex; flex-direction: column; gap: var(--space-3); }
+.hh-home-art { height: 157px; position: relative; overflow: hidden; }
+.hh-home-art-stage { position: absolute; width: 364px; height: 157px; left: 50%; transform: translateX(-50%); }
+.hh-home-shadow, .hh-home-character { position: absolute; }
+.hh-home-shadow.s1 { left: 72px; top: 118px; }
+.hh-home-shadow.s2 { left: 92px; top: 125px; }
+.hh-home-shadow.s3 { left: 127px; top: 123px; }
+.hh-home-shadow.s4 { left: 162px; top: 114px; }
+.hh-home-character { left: 56px; top: 0; width: 252px; height: 157px; object-fit: cover; }
+.hh-home-banner { border: 0; padding: var(--space-4); border-radius: var(--rounded-lg); min-height: 88px; width: 100%; display: flex; align-items: center; gap: var(--space-3); color: white; text-align: left; cursor: pointer; background: linear-gradient(126.671deg,rgba(100,233,248,0) 50%,rgba(100,233,248,.7) 97.623%),var(--color-primary); box-shadow: inset -2px -2px 2px rgba(255,255,255,.15); }
+.hh-home-book { width: 56px; height: 56px; border-radius: 28px; background: rgba(100,233,248,.1); display: grid; place-items: center; flex: none; }
+.hh-home-banner-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.hh-home-banner-copy > span { font-size: 14px; font-weight: 500; line-height: 1.4; color: var(--button-pale); }
+.hh-home-banner-copy strong { font-size: 16px; font-weight: 600; line-height: 1.5; }
+.hh-home-section { display: flex; flex-direction: column; gap: var(--space-2); }
+.hh-home-section h2 { font-size: var(--text-lg); font-weight: 600; line-height: 1.5; }
+.hh-home-categories { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 20px var(--space-2); padding: var(--space-3) var(--space-4); min-height: 208px; border-radius: var(--rounded-lg); background: var(--color-surface); filter: drop-shadow(0 6px 11.4px rgba(102,131,181,.1)); }
+.hh-home-categories button { border: 0; background: transparent; color: inherit; padding: 0; min-width: 0; min-height: 82px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-1); cursor: pointer; border-radius: var(--rounded-sm); }
+.hh-home-categories span { font-size: 14px; font-weight: 500; line-height: 1.4; white-space: nowrap; }
+.hh-home-popular { display: flex; flex-direction: column; gap: var(--space-3); }
+.hh-home .hh-home-problem { background: var(--color-surface); box-shadow: 0 6px 22.8px rgba(102,131,181,.1); }
+.hh-home .hh-home-problem:active:not(:disabled) { background: var(--list-neutral-pressed); }
+/* Replace only this instance's arrow with the original blue A01 asset. */
+.hh-home-problem > .ui-asset { content: url('./assets/imgIconArrowLeft.svg'); }
+@media (max-width:360px) { .hh-home-banner { gap: var(--space-2); } .hh-home-categories { padding-inline: var(--space-2); gap: 20px 4px; } }

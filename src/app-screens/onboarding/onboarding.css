@@ -1,0 +1,35 @@
+.hh-onboarding-frame { overflow:hidden; }
+.hh-onboarding { height:100%; display:flex; flex-direction:column; background:var(--color-surface); color:var(--color-on-surface); }
+.hh-onboarding > .ui-gnb { flex:none; background:transparent; }
+.hh-onboarding h1, .hh-onboarding p { margin:0; }
+.hh-onboarding-next { flex:none; padding:var(--space-6) var(--space-6) var(--space-64); }
+.hh-intro-content { flex:1; min-height:0; overflow-y:auto; overscroll-behavior:none; display:flex; flex-direction:column; align-items:center; gap:var(--space-64); padding:var(--space-5) var(--space-6) var(--space-6); }
+.hh-intro-story { flex:1 0 auto; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+.hh-intro-art { height:320px; width:100%; display:flex; align-items:center; justify-content:center; box-sizing:border-box; }
+.hh-intro-art--1 { padding:0 var(--space-32); }
+.hh-intro-art--2 { padding:0 var(--space-40); }
+.hh-intro-art--3 { padding:0 var(--space-5); }
+.hh-intro-art img { width:100%; display:block; }
+.hh-intro-art--1 img { aspect-ratio:296/196; object-fit:cover; }
+.hh-intro-art--2 img { aspect-ratio:278/214; object-fit:cover; }
+.hh-intro-art--3 img { aspect-ratio:354/292; object-position:bottom; }
+.hh-intro-copy { width:100%; text-align:center; }
+.hh-intro-copy h1 { font-size:var(--text-xl); font-weight:700; line-height:1.4; }
+.hh-intro-copy p, .hh-welcome-copy p { font-size:var(--text-base); line-height:1.5; color:var(--color-secondary); margin-top:var(--space-3); }
+.hh-intro-progress { flex:none; display:flex; gap:var(--space-2); height:8px; }
+.hh-intro-progress span { display:block; width:8px; height:8px; background:var(--color-border); border-radius:var(--rounded-full); transition:width var(--ui-motion) var(--ui-ease), background-color var(--ui-motion) var(--ui-ease); }
+.hh-intro-progress span[data-active=true] { width:32px; background:var(--color-primary); }
+.hh-welcome-content { flex:1; min-height:0; overflow-y:auto; overscroll-behavior:none; position:relative; display:flex; flex-direction:column; }
+.hh-welcome-copy { flex:none; position:relative; z-index:1; padding:var(--space-5) var(--space-6) var(--space-6); text-align:center; }
+.hh-welcome-copy h1 { font-size:var(--text-2xl); font-weight:700; line-height:1.4; color:#000; }
+.hh-welcome-art-space { flex:1 0 auto; display:flex; align-items:center; justify-content:center; padding:12px 24px; }
+.hh-welcome-art { position:relative; width:338px; max-width:100%; aspect-ratio:1; animation:hh-welcome-float 2.8s ease-in-out infinite; }
+@keyframes hh-welcome-float { 0%,100% { transform:translateY(12px) rotate(-1deg); } 50% { transform:translateY(-12px) rotate(1deg); } }
+.hh-intro-art, .hh-intro-copy h1, .hh-intro-copy p { animation:hh-intro-reveal 1000ms var(--ui-ease) both; }
+.hh-intro-copy h1 { animation-delay:500ms; }
+.hh-intro-copy p { animation-delay:1000ms; }
+@keyframes hh-intro-reveal { from { opacity:0; } to { opacity:1; } }
+.hh-onboarding--welcome { background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 412 910' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23grad)' opacity='0.20000000298023224'/><defs><radialGradient id='grad' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(14.5 22.8 -10.323 6.5648 13 636)'><stop stop-color='rgba(212,248,255,1)' offset='0'/><stop stop-color='rgba(212,248,255,0)' offset='1'/></radialGradient></defs></svg>"), url("data:image/svg+xml;utf8,<svg viewBox='0 0 412 910' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23grad)' opacity='0.20000000298023224'/><defs><radialGradient id='grad' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(2.6 20.8 -28.53 3.5663 412 267.5)'><stop stop-color='rgba(186,200,255,1)' offset='0'/><stop stop-color='rgba(203,214,255,0.53323)' offset='0.46677'/><stop stop-color='rgba(222,229,255,0)' offset='1'/></radialGradient></defs></svg>"), linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%); }
+.hh-welcome-art img { width:100%; height:100%; display:block; object-fit:cover; }
+.hh-welcome-art::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom, transparent 42.456%, rgb(255 255 255 / .5)); pointer-events:none; }
+@media(prefers-reduced-motion:reduce) { .hh-intro-progress span { transition:none; } .hh-welcome-art, .hh-intro-art, .hh-intro-copy h1, .hh-intro-copy p { animation:none; } }
