@@ -1,0 +1,16 @@
+.hh-problem-layer-stack { position: relative; height: 100%; }
+.hh-problem-layer-input { height: 100%; }
+.hh-analysis { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; background:var(--color-surface); color:var(--color-on-surface); box-shadow:-6px 0 24px rgb(25 33 46 / .16); animation:hh-problem-slide-in var(--ui-motion) var(--ui-ease); }
+.hh-analysis--leaving { animation:hh-problem-slide-out var(--ui-motion) var(--ui-ease) forwards; }
+.hh-analysis > .ui-gnb { flex:none; }
+.hh-analysis-content { flex:1; min-height:0; display:flex; flex-direction:column; padding:var(--space-3) var(--space-6) var(--space-6); gap:var(--space-1); overflow-y:auto; overscroll-behavior:none; }
+.hh-analysis-copy { flex:none; font-size:20px; font-weight:600; line-height:30px; }
+.hh-analysis-copy p { margin:0; }
+.hh-analysis-copy span { color:var(--color-primary); }
+.hh-analysis-illustration { flex:1; min-height:180px; display:flex; align-items:center; justify-content:center; }
+.hh-analysis-art { position:relative; width:276px; height:140.481px; flex:none; }
+.hh-analysis-art img { display:block; max-width:none; }
+.hh-analysis-rotator { position:absolute; display:flex; align-items:center; justify-content:center; }
+.hh-analysis-failure { width:230px; height:152px; object-fit:cover; transform:scaleX(-1); }
+.hh-analysis-next { flex:none; padding-bottom:var(--space-40); }
+@media(prefers-reduced-motion:reduce) { .hh-analysis { animation:none; } }

@@ -632,6 +632,7 @@
   "content_horizontal_inset_px": 24
   "content_width_px": 364
 "motion":
+  "navigation_pressed_brightness": 0.94 # 2026-10-31 사용자 승인: 별도 상태 디자인 없는 화면 이동 요소
   "easing": "cubic-bezier(.4, 0, .2, 1)" # 공통 시작·끝 가감속
   "transition_ms": 320 # 탭 선택 배경·아코디언·ActionSheet 전환
   "overlay_ms": 100 # Overlay 열림·닫힘 dissolve
@@ -701,6 +702,8 @@
 
 ## Components
 
+2026-10-31 사용자 승인: 별도 상태 디자인이 없는 화면 이동용 배너·카테고리·프로필 버튼은 눌리는 동안 `motion.navigation_pressed_brightness`로 어둡게 표시한다. 전환은 `motion.color_ms`와 `motion.easing`을 사용한다. native button의 `:active:not(:disabled)`를 사용하고 터치 스크롤을 막거나 눌림 상태를 고정하지 않는다. 해제·스크롤 취소 후 복원을 확인한다. 새 hover 효과는 필요하지 않으며, 기존 공통 컴포넌트의 상태 토큰을 이 밝기 효과로 대체하거나 중복 적용하지 않는다. 포커스 표시를 유지하고 움직임 줄이기에서는 전환을 생략한다.
+
 공통 구현은 [src/components/ui](src/components/ui)에 있다. 주요 행동은 Button, 아이콘만 있는 다음 행동은 ArrowButton, 복수 선택은 Checkbox, 단일 선택은 Radio, 수신자 전환은 TabBar를 사용한다. ListRow는 목록 행동, MessageButton은 문장 포함 여부, GNB는 헤더, Accordion은 펼침 설명, AddImage·Photo는 사진 추가·표시, ActionSheet는 행동 선택, Overlay는 확인에 사용한다.
 
 정확한 Props·기본값·이벤트·닫힘·접근성·모션은 [CONTRACT.md](src/components/CONTRACT.md)를 따른다. 모션 값은 상단 `motion`에 기록한다. 미리보기의 예시 상태나 콜백을 실제 화면 정책으로 확정하지 않는다.
@@ -716,3 +719,6 @@
 - 출시 제외된 Search·Navigation Bar·Community_Post·Chip·태그·썸네일을 추가하지 않는다.
 - 미정 동작과 실제 LLM·카메라·앨범 연결을 예시 코드로 완료 처리하지 않는다.
 - `preview.css`를 출시 화면의 스타일로 복사하지 않는다.
+
+### CTA 눌림 피드백 (2026-10-31)
+- 기존 pressed 색 토큰을 누르는 순간 즉시 적용하고 손을 떼면 기존 color_ms로 복귀한다. 짧은 탭을 위해 이벤트 실행을 지연하지 않는다.

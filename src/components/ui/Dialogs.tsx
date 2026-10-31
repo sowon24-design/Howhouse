@@ -7,7 +7,7 @@ import './ui.css'
 
 type DialogProps = { open: boolean; onClose: () => void; children: ReactNode; label: string; className: string; closeOnBackdrop?: boolean }
 
-function Dialog({ open, onClose, children, label, className, closeOnBackdrop = true }: DialogProps) {
+export function Dialog({ open, onClose, children, label, className, closeOnBackdrop = true }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null)
   const startedOutside = useRef(false)
   const restore = useRef<(() => void) | null>(null)

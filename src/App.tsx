@@ -1,3 +1,10 @@
+import { SystemPreview } from './app-screens/system/SystemPreview'
+import { MyPreview } from './app-screens/my/MyScreen'
+import { useEffect, useState } from 'react'
+import { HomePreview } from './app-screens/home/HomePreview'
+import { OnboardingPreview } from './app-screens/onboarding/OnboardingPreview'
+import { ProblemPreview } from './app-screens/problem/ProblemPreview'
+import { emptyInput } from './app-screens/problem/ProblemScreen'
 import { Icon, iconCatalog } from './components/Icon/Icon'
 import { ComponentPreview } from './ComponentPreview'
 import './preview.css'
@@ -38,6 +45,24 @@ const iconNotes: Record<string, string> = {
 }
 
 export default function App() {
+  const [nickname, setNickname] = useState<string>()
+  const [draft, setDraft] = useState(emptyInput)
+  const [hash, setHash] = useState(window.location.hash)
+  useEffect(() => {
+    const update = () => {
+      if (window.location.hash === '#home') setDraft(emptyInput())
+      setHash(window.location.hash)
+    }
+    window.addEventListener('hashchange', update)
+    return () => window.removeEventListener('hashchange', update)
+  }, [])
+  if (hash === '#system') return <SystemPreview />
+  if (hash === '#onboarding') return <OnboardingPreview onComplete={name => { setNickname(name); window.location.hash = 'home' }} />
+  if (hash === '#home' || hash === '#problem' || hash === '#my') return <div className="hh-screen-stack" data-problem-open={(hash === '#problem' || hash === '#my')}>
+    <div inert={(hash === '#problem' || hash === '#my')} aria-hidden={(hash === '#problem' || hash === '#my')}><HomePreview nickname={nickname} /></div>
+    {hash === '#my' && <div className="hh-screen-stack-front"><MyPreview nickname={nickname} onNicknameChange={setNickname} /></div>}
+    {hash === '#problem' && <div className="hh-screen-stack-front"><ProblemPreview input={draft} onChange={setDraft} /></div>}
+  </div>
   return (
     <main className="foundation-preview">
       <header className="preview-header">
@@ -48,6 +73,10 @@ export default function App() {
         <nav aria-label="미리보기 목차" className="preview-nav">
           <a href="#colors">01 색상</a><a href="#typography">02 Pretendard</a><a href="#icons">03 아이콘</a>
           <a href="#components">04 공통 컴포넌트</a>
+          <a href="#home">05 A01 홈</a>
+          <a href="#problem">06 A02 문제 작성</a>
+          <a href="#onboarding">07 E01·E02 최초 시작·소개</a>
+          <a href="#system">08 F01·F02 로딩·오프라인</a>
         </nav>
       </header>
 

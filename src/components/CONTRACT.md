@@ -174,3 +174,16 @@
 7. 사진 개수 제한과 실제 파일 연결은 화면에서 별도 검증한다.
 
 문서화 검증은 현재 코드 대조다. 실제 출시 화면 조립 테스트와 팀 검토를 대신하지 않는다.
+
+## Dialog (시트·모달 공통 기반)
+
+소스: [Dialogs.tsx](ui/Dialogs.tsx)
+
+- 화면별 전문 시트 재사용을 위해 named export한다.
+- 필수 Props: `open`, `onClose`, `children`, `label`, `className`. 선택 Props: `closeOnBackdrop`(기본 true).
+- native dialog의 포커스 관리·배경 스크롤 잠금·Escape·닫힘 애니메이션을 공유한다. 호출 화면이 open을 관리한다.
+- 시트는 `ui-action-sheet` 클래스를 사용한다. 전문·본문 스크롤·체크·동의 저장은 화면 책임이다.
+- 한 번에 하나만 연다. 기존 ActionSheet·Overlay 동작은 유지한다.
+
+### Button 눌림 피드백 보정 (2026-10-31)
+- 짧은 탭에도 pressed 토큰이 보이도록 :active 진입 색 전환은 즉시 적용한다. 해제는 기존 160ms 복귀를 유지한다. disabled/loading 차단과 클릭 콜백 시점은 변경하지 않는다.

@@ -1,0 +1,11 @@
+.hh-home-preview { padding: 24px 0; }
+.hh-screen-stack { position: relative; }
+.hh-screen-stack-front { position: absolute; inset: 0; z-index: 1; }
+.hh-screen-stack[data-problem-open=true] > div:first-child .hh-home-preview-tools { visibility: hidden; }
+.hh-home-preview-tools { max-width: 580px; margin: 20px auto 0; padding: 0 16px; font-size: 14px; color: var(--color-secondary); }
+.hh-home-preview-tools a { color: var(--color-primary); }
+.hh-home-preview-tools p { margin: 8px 0; }
+.hh-home-preview-tools [role=status] { min-height: 42px; }
+.hh-home-preview-frame { width: 100%; max-width: 412px; height: 910px; margin: 0 auto; overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: none; background: var(--color-surface); }
+.hh-home-preview-frame::-webkit-scrollbar { display: none; }
+@media (max-width: 412px) { .hh-home-preview-frame { height: 100dvh; } }
