@@ -1,0 +1,20 @@
+.solutions-b03 { background:var(--color-surface); min-height:100dvh; }
+.solutions-b03__content { min-height:calc(100dvh - 56px); padding:var(--space-4) var(--space-6) 64px; display:flex; flex-direction:column; justify-content:space-between; gap:var(--space-6); }
+.solutions-b03__top { display:flex; flex-direction:column; gap:var(--space-6); }
+.solutions-b03__top h2 { margin:0 0 var(--space-2); }
+.solutions-b03__top h2 span { color:var(--color-primary); }
+.solutions-b03__top textarea { display:block; width:100%; min-height:248px; height:auto; field-sizing:content; resize:vertical; border:0; border-radius:var(--rounded-sm); background:var(--color-neutral); padding:var(--space-5); color:var(--color-on-surface); margin-top:var(--space-3); line-height:1.5; }
+.solutions-b03__top textarea:focus-visible { outline:2px solid var(--color-primary); outline-offset:3px; }
+.solutions-b03__top p,.solutions-b03__actions p { font-size:14px; line-height:1.4; color:var(--color-secondary); margin:var(--space-3) 0 0; }
+.solutions-b03__actions { position:relative; }
+.solutions-b03__actions p { text-align:center; }
+.solutions-b03__toast { display:flex; justify-content:center; min-height:28px; margin-bottom:var(--space-3); }
+.solutions-b03__toast span { background:var(--color-on-surface); color:var(--color-surface); border-radius:var(--rounded-full); padding:var(--space-1) var(--space-3); font-size:14px; line-height:1.4; }
+.solutions-message-sheet { margin:auto auto 0; width:min(412px,100%); max-width:100%; max-height:calc(100dvh - 24px); overflow:auto; background:var(--color-surface); color:var(--color-on-surface); border:0; border-radius:var(--rounded-lg) var(--rounded-lg) 0 0; padding:var(--space-4) var(--space-6) 64px; }
+.solutions-message-sheet[open] { display:flex; flex-direction:column; gap:36px; }
+.solutions-message-sheet::backdrop { background:rgb(0 0 0 / .25); }
+.solutions-message-sheet__handle { width:80px; height:5px; border-radius:var(--rounded-full); background:var(--color-border); align-self:center; flex:none; }
+.solutions-message-sheet h2 { margin:0; text-align:center; }
+.solutions-message-sheet__sentences { display:flex; flex-direction:column; gap:var(--space-2); }
+.solutions-message-sheet__actions { display:flex; gap:var(--space-3); }
+.solutions-message-sheet__actions>* { flex:1 1 0; }
