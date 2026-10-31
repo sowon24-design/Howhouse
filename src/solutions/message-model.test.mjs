@@ -1,6 +1,6 @@
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
-import {initialDraft,applySentences,toMessageRecipients,copyMessage,editDraft,messageBody,selectedIndexes} from './message-model.ts'
+import {initialDraft,applySentences,toMessageRecipients,copyMessage,copyMessageResult,editDraft,messageBody,selectedIndexes} from './message-model.ts'
 const r={id:'landlord',label:'집주인',title:'집주인',sentences:['인사말 원문','문제 설명 원문','요청 원문','마무리 원문']}
 test('required full scenario: edit, add, remove, restore original at fixed position',()=>{
   let d=applySentences(initialDraft(r),[0,1],r.sentences)
@@ -53,4 +53,13 @@ test('paragraphs inserted inside an edited block retain its identity and are rem
   assert.equal(d.sentences[0].blockId,'landlord:block:0')
   d=applySentences(d,[1,2,3],r.sentences)
   assert.equal(messageBody(d),'문제 설명 원문\n\n요청 원문\n\n마무리 원문')
+})
+
+test('copy result distinguishes navigation success from empty and failed writes',async()=>{
+  let writes=0
+  assert.equal((await copyMessageResult('   ',async()=>{writes++})).status,'empty')
+  assert.equal(writes,0)
+  assert.equal((await copyMessageResult('본문',async()=>{throw Error('denied')})).status,'failed')
+  assert.equal((await copyMessageResult('본문',async()=>{writes++})).status,'success')
+  assert.equal(writes,1)
 })

@@ -13,6 +13,12 @@
 .hh-nickname-warning { flex:none; width:16px; height:16px; margin-top:2px; display:grid; place-items:center; }
 .hh-nickname-warning img { display:block; max-width:none; }
 .hh-nickname-next { flex:none; padding:var(--space-6) var(--space-6) var(--space-64); }
+/* Match A02's compact footer when the mobile viewport shrinks for the keyboard.
+   Shared by E04 (create) and D02 (edit); B screens are independent. */
+@media (pointer: coarse) and (max-height: 700px) {
+  .hh-nickname-next { padding-bottom: var(--space-2); }
+}
 
 
 .hh-nickname--edit .hh-nickname-content h1 { font-size:var(--text-base); margin-bottom:var(--space-2); }
+@media (prefers-reduced-motion: reduce) { .hh-nickname-next { transition:none; } }

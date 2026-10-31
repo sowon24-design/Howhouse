@@ -3,10 +3,13 @@
 .hh-home h1, .hh-home h2, .hh-home p { margin: 0; }
 .hh-home button { -webkit-tap-highlight-color: transparent; }
 .hh-home button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
-.hh-home-profile, .hh-home-banner, .hh-home-categories button { transition: filter 160ms var(--ui-ease); }
-.hh-home-profile:active:not(:disabled), .hh-home-banner:active:not(:disabled), .hh-home-categories button:active:not(:disabled) { filter: brightness(.94); }
+.hh-home-profile, .hh-home-banner, .hh-home-categories button img { transition: filter 160ms var(--ui-ease); }
+.hh-home-profile:active:not(:disabled), .hh-home-banner:active:not(:disabled) { filter: brightness(.94); }
+.hh-home button:active:not(:disabled) { transition-duration:0ms; }
+.hh-home :is(.hh-home-profile, .hh-home-banner)[data-home-pressed=true]:not(:disabled) { filter:brightness(.94); transition-duration:0ms; }
+.hh-home-categories button:is(:active, [data-home-pressed=true]):not(:disabled) img { filter:brightness(.94); transition-duration:0ms; }
 @media (prefers-reduced-motion: reduce) {
-  .hh-home-profile, .hh-home-banner, .hh-home-categories button { transition: none; }
+  .hh-home-profile, .hh-home-banner, .hh-home-categories button img { transition: none; }
 }
 .hh-home-header { height: 56px; padding: 0 var(--space-5); display: flex; justify-content: space-between; align-items: center; }
 .hh-home-header > img, .hh-home img { display: block; flex-shrink: 0; }

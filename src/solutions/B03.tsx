@@ -1,9 +1,21 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { Button, GNB, ListRow, MessageButton, TabBar } from '../components/ui'
-import { applySentences, initialDraft, copyMessage, editDraft, messageBody, selectedIndexes } from './message-model'
+import { applySentences, initialDraft, copyMessageResult, editDraft, messageBody, selectedIndexes } from './message-model'
 import type { MessageDraft, Recipient } from './message-model'
 import write from './assets/b03-write.svg'
 import './b03.css'
+
+async function writeClipboard(text:string) {
+  if(navigator.clipboard && window.isSecureContext) {
+    try {await navigator.clipboard.writeText(text);return} catch { /* Try the HTTP-preview fallback. */ }
+  }
+  const previous=document.activeElement as HTMLElement|null
+  const field=document.createElement('textarea')
+  field.value=text;field.style.cssText='position:fixed;opacity:0;pointer-events:none'
+  document.body.append(field);field.select()
+  try {if(!document.execCommand('copy'))throw new Error('Clipboard unavailable')}
+  finally {field.remove();previous?.focus({preventScroll:true})}
+}
 
 export function B03({recipients,onBack}:{recipients:readonly Recipient[];onBack:()=>void}) {
   const base=useId()
@@ -14,6 +26,9 @@ export function B03({recipients,onBack}:{recipients:readonly Recipient[];onBack:
   const [toast,setToast]=useState('')
   const [copying,setCopying]=useState(false)
   const timer=useRef<ReturnType<typeof setTimeout>|null>(null)
+  const mounted=useRef(true)
+  const inFlight=useRef(false)
+  useEffect(()=>{mounted.current=true;return ()=>{mounted.current=false}},[])
   const dialog=useRef<HTMLDialogElement>(null)
   const startedOutside=useRef(false)
   useEffect(()=>()=>{if(timer.current)clearTimeout(timer.current)},[])
@@ -27,9 +42,13 @@ export function B03({recipients,onBack}:{recipients:readonly Recipient[];onBack:
   },[picking])
   function announce(text:string){if(timer.current)clearTimeout(timer.current);setToast(text);timer.current=setTimeout(()=>setToast(''),3000)}
   async function copy(){
-    setCopying(true)
-    try {announce(await copyMessage(messageBody(drafts[target]),text=>navigator.clipboard.writeText(text)))}
-    finally {setCopying(false)}
+    if(inFlight.current)return
+    inFlight.current=true;setCopying(true)
+    try {
+      const result=await copyMessageResult(messageBody(drafts[target]),writeClipboard)
+      if(!mounted.current)return
+      announce(result.message)
+    } finally {inFlight.current=false;if(mounted.current)setCopying(false)}
   }
   if(!recipients.length)return null
   const current=recipients.find(r=>r.id===target)!

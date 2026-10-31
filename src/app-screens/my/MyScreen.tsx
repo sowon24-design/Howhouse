@@ -1,3 +1,5 @@
+import { screenSlidesEnabled } from '../navigation-motion'
+import { useAndroidBack } from '../android-back'
 import { InformationScreen, type InformationPage } from './InformationScreen'
 import { NicknameScreen } from '../onboarding/NicknameScreen'
 import { useState } from 'react'
@@ -20,7 +22,7 @@ export function MyScreen({ nickname, version, onBack, onEdit, onMenu }: {
 }) {
   const [leaving, setLeaving] = useState(false)
   function back() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) onBack()
+    if (!screenSlidesEnabled || window.matchMedia('(prefers-reduced-motion: reduce)').matches) onBack()
     else setLeaving(true)
   }
   return <main className={`hh-my${leaving ? ' hh-my--leaving' : ''}`} aria-label="마이 페이지" inert={leaving} onAnimationEnd={event => {
@@ -43,21 +45,26 @@ export function MyPreview({ nickname = '자취하는 소라게', onNicknameChang
   const [information, setInformation] = useState<InformationPage | null>(null)
   const [closingInformation, setClosingInformation] = useState(false)
   function closeInformation() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setInformation(null)
+    if (!screenSlidesEnabled || window.matchMedia('(prefers-reduced-motion: reduce)').matches) setInformation(null)
     else setClosingInformation(true)
   }
   const [editing, setEditing] = useState(false)
   const [closingEdit, setClosingEdit] = useState(false)
-  const [status, setStatus] = useState('버전은 Figma 예시값입니다. 닉네임은 임시 저장합니다. 빨간 본문은 수정 예정인 임시 문구입니다. 이메일 복사는 테스트 문자열 test.email.com을 복사합니다.')
+  useAndroidBack(() => {
+    if (editing) { setEditing(false); setClosingEdit(false) }
+    else if (information) closeInformation()
+    else window.location.hash = 'home'
+  })
+  const [status, setStatus] = useState('버전은 Figma 예시값입니다. 수정 완료한 닉네임은 기기에 저장합니다. 저장 결과는 홈 개발용 도구에서 확인할 수 있습니다. 빨간 본문은 수정 예정인 임시 문구입니다. 이메일 복사는 테스트 문자열 test.email.com을 복사합니다.')
   return <div className="hh-home-preview">
     <div className="hh-home-preview-frame hh-my-frame hh-my-stack"><div className="hh-my-base" inert={editing || information !== null} aria-hidden={editing || information !== null}><MyScreen nickname={nickname} version="v 1.0.1" onBack={() => { window.location.hash = 'home' }} onEdit={() => { setClosingEdit(false); setEditing(true) }} onMenu={id => { if (id === 'ai') setStatus('AI 활용 정보 · 상세 시안 확인 후 연결 예정'); else { setClosingInformation(false); setInformation(id) } }} /></div>
       {information && <div className={`hh-my-editor${closingInformation ? ' hh-my-editor--leaving' : ''}`} inert={closingInformation} onAnimationEnd={event => { if (event.target === event.currentTarget && event.animationName === 'hh-my-out') { setInformation(null); setClosingInformation(false) } }}>
         <InformationScreen page={information} onBack={closeInformation} />
       </div>}
       {editing && <div className={`hh-my-editor${closingEdit ? ' hh-my-editor--leaving' : ''}`} inert={closingEdit} onAnimationEnd={event => { if (event.target === event.currentTarget && event.animationName === 'hh-my-out') { setEditing(false); setClosingEdit(false) } }}>
-        <NicknameScreen mode="edit" initialValue={nickname} onBack={() => { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setEditing(false); else setClosingEdit(true) }} onComplete={name => { onNicknameChange(name); window.location.hash = 'home' }} />
+        <NicknameScreen mode="edit" initialValue={nickname} onBack={() => { if (!screenSlidesEnabled || window.matchMedia('(prefers-reduced-motion: reduce)').matches) setEditing(false); else setClosingEdit(true) }} onComplete={name => { onNicknameChange(name); window.location.hash = 'home' }} />
       </div>}
     </div>
-    <aside className="hh-home-preview-tools" aria-label="마이 미리보기 안내"><a href="#home">홈 미리보기</a> · <a href="#components">공통 컴포넌트 보기</a><p role="status">{status}</p></aside>
+    <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="마이 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel"><a href="#home">홈 미리보기</a> · <a href="#components">공통 컴포넌트 보기</a><p role="status">{status}</p></div></details>
   </div>
 }

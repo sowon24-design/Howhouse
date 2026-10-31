@@ -70,10 +70,15 @@ export function editDraft(draft:MessageDraft,body:string):MessageDraft {
   }
   return {...draft,sentences,nextId}
 }
+export type CopyResult = { status: 'success' | 'empty' | 'failed'; message: string }
+export async function copyMessageResult(body:string,write:(text:string)=>Promise<void>):Promise<CopyResult> {
+  if(!body.trim())return {status:'empty',message:'메시지 내용을 입력한 후 다시 시도해 주세요.'}
+  try {await write(body);return {status:'success',message:'메시지를 복사했어요'}}
+  catch {return {status:'failed',message:'복사하지 못했어요. 다시 시도해 주세요.'}}
+}
+// Preserve the existing string API for independent previews and callers.
 export async function copyMessage(body:string,write:(text:string)=>Promise<void>):Promise<string> {
-  if(!body.trim())return '메시지 내용을 입력한 후 다시 시도해 주세요.'
-  try {await write(body);return '메시지를 복사했어요'}
-  catch {return '복사하지 못했어요. 다시 시도해 주세요.'}
+  return (await copyMessageResult(body,write)).message
 }
 
 

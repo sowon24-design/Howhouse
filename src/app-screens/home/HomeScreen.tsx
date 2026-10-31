@@ -1,4 +1,5 @@
 import { ListRow } from '../../components/ui'
+import { HomePressButton } from './HomePressButton'
 import illustration from './assets/imgImage150.png'
 import logo from './assets/imgVector132Stroke.svg'
 import profile from './assets/imgIconProfile.svg'
@@ -44,7 +45,7 @@ export function HomeScreen({ nickname, month, popularProblems, onProfile, onStar
   return <main className="hh-home" aria-label="어쩌집 홈">
     <header className="hh-home-header">
       <img src={logo} alt="어쩌집" />
-      <button type="button" className="hh-home-profile" aria-label="마이 페이지" onClick={onProfile}><img src={profile} alt="" /></button>
+      <HomePressButton type="button" className="hh-home-profile" aria-label="마이 페이지" onClick={onProfile}><img src={profile} alt="" /></HomePressButton>
     </header>
     <div className="hh-home-content">
       <div className="hh-home-greeting">
@@ -61,18 +62,18 @@ export function HomeScreen({ nickname, month, popularProblems, onProfile, onStar
             <img className="hh-home-character" src={illustration} alt="" />
           </div>
         </div>
-        <button type="button" className="hh-home-banner" onClick={onStartProblem}>
+        <HomePressButton type="button" className="hh-home-banner" onClick={onStartProblem}>
           <span className="hh-home-book"><img src={book} alt="" /></span>
           <span className="hh-home-banner-copy"><span>우리집 문제에 대한</span><strong>해결 방법을 찾아 볼까요?</strong></span>
           <img src={arrow} alt="" />
-        </button>
+        </HomePressButton>
       </section>
       <section className="hh-home-section" aria-labelledby="home-categories-title">
         <h2 id="home-categories-title">어떤 문제를 해결할까요?</h2>
         <div className="hh-home-categories">{homeCategories.map(category =>
-          <button type="button" key={category.key} onClick={() => onCategory(category.key)}>
+          <HomePressButton type="button" key={category.key} onClick={() => onCategory(category.key)}>
             <img src={category.image} alt="" /><span>{category.label}</span>
-          </button>)}</div>
+          </HomePressButton>)}</div>
       </section>
       <section className="hh-home-section" aria-labelledby="home-popular-title">
         <h2 id="home-popular-title"><span>{month}월</span>에 많이 찾는 문제예요</h2>

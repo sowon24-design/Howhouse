@@ -1,3 +1,6 @@
+import { categories, getCategoryCases, solutionCases, type CategoryId } from './solutions/data'
+import { AnimatePresence } from 'motion/react'
+import { SolutionsFlow, categoryForHome } from './app-screens/solutions/SolutionsFlow'
 import { SystemPreview } from './app-screens/system/SystemPreview'
 import { MyPreview } from './app-screens/my/MyScreen'
 import { useEffect, useState } from 'react'
@@ -8,6 +11,8 @@ import { emptyInput } from './app-screens/problem/ProblemScreen'
 import { Icon, iconCatalog } from './components/Icon/Icon'
 import { ComponentPreview } from './ComponentPreview'
 import './preview.css'
+import { readProfile, writeProfile, resetProfile, type LocalProfile } from './app-screens/profile-storage'
+import { useAndroidBackBridge } from './app-screens/android-back'
 
 const colors = [
   ['neutral', '화면 배경', '#F5F7FB'], ['surface', '카드·시트', '#FFFFFF'],
@@ -45,23 +50,58 @@ const iconNotes: Record<string, string> = {
 }
 
 export default function App() {
-  const [nickname, setNickname] = useState<string>()
+  useAndroidBackBridge()
+  const [profile, setProfile] = useState<LocalProfile | undefined>(() => {
+    try { return readProfile(window.localStorage) } catch { return undefined }
+  })
+  const nickname = profile?.nickname
+  const [storageStatus, setStorageStatus] = useState('닉네임·설정 완료 여부만 이 브라우저에 저장합니다. 문제 글·사진은 저장하지 않습니다.')
+  function saveNickname(name: string, complete = profile?.setupComplete ?? false) {
+    const next = { nickname: name, setupComplete: complete }
+    setProfile(next)
+    let saved = false
+    try { saved = writeProfile(window.localStorage, next) } catch { /* storage unavailable */ }
+    setStorageStatus(saved ? '닉네임을 기기에 저장했습니다. 같은 주소에서 새로고침해도 유지됩니다.' : '기기 저장에 실패했습니다. 현재 실행 중에만 유지되며 새로고침하면 사라질 수 있습니다.')
+  }
+  function resetSetup() {
+    let cleared = false
+    try { cleared = resetProfile(window.localStorage) } catch { /* storage unavailable */ }
+    if (!cleared) { setStorageStatus('저장 정보를 지우지 못했습니다. 브라우저 저장 설정을 확인해 주세요.'); return }
+    setProfile(undefined)
+    setDraft(emptyInput())
+    setProblemBackground(undefined)
+    setStorageStatus('테스트 초기화 완료: 닉네임·설정 완료·소개 진행 위치·입력 초안을 지웠습니다.')
+    window.location.hash = 'onboarding'
+    setOnboardingKey(value => value + 1)
+  }
+  const [onboardingKey, setOnboardingKey] = useState(0)
   const [draft, setDraft] = useState(emptyInput)
+  const [problemBackground, setProblemBackground] = useState<CategoryId>()
   const [hash, setHash] = useState(window.location.hash)
   useEffect(() => {
+    if (!hash || hash === '#') window.location.replace(`#${profile?.setupComplete ? 'home' : 'onboarding'}`)
+  }, [hash, profile?.setupComplete])
+  useEffect(() => {
     const update = () => {
+      if (window.location.hash !== '#problem') setProblemBackground(undefined)
       if (window.location.hash === '#home') setDraft(emptyInput())
       setHash(window.location.hash)
     }
     window.addEventListener('hashchange', update)
     return () => window.removeEventListener('hashchange', update)
   }, [])
+  const selectedCase = solutionCases.find(item => hash === `#case/${encodeURIComponent(item.id)}`)
+  const caseCategory = selectedCase && categories.find(item => getCategoryCases([selectedCase], item.id).length)?.id
+  const category = (hash === '#problem' ? problemBackground : undefined) ?? caseCategory ?? Object.values(categoryForHome).find(value => hash === `#solutions/${encodeURIComponent(value)}`)
+  const frontOpen = hash === '#problem' || hash === '#my' || Boolean(category)
   if (hash === '#system') return <SystemPreview />
-  if (hash === '#onboarding') return <OnboardingPreview onComplete={name => { setNickname(name); window.location.hash = 'home' }} />
-  if (hash === '#home' || hash === '#problem' || hash === '#my') return <div className="hh-screen-stack" data-problem-open={(hash === '#problem' || hash === '#my')}>
-    <div inert={(hash === '#problem' || hash === '#my')} aria-hidden={(hash === '#problem' || hash === '#my')}><HomePreview nickname={nickname} /></div>
-    {hash === '#my' && <div className="hh-screen-stack-front"><MyPreview nickname={nickname} onNicknameChange={setNickname} /></div>}
-    {hash === '#problem' && <div className="hh-screen-stack-front"><ProblemPreview input={draft} onChange={setDraft} /></div>}
+  if (!hash || hash === '#') return null
+  if (hash === '#onboarding') return <OnboardingPreview key={onboardingKey} storageStatus={storageStatus} onResetSetup={resetSetup} onComplete={name => { saveNickname(name, true); window.location.hash = 'home' }} />
+  if (hash === '#home' || hash === '#problem' || hash === '#my' || category) return <div className="hh-screen-stack" data-problem-open={frontOpen}>
+    <div inert={frontOpen} aria-hidden={frontOpen}><HomePreview nickname={nickname} storageStatus={storageStatus} onResetSetup={resetSetup} onProblem={id => {window.location.hash = `case/${encodeURIComponent(id)}`}} onCategory={key => { window.location.hash = `solutions/${encodeURIComponent(categoryForHome[key])}` }} /></div>
+    <AnimatePresence>{category && <div key={`${category}-${selectedCase?.id ?? 'list'}`} className="hh-screen-stack-front" inert={hash === '#problem'} aria-hidden={hash === '#problem'}><SolutionsFlow active={hash !== '#problem'} category={category} initialCaseId={selectedCase?.id} onHome={() => {window.location.hash = 'home'}} onWriteProblem={() => {setProblemBackground(category); window.location.hash = 'problem'}} /></div>}</AnimatePresence>
+    {hash === '#my' && <div className="hh-screen-stack-front"><MyPreview nickname={nickname} onNicknameChange={name => saveNickname(name)} /></div>}
+    {hash === '#problem' && <div className="hh-screen-stack-front"><ProblemPreview input={draft} onChange={setDraft} onSuccess={id => {window.location.hash = `case/${encodeURIComponent(id)}`}} onInputBack={() => {window.location.hash = problemBackground ? `solutions/${encodeURIComponent(problemBackground)}` : 'home'}} /></div>}
   </div>
   return (
     <main className="foundation-preview">

@@ -34,7 +34,7 @@ export function SystemPreview() {
     <div className="hh-home-preview-frame hh-system-frame">
       {screen === 'launch' ? <LaunchScreen /> : <OfflineScreen retrying={retrying} onRetry={() => { setRetrying(true); setStatus('재연결 대기 예시 · 아래 연결 회복 버튼으로 복귀를 확인하세요.') }} />}
     </div>
-    <aside className="hh-home-preview-tools" aria-label="F 화면 미리보기 조작">
+    <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="F 화면 미리보기 조작"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
       <a href="#home">홈 미리보기</a> · <a href="#components">공통 컴포넌트 보기</a>
       <p>아래 버튼은 테스트용입니다. 실제 네트워크 감지·자동 진입·분석 복구는 연결하지 않았습니다.</p>
       <div className="hh-system-controls">
@@ -46,6 +46,6 @@ export function SystemPreview() {
         <button disabled={!retrying} onClick={() => { setRetrying(false); setStatus('연결 미회복 예시 · 다시 시도할 수 있습니다. 실제 대기 종료 기준은 통합 때 확정합니다.') }}>미회복 상태 확인</button>
       </div>
       <p role="status">{status}</p>
-    </aside>
+    </div></details>
   </div>
 }

@@ -19,7 +19,13 @@
 .hh-problem textarea:focus { outline: none; }
 .hh-problem-photos { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .hh-problem-next { flex: none; padding: 0 var(--space-6) var(--space-64); background: var(--color-surface); }
+/* A resized mobile viewport (including an open system keyboard) needs a compact
+   footer. The preview's separate 32px tools row remains below this 8px inset. */
+@media (pointer: coarse) and (max-height: 700px) {
+  .hh-problem-next { padding-bottom: var(--space-2); }
+}
 .hh-problem-error { color: var(--color-error); font-size: 14px; }
 .hh-problem .ui-icon-button { transition: filter 160ms var(--ui-ease); }
 .hh-problem .ui-icon-button:active { filter: brightness(.94); }
 @media (prefers-reduced-motion: reduce) { .hh-problem .ui-icon-button { transition: none; } .hh-problem { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .hh-problem-next { transition: none; } }
