@@ -1,0 +1,15 @@
+/* Isolated preview shell; never import this file into production screens. */
+.solutions-preview { max-width: 412px; margin-inline: auto; }
+.solutions-preview__notice { padding: var(--space-2) var(--space-6); background: var(--color-neutral); color: var(--color-secondary); font-size: var(--text-sm); }
+.solutions-preview__destination { padding: var(--space-6); min-height: 100dvh; background: var(--color-surface); }
+
+/* The debug notice stays outside the device area. No OS chrome is reproduced. */
+.solutions-preview { max-width:none; display:flex; flex-direction:column; align-items:center; }
+.solutions-preview__notice { width:412px; max-width:100%; }
+.solutions-preview__viewport { width:min(412px,100%); height:910px; overflow-y:auto; overscroll-behavior-y:contain; scrollbar-width:none; --solutions-screen-height:910px; background:var(--color-surface); }
+.solutions-preview__viewport::-webkit-scrollbar { display:none; }
+.solutions-preview__viewport :is(.solutions-b01,.solutions-b02,.solutions-b03) { min-height:var(--solutions-screen-height); }
+.solutions-preview__viewport .solutions-b03__content { min-height:calc(var(--solutions-screen-height) - 56px); }
+@media(max-width:600px){
+ .solutions-preview__viewport { height:100dvh; --solutions-screen-height:100dvh; }
+}
