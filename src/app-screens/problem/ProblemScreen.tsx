@@ -21,12 +21,13 @@ function AttachedPhoto({ file, index, onRemove }: { file: File; index: number; o
   return url ? <Photo src={url} alt={`첨부 사진 ${index + 1}`} onRemove={onRemove} /> : null
 }
 
-export function ProblemScreen({ input, onChange, onBack, onAnalyze, onCapture }: {
+export function ProblemScreen({ input, onChange, onBack, onAnalyze, onCapture, analysisError }: {
   input: AnalysisInput
   onChange: (input: AnalysisInput) => void
   onBack: () => void
   onAnalyze: (input: AnalysisInput) => void
   onCapture: () => void
+  analysisError?: string
 }) {
   const textarea = useRef<HTMLTextAreaElement>(null)
   const cta = useCtaPositionMotion<HTMLDivElement>()
@@ -112,6 +113,7 @@ export function ProblemScreen({ input, onChange, onBack, onAnalyze, onCapture }:
             </motion.div>)}
           </div>
           {error && <p role="alert" className="hh-problem-error">{error}</p>}
+          {analysisError && <p role="alert" className="hh-problem-error">{analysisError}</p>}
         </section>
       </div>
       <div ref={cta} className="hh-problem-next"><Button type="submit" disabled={!ready}>지금 해야 할 일 보러가기</Button></div>
