@@ -18,3 +18,11 @@
 .solutions-message-sheet__sentences { display:flex; flex-direction:column; gap:var(--space-2); }
 .solutions-message-sheet__actions { display:flex; gap:var(--space-3); }
 .solutions-message-sheet__actions>* { flex:1 1 0; }
+
+.solutions-b03__toast span { animation:solutions-copy-pop 1500ms var(--ui-ease) both; transform-origin:center bottom; }
+@keyframes solutions-copy-pop {
+  0% { opacity:0; transform:translateY(8px) scale(.96); }
+  16%,86% { opacity:1; transform:translateY(0) scale(1); }
+  100% { opacity:0; transform:translateY(4px) scale(.98); }
+}
+@media(prefers-reduced-motion:reduce) { .solutions-b03__toast span { animation:none; } }

@@ -3,7 +3,7 @@ import { AnimatePresence } from 'motion/react'
 import { SolutionsFlow, categoryForHome } from './app-screens/solutions/SolutionsFlow'
 import { SystemPreview } from './app-screens/system/SystemPreview'
 import { MyPreview } from './app-screens/my/MyScreen'
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { HomePreview } from './app-screens/home/HomePreview'
 import { OnboardingPreview } from './app-screens/onboarding/OnboardingPreview'
 import { ProblemPreview } from './app-screens/problem/ProblemPreview'
@@ -86,6 +86,13 @@ function AppContent({ suspended, onConnectionLost }: { suspended: boolean; onCon
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult<GeneratedSolution> | null>(null)
   const [problemBackground, setProblemBackground] = useState<CategoryId>()
   const [hash, setHash] = useState(window.location.hash)
+  // Scope the horizontal viewport guard to A/B/E/F; D remains independently owned.
+  useLayoutEffect(() => {
+    const enabled = !hash || hash === '#' || ['#home', '#problem', '#onboarding', '#system', '#analysis-result'].includes(hash) || hash.startsWith('#solutions/') || hash.startsWith('#case/')
+    if (enabled) document.documentElement.dataset.appHorizontalLock = 'true'
+    else delete document.documentElement.dataset.appHorizontalLock
+    return () => { delete document.documentElement.dataset.appHorizontalLock }
+  }, [hash])
   useEffect(() => {
     if (!hash || hash === '#') window.location.replace(`#${profile?.setupComplete ? 'home' : 'onboarding'}`)
   }, [hash, profile?.setupComplete])
