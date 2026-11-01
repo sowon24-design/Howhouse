@@ -84,3 +84,6 @@
 .solutions-b02__header>button,.solutions-b02__previous,.solutions-b02__feedback button,.solutions-b02__video { transition:filter 160ms cubic-bezier(.4,0,.2,1); }
 .solutions-b02__header>button:active:not(:disabled),.solutions-b02__previous:active:not(:disabled),.solutions-b02__feedback button:active:not(:disabled),.solutions-b02__video:active { filter:brightness(.94); }
 @media(prefers-reduced-motion:reduce){.solutions-b02__header>button,.solutions-b02__previous,.solutions-b02__feedback button,.solutions-b02__video{transition:none;}}
+
+/* Preserve main generated-result layout when there is no hero photo. */
+.solutions-b02--case[data-without-photos=true] .solutions-b02__header { position:relative; color:var(--color-on-surface); }

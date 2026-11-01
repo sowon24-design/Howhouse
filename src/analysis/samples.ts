@@ -1,5 +1,20 @@
 import type { AnalysisResult } from './client'
 
+/** Free integration fixture; not an actual repair recommendation. */
+export const generatedSampleContent = {
+  title: '[테스트] 생성 결과 연결 확인', description: '실제 분석이 아닌 무료 화면 연결 샘플입니다.',
+  supplies: [], steps: [{ title: '표시 확인', description: '실제 수리 안내가 아닙니다. 생성 내용을 그대로 표시하는지 확인합니다.' }],
+  contacts: { landlord: ['[테스트] 안녕하세요.', '[테스트] 점검을 문의드립니다.'], company: [] },
+}
+export const generatedSampleResult = { source: 'generated' as const, solution: {
+  id: 'generated:sample-only', source: 'generated' as const,
+  title: generatedSampleContent.title, description: generatedSampleContent.description,
+  supplies: [], steps: generatedSampleContent.steps.map((step, i) => ({ ...step, number: i + 1 })),
+  duration: '', responsibility: '', reference: '', videos: [], photos: [],
+  contacts: { landlord: { label: '집주인', sentences: generatedSampleContent.contacts.landlord }, company: { label: '', sentences: [] } },
+  canContact: true,
+} }
+
 /** Verified in main 7bc7742 CSV + converter. Only ID is returned; no rewritten copy. */
 export const existingCaseSample = {
   source: 'existing', caseId: '욕실·수도:1',
