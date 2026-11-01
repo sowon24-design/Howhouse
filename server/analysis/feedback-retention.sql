@@ -1,9 +1,9 @@
--- NOT APPLIED. Run only after the team chooses retention, approves schema and reviews this job.
+-- NOT APPLIED. Owner approved one year (365 days) on 2026-11-01. Apply after schema/job review.
 -- Supabase Cron must be enabled first. No extension/account/security settings are changed here.
 -- Refuse to replace an existing same-name job silently.
 begin;
 do $$
-declare v_days integer := null; -- Replace NULL only with the team's approved number of days.
+declare v_days integer := 365; -- Owner-approved feedback retention; separate from the 7-day answer cache.
 begin
   if v_days is null or v_days<1 or v_days>3650 then raise exception 'Choose the reviewed feedback retention period first'; end if;
   if exists(select 1 from cron.job where jobname='howhouse-feedback-expiry') then

@@ -1,7 +1,7 @@
--- PREPARED ONLY. Retention is awaiting team decision. Do not apply/activate yet.
+-- PREPARED ONLY. Owner approved 365-day retention on 2026-11-01; deployment/activation is separate.
 -- Uses existing auth.users and server-only Supabase secret. No model call/input/photo/message storage.
 begin;
--- Empty until the team explicitly chooses a period and enables a reviewed cleanup job.
+-- Empty until the reviewed 365-day policy and cleanup job are explicitly activated.
 create table if not exists public.howhouse_feedback_policy (
   singleton boolean primary key default true check(singleton),
   retention_days integer not null check(retention_days between 1 and 3650),
