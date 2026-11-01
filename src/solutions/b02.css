@@ -77,6 +77,8 @@
 /* Local native controls: shared UI components keep their own pressed states. */
 .solutions-b02__header { position:absolute; top:0; left:0; right:0; }
 .solutions-b02__header-spacer { width:24px; }
+/* Generated answers may have no photo: retain the existing 56px header in normal flow. */
+.solutions-b02--case[data-without-photos=true] .solutions-b02__header { position:relative; }
 .solutions-b02__photos { height:254px; border-radius:0 0 var(--rounded-lg) var(--rounded-lg); }
 .solutions-b02__photos img { height:254px; object-fit:contain; }
 .solutions-b02__header>button,.solutions-b02__previous,.solutions-b02__feedback button,.solutions-b02__video { transition:filter 160ms cubic-bezier(.4,0,.2,1); }

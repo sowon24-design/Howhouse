@@ -10,7 +10,23 @@ export type AnalysisResult<TGenerated> =
 
 export type AnalysisFailure = {
   code: 'invalid-input' | 'case-not-found' | 'sample-failure' | 'transport-error'
+    | 'insufficient-input' | 'unsafe-input' | 'catalog-mismatch' | 'budget-limit' | 'api-error'
+    | 'connection-error' | 'server-error' | 'invalid-response' | 'server-busy' | 'model-refusal' | 'analysis-timeout'
   message: string
+}
+
+/** Presentation policy stays with the screen owner. Connection does not prove offline. */
+export function getAnalysisFailureKind(code: AnalysisFailure['code']) {
+  switch (code) {
+    case 'connection-error': return 'connection'
+    case 'server-error': case 'api-error': case 'server-busy': return 'server'
+    case 'invalid-response': case 'case-not-found': case 'catalog-mismatch': return 'response'
+    case 'insufficient-input': case 'unsafe-input': case 'model-refusal': case 'analysis-timeout': return 'analysis'
+    case 'invalid-input': return 'input'
+    case 'budget-limit': return 'limit'
+    case 'sample-failure': return 'sample'
+    default: return 'unknown'
+  }
 }
 
 export type AnalysisMode = 'sample' | 'api'
@@ -38,7 +54,7 @@ export type AnalysisTransport<TGenerated> = (
   context: { requestId: string; signal: AbortSignal },
 ) => Promise<AnalysisResult<TGenerated>>
 
-class AnalysisError extends Error {
+export class AnalysisError extends Error {
   readonly failure: AnalysisFailure
   constructor(failure: AnalysisFailure) {
     super(failure.message)

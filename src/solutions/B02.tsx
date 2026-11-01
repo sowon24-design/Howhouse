@@ -13,7 +13,7 @@ import warning from './assets/b02-warning.svg'
 import './b02.css'
 
 /** View data only. This is NOT the team's final analysis response / sheet schema. */
-export type B02ViewData = SolutionView
+export type B02ViewData = Omit<SolutionView, 'id' | 'field' | 'number' | 'category' | 'symptom'>
 export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPreviewOpinion }: {
   data: B02ViewData; onBack?: () => void; onContact: () => void; onComplete?: () => void
   onOpenVideo: (url: string) => void; onPreviewOpinion: () => void
@@ -28,7 +28,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
     setRating(rating === value ? null : value)
     if (value === 'down' && rating !== value) setSheet('edit')
   }
-  return <section className="solutions-b02 solutions-b02--case" aria-label="해결 방법">
+  return <section className="solutions-b02 solutions-b02--case" data-without-photos={data.photos.length === 0} aria-label="해결 방법">
     {data.photos.length > 0 && <div className="solutions-b02__photos">{data.photos.map((photo, i) => <img key={i} src={photo.src} alt={photo.alt} />)}</div>}
     <header className="solutions-b02__header">
       <button type="button" aria-label="뒤로" disabled={!onBack} onClick={onBack}><img src="/components/figma/back-light.svg" alt="" /></button>
