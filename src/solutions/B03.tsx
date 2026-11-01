@@ -25,13 +25,14 @@ export function B03({recipients,onBack}:{recipients:readonly Recipient[];onBack:
   const [picking,setPicking]=useState(false)
   const [pending,setPending]=useState<number[]>([])
   const [toast,setToast]=useState('')
+  const [toastSequence,setToastSequence]=useState(0)
   const [copying,setCopying]=useState(false)
   const timer=useRef<ReturnType<typeof setTimeout>|null>(null)
   const mounted=useRef(true)
   const inFlight=useRef(false)
   useEffect(()=>{mounted.current=true;return ()=>{mounted.current=false}},[])
   useEffect(()=>()=>{if(timer.current)clearTimeout(timer.current)},[])
-  function announce(text:string){if(timer.current)clearTimeout(timer.current);setToast(text);timer.current=setTimeout(()=>setToast(''),3000)}
+  function announce(text:string){if(timer.current)clearTimeout(timer.current);setToastSequence(n=>n+1);setToast(text);timer.current=setTimeout(()=>setToast(''),1500)}
   async function copy(){
     if(inFlight.current)return
     inFlight.current=true;setCopying(true)
@@ -56,7 +57,7 @@ export function B03({recipients,onBack}:{recipients:readonly Recipient[];onBack:
           <p>* 메세지창을 클릭해서 직접 수정할 수도 있어요.</p>
         </section>)}
       </div>
-      <div className="solutions-b03__actions"><div className="solutions-b03__toast" role="status">{toast&&<span>{toast}</span>}</div><Button disabled={copying} onClick={copy}>메세지 복사하기</Button><p>복사한 뒤 문자에 붙여넣어 주세요.</p></div>
+      <div className="solutions-b03__actions"><div className="solutions-b03__toast" role="status">{toast&&<span key={toastSequence}>{toast}</span>}</div><Button disabled={copying} onClick={copy}>메세지 복사하기</Button><p>복사한 뒤 문자에 붙여넣어 주세요.</p></div>
     </main>
     <SolutionSheet open={picking} onClose={()=>setPicking(false)} label="메세지에 포함할 문장을 선택해 주세요." className="solutions-message-sheet">
       <div className="solutions-message-sheet__handle" aria-hidden="true"/>
