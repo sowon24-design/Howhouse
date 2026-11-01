@@ -50,7 +50,17 @@ B02/StepCards 원본은 변경하지 않았다. 실제 steps 배열 길이로 �
 1. 변경 내용을 소원·예슬이 확인한 뒤 서버 재시작 또는 호스팅 서버 재배포, 앱 재빌드/동기화가 필요하다. 현재 실행 중인 외부 서버·설치 APK는 자동으로 바뀌지 않는다.
 2. analysisVersion과 프롬프트 해시가 바뀌어 이전 버전의 저장 답변은 새 요청에서 재사용되지 않는다. 파일·DB 삭제나 개발 호출 한도 초기화는 하지 않았다.
 3. 승인된 시험 환경에서 기존 사례 1개, 전문가 연결 1개, 정보 부족/지원 밖 사례를 구분해 실제 검증한다. 무료 모의 검사와 실제 API 성공을 구분한다.
-4. commit/push/PR·실제 유료 분석 호출은 이번 작업에서 하지 않았다. 약관·Notion은 이번 분석 변경 범위가 아니다.
+4. 초기 안전 변경 검증 당시 실제 유료 분석 호출은 하지 않았다. 이후 배포 진행 상태는 아래를 따른다. 약관·Notion은 이번 분석 변경 범위가 아니다.
+
+## 후속 배포 진행 — 2026-11-01
+
+- 통합 무료 자동 검사 114개, trial build, verify:foundations 통과. PC에서 B02 예상 시간·책임·판단 참고 펼침과 B03 개별 4개 체크 블록을 확인했다. 검증용 임시 페이지는 삭제했다.
+- 앱 변경은 feature/solutions에 push하고 [PR #39](https://github.com/sowon24-design/Howhouse/pull/39)를 생성했다. main 병합은 아직 하지 않았다.
+- 배포 브랜치 기준 서버 검사 17개 통과 후 [PR #38](https://github.com/sowon24-design/Howhouse/pull/38)을 feature/analysis-hosted-trial에 병합했다. 병합 커밋은 `68d0711`이다.
+- 소원이 Render에서 확인한 결과 해당 커밋의 자동 배포 기록이 없고 기존 `8946995`가 Live다. 기존 서비스에서 `68d0711` 수동 배포가 필요하다. Render 브랜치·환경변수는 변경하지 않았다. 새 서버의 실제 모델 응답 검증은 배포 후 진행해야 한다.
+- 공개 설정 3개를 Git 제외 .env.trial.local에 저장했다. trial 모드 빌드 후 cap sync android를 완료했다. 설정값·인증 토큰은 Git에 포함하지 않았다.
+- Android Studio 내장 Java 25가 Gradle 8.14.3과 호환되지 않아 공식 Temurin JDK 21을 runtime.local에 준비했다. 시스템 Java/프로젝트 Gradle 설정은 바꾸지 않았다. 기존 승인된 SDK 라이선스로 Platform 36과 Build-Tools 35를 설치하고 assembleDebug에 성공했다.
+- `android/app/build/outputs/apk/debug/app-debug.apk`를 Pixel_10 에뮬레이터(emulator-5554)에 install -r로 설치·실행했고 실행 프로세스를 확인했다. SHA256: `BE6D373BBD7C473C4B9B202F1ECF3179936A7E679E2011F0311D04D8DE592645`. 갤럭시 실물 기기 설치·실서버 새 응답의 APK 조작 검증은 미완료다.
 
 ## 변경 파일
 
