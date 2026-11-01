@@ -4,6 +4,24 @@ import { createTrialAccess } from './trial-access.mjs'
 import { createTrialStore } from './trial-store.mjs'
 import { createAnalysisServer } from './server.mjs'
 
+/** Return field names only. Never return values, exceptions, URLs or credentials. */
+export function trialSettingsIssues(env) {
+  const issues = []
+  if (env.ANALYSIS_PRIVATE_TRIAL !== '1') issues.push('ANALYSIS_PRIVATE_TRIAL')
+  if (!env.ANALYSIS_ALLOWED_ORIGINS?.trim()) issues.push('ANALYSIS_ALLOWED_ORIGINS')
+  if (!(env.ANALYSIS_PUBLIC_URL || env.RENDER_EXTERNAL_URL)) issues.push('ANALYSIS_PUBLIC_URL/RENDER_EXTERNAL_URL')
+  try { validateConfig({ OPENAI_API_KEY: env.OPENAI_API_KEY, OPENAI_MODEL: 'gpt-6.1-terra' }) } catch { issues.push('OPENAI_API_KEY') }
+  if (!['gpt-6.1-terra', 'gpt-6.1-sol'].includes(env.OPENAI_MODEL?.trim())) issues.push('OPENAI_MODEL')
+  try {
+    const url = new URL(env.SUPABASE_URL)
+    if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error()
+  } catch { issues.push('SUPABASE_URL') }
+  if (!env.SUPABASE_PUBLISHABLE_KEY?.startsWith('sb_publishable_')) issues.push('SUPABASE_PUBLISHABLE_KEY')
+  if (!env.SUPABASE_SECRET_KEY?.startsWith('sb_secret_')) issues.push('SUPABASE_SECRET_KEY')
+  if (Buffer.from(env.ANALYSIS_CACHE_ENCRYPTION_KEY ?? '', 'base64').length !== 32) issues.push('ANALYSIS_CACHE_ENCRYPTION_KEY (32-byte base64)')
+  return issues
+}
+
 export function readTrialConfig(env) {
   if (env.ANALYSIS_PRIVATE_TRIAL !== '1') throw new Error('Private trial must be explicitly selected')
   const publicUrl = new URL(env.ANALYSIS_PUBLIC_URL || env.RENDER_EXTERNAL_URL || '')
@@ -24,18 +42,29 @@ export function readTrialConfig(env) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  let stage = 'environment-settings'
   try {
     // Hosted secrets only: no .env file or local unlimited fallback.
+    const issues = trialSettingsIssues(process.env)
+    if (issues.length) {
+      console.error(`확인할 설정 항목: ${issues.join(', ')}. 값은 표시하지 않습니다.`)
+      throw new Error('invalid-settings')
+    }
     const config = readTrialConfig(process.env)
+    stage = 'authentication-settings'
     const authenticate = createTrialAccess(config)
+    stage = 'storage-settings'
     const store = createTrialStore(config)
+    stage = 'database-connection'
     await store.check()
+    stage = 'analysis-server-initialization'
     const server = createAnalysisServer({ config, trial: {
       host: config.host, origins: config.origins, authenticate, forUser: id => store.forUser(id),
     } })
     server.on('error', () => { console.error('시험 서버 포트/설정을 확인하세요. 비밀 값은 표시하지 않습니다.'); process.exitCode = 1 })
     server.listen(config.port, '0.0.0.0', () => console.log('앱 임시 인증 기반 시험 서버 시작. 분석 횟수 제한 없음. 공개 출시용 보호 정책은 별도입니다.'))
   } catch {
+    console.error(`시작 실패 단계: ${stage}. 비밀 값과 외부 오류 원문은 표시하지 않습니다.`)
     console.error('시험 서버를 시작하지 않았습니다. HTTPS 주소·앱 인증 설정·서버 비밀 값·DB 스키마를 확인하세요. 비밀 값은 표시하지 않습니다.')
     process.exitCode = 1
   }
