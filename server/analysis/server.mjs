@@ -4,16 +4,17 @@ import { appendFileSync, readFileSync, existsSync } from 'node:fs'
 import { parseEnv } from 'node:util'
 import { pathToFileURL } from 'node:url'
 import { loadCatalog } from './catalog.mjs'
-import { MatchError, matchCase } from './matcher.mjs'
+import { analysisVersion, MatchError, matchCase } from './matcher.mjs'
 import { validateConfig } from './verify-openai.mjs'
 import { createAnalysisService } from './service.mjs'
 import { createAnswerCache } from './answer-cache.mjs'
 import { probeModelConnectivity } from './connectivity.mjs'
 import { checkLocalStorage } from './storage.mjs'
+import { generatedContentVersion, toLegacyGeneratedContent } from '../../src/analysis/solution.ts'
 
 const origins = new Set(['http://127.0.0.1:5173', 'http://localhost:5173'])
 const bodyLimit = 12 * 1024 * 1024
-const codes = new Set(['invalid-input', 'insufficient-input', 'unsafe-input', 'model-refusal', 'analysis-timeout', 'catalog-mismatch', 'budget-limit', 'server-busy', 'api-error', 'auth-required'])
+const codes = new Set(['invalid-input', 'insufficient-input', 'unsupported-input', 'unsafe-input', 'model-refusal', 'analysis-timeout', 'catalog-mismatch', 'budget-limit', 'server-busy', 'api-error', 'auth-required'])
 
 export function developmentCallLimit(args) {
   const selected = args.find(arg => arg.startsWith('--max-calls='))
@@ -106,12 +107,12 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
     }
     // Hosting readiness probe only. No key, account, model or database content is exposed.
     if (trial && allowedHost && req.method === 'GET' && req.url === '/health') {
-      reply(200, { service: 'howhouse-analysis', status: 'ok' }); return
+      reply(200, { service: 'howhouse-analysis', status: 'ok', analysisVersion, generatedContentVersion }); return
     }
     if (!allowed) { reply(403, { code: 'forbidden' }); req.resume(); return }
     if (req.method === 'OPTIONS') {
       res.writeHead(204, { 'Access-Control-Allow-Origin': origin, Vary: 'Origin',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'X-Howhouse-Session, Content-Type, Authorization' })
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'X-Howhouse-Session, X-Howhouse-Content-Version, Content-Type, Authorization' })
       res.end(); return
     }
     if (!['/session', '/health', '/health?upstream=1', '/api/analysis/match'].includes(req.url)) { reply(404, { code: 'not-found' }); req.resume(); return }
@@ -131,9 +132,9 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
         req.resume(); return
       }
     }
-    if (req.method === 'GET' && req.url === '/session') { reply(200, { token, remainingCalls: selectedLedger.remaining() }); return }
+    if (req.method === 'GET' && req.url === '/session') { reply(200, { token, remainingCalls: selectedLedger.remaining(), generatedContentVersion }); return }
     if (req.method === 'GET' && req.url === '/health') {
-      reply(200, { service: 'howhouse-analysis', status: 'ok' }); return
+      reply(200, { service: 'howhouse-analysis', status: 'ok', analysisVersion, generatedContentVersion }); return
     }
     if (req.method === 'GET' && req.url === '/health?upstream=1') {
       const connection = await probeImpl()
@@ -152,7 +153,9 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
       if (controller.signal.aborted) return
       if (input.catalogVersion !== catalog.version) throw new MatchError('catalog-mismatch')
       const { result, reuse } = await selectedAnalyze(input, { requestId, signal: controller.signal })
-      if (!controller.signal.aborted) reply(200, { requestId, result, reuse })
+      const compatibleResult = result.source === 'generated' && req.headers['x-howhouse-content-version'] !== generatedContentVersion
+        ? { source: 'generated', solution: toLegacyGeneratedContent(result.solution) } : result
+      if (!controller.signal.aborted) reply(200, { requestId, result: compatibleResult, reuse })
     } catch (error) {
       if (error instanceof MatchError && error.requestId) requestId = error.requestId
       if (!controller.signal.aborted) {
