@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useId, useState } from 'react'
 import { SolutionSheet } from './SolutionSheet'
 import { Button, Radio } from '../components/ui'
 import thanks from './assets/b02-thanks.png'
@@ -10,12 +10,14 @@ export function OpinionSheet({ mode, reason, text, onReason, onText, onClose, on
   onReason: (value: string) => void; onText: (value: string) => void
   onClose: () => void; onPreviewSubmit: () => void
 }) {
+  const [visibleMode, setVisibleMode] = useState(mode)
+  if (mode !== 'closed' && mode !== visibleMode) setVisibleMode(mode)
   const heading = useId()
   const group = useId()
   const custom = reason === '직접 입력하기'
-  return <SolutionSheet open={mode !== 'closed'} onClose={onClose} swipeDismiss label={mode === 'thanks' ? '의견을 주셔서 감사합니다.' : '어떤 점이 아쉬웠나요?'} className="solutions-opinion">
+  return <SolutionSheet open={mode !== 'closed'} onClose={onClose} swipeDismiss label={visibleMode === 'thanks' ? '의견을 주셔서 감사합니다.' : '어떤 점이 아쉬웠나요?'} className="solutions-opinion">
     <div className="solutions-opinion__handle" aria-hidden="true" />
-    {mode === 'thanks' ? <>
+    {visibleMode === 'thanks' ? <>
       <div className="solutions-opinion__copy"><h2 id={heading} className="text-heading">의견을 주셔서 감사합니다.</h2><p>보내주신 의견은 어쩌집 서비스 개선에 활용됨니다.</p></div>
       <div className="solutions-opinion__thanks"><img src={thanks} alt="" /></div>
       <Button onClick={onClose}>확인했어요</Button>
