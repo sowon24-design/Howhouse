@@ -17,7 +17,9 @@ export function createAnalysisService({ config, catalog, ledger, cache, matchImp
   return async function analyze(input, { requestId, signal }) {
     if (signal.aborted) throw signal.reason
     const key = cache ? cache.key(input, context) : inputFingerprint(input, context, secret)
-    const saved = await cache?.get(key)
+    let saved
+    try { saved = await cache?.get(key) }
+    catch { throw new MatchError('api-error', 'answer-read-failed') }
     if (validSavedResult(saved, catalog)) return { result: saved, reuse: 'saved' }
     let job = jobs.get(key)
     const joined = !!job
@@ -28,7 +30,8 @@ export function createAnalysisService({ config, catalog, ledger, cache, matchImp
       jobs.set(key, job)
       job.promise = Promise.resolve().then(async () => {
         if (controller.signal.aborted) throw controller.signal.reason
-        await ledger.reserve(requestId)
+        try { await ledger.reserve(requestId) }
+        catch (error) { if (error instanceof MatchError) throw error; throw new MatchError('api-error', 'call-reserve-failed') }
         try {
           if (controller.signal.aborted) throw controller.signal.reason
           const { result, usage } = await runWithDeadline(
@@ -37,7 +40,8 @@ export function createAnalysisService({ config, catalog, ledger, cache, matchImp
               timeoutError: () => new MatchError('analysis-timeout'), schedule: deadlineScheduler },
           )
           if (!validSavedResult(result, catalog)) throw new MatchError('api-error')
-          await ledger.finish(requestId, controller.signal.aborted ? 'cancelled' : 'completed', usage)
+          try { await ledger.finish(requestId, controller.signal.aborted ? 'cancelled' : 'completed', usage) }
+          catch { throw new MatchError('api-error', 'call-finish-failed') }
           if (!controller.signal.aborted) { try { await cache?.set(key, result) } catch { /* Return paid answer even if cache storage fails. */ } }
           return result
         } catch (error) {

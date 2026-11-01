@@ -160,7 +160,11 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
       if (error instanceof MatchError && error.requestId) requestId = error.requestId
       if (!controller.signal.aborted) {
         const code = error instanceof MatchError && codes.has(error.code) ? error.code : 'api-error'
-        reply(code === 'budget-limit' ? 429 : code === 'server-busy' ? 409 : code === 'analysis-timeout' ? 504 : code === 'api-error' ? 502 : 422, { requestId, code })
+        // Only fixed diagnostics; never serialize provider/database errors, keys or user input.
+        const diagnostic = code === 'api-error' && error instanceof MatchError
+          && /^(provider-http-[45][0-9]{2}|provider-incomplete|provider-response-invalid|answer-read-failed|call-reserve-failed|call-finish-failed)$/.test(error.diagnostic ?? '')
+          ? error.diagnostic : undefined
+        reply(code === 'budget-limit' ? 429 : code === 'server-busy' ? 409 : code === 'analysis-timeout' ? 504 : code === 'api-error' ? 502 : 422, { requestId, code, ...(diagnostic ? { diagnostic } : {}) })
       }
     } finally {
       res.removeListener('close', abort)

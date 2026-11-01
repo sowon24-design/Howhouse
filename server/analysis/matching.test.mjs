@@ -50,7 +50,7 @@ test('provider errors are not retried or exposed; cancellation signal is forward
   await assert.rejects(matchCase({ ...config, catalog, text: 'x', photos: [], signal, fetchImpl: async (url, options) => {
     calls++; assert.equal(url, 'https://api.openai.com/v1/responses'); assert.equal(options.signal, signal)
     return new Response('private provider error', { status: 429 })
-  } }), { code: 'api-error' })
+  } }), { code: 'api-error', diagnostic: 'provider-http-429' })
   assert.equal(calls, 1)
 })
 
