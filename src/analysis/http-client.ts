@@ -1,6 +1,6 @@
 import { AnalysisError, createAnalysisClient } from './client'
 import type { AnalysisFailure, AnalysisResult } from './client'
-import { isGeneratedContent, toGeneratedSolution } from './solution'
+import { generatedContentVersion, readGeneratedContent, toGeneratedSolution } from './solution'
 import type { GeneratedSolution } from './solution'
 import { analysisTimeoutMs, runWithDeadline } from './deadline'
 import type { DeadlineScheduler } from './deadline'
@@ -8,7 +8,7 @@ import { resolveAnalysisBaseUrl, defaultAnalysisBaseUrl } from './endpoint'
 import { configuredAppSession } from './app-session'
 
 const failureCodes = new Set<AnalysisFailure['code']>([
-  'invalid-input', 'insufficient-input', 'unsafe-input', 'model-refusal', 'analysis-timeout', 'catalog-mismatch', 'budget-limit', 'server-busy', 'api-error',
+  'invalid-input', 'insufficient-input', 'unsupported-input', 'unsafe-input', 'model-refusal', 'analysis-timeout', 'catalog-mismatch', 'budget-limit', 'server-busy', 'api-error',
   'auth-required',
 ])
 
@@ -100,13 +100,16 @@ export function createHttpAnalysisClient(options: {
     if (!session || typeof session !== 'object' || !('token' in session) || typeof session.token !== 'string') {
       fail('invalid-response')
     }
+    const supportsDetails = 'generatedContentVersion' in session && session.generatedContentVersion === generatedContentVersion
     const body = new FormData()
     body.set('requestId', requestId)
     body.set('catalogVersion', catalogVersion)
     body.set('analysisUserText', input.analysisUserText)
     for (const photo of input.analysisUserPhotos) body.append('analysisUserPhotos', photo)
     const response = await fetchServer(fetchImpl, `${base}/api/analysis/match`, {
-      method: 'POST', headers: { ...authHeaders, 'X-Howhouse-Session': session.token }, body, signal,
+      method: 'POST', headers: { ...authHeaders, 'X-Howhouse-Session': session.token,
+        ...(supportsDetails
+          ? { 'X-Howhouse-Content-Version': generatedContentVersion } : {}) }, body, signal,
     })
     const data = await readJson(response, signal)
     if (!response.ok && (response.status === 401 || response.status === 403)) fail('auth-required')
@@ -122,8 +125,9 @@ export function createHttpAnalysisClient(options: {
     const result = data.result
     if ('source' in result && result.source === 'existing' && 'caseId' in result && typeof result.caseId === 'string'
       && options.getSolutionById(result.caseId)) return { source: 'existing', caseId: result.caseId } satisfies AnalysisResult<never>
-    if ('source' in result && result.source === 'generated' && 'solution' in result && isGeneratedContent(result.solution)) {
-      return { source: 'generated', solution: toGeneratedSolution(result.solution, requestId) }
+    if ('source' in result && result.source === 'generated' && 'solution' in result) {
+      const content = readGeneratedContent(result.solution, { allowLegacy: !supportsDetails })
+      if (content) return { source: 'generated', solution: toGeneratedSolution(content, requestId) }
     }
     throw new AnalysisError({ code: 'case-not-found', message: '현재 데이터에 없는 사례 결과입니다.' })
   }, { signal: parentSignal, timeoutMs: analysisTimeoutMs, schedule: options.deadlineScheduler,

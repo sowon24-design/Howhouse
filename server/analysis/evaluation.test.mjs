@@ -5,12 +5,13 @@ import { runEvaluation } from './evaluate.mjs'
 
 test('evaluation distinguishes expected safety failures, wrong IDs and blocked infrastructure', () => {
   const find = id => evaluationCases.find(c => c.id === id)
-  assert.equal(judgeEvaluation(find('unsafe-gas'), { code: 'unsafe-input' }, 422).status, 'passed')
-  assert.equal(judgeEvaluation(find('unsafe-gas'), { result: { source: 'generated' } }, 200).status, 'failed')
+  assert.equal(judgeEvaluation(find('professional-gas'), { code: 'unsafe-input' }, 422).status, 'failed')
+  assert.equal(judgeEvaluation(find('professional-gas'), { result: { source: 'generated' } }, 200).status, 'passed')
+  assert.equal(judgeEvaluation(find('unsupported'), { code: 'unsupported-input' }, 422).status, 'passed')
   assert.equal(judgeEvaluation(find('existing-drain'), { result: { source: 'existing', caseId: '욕실·수도:2' } }, 200).status, 'failed')
   assert.equal(judgeEvaluation(find('existing-drain'), { code: 'budget-limit' }, 429).status, 'blocked')
   assert.equal(judgeEvaluation(find('generated-hinge'), {}, 502).status, 'blocked')
-  assert.equal(judgeEvaluation(find('unsafe-gas'), {}, 502).status, 'blocked')
+  assert.equal(judgeEvaluation(find('professional-gas'), {}, 502).status, 'blocked')
   assert.equal(judgeEvaluation(find('existing-drain'), { code: 'catalog-mismatch' }, 422).status, 'blocked')
 })
 

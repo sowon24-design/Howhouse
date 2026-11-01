@@ -37,7 +37,7 @@ test('generated schema rejects missing, empty, extra, invented URL and malformed
     { ...generatedSampleContent, videos: ['https://invented.invalid'] }, { ...generatedSampleContent, contacts: { landlord: [''], company: [] } },
     { ...generatedSampleContent, steps: [{ title: 'x' }] }]) assert.ok(!isGeneratedContent(content))
   const view = toGeneratedSolution(generatedSampleContent, 'test')
-  assert.equal(view.id, 'generated:test'); assert.equal(view.responsibility, ''); assert.deepEqual(view.photos, [])
+  assert.equal(view.id, 'generated:test'); assert.equal(view.responsibility, '-'); assert.deepEqual(view.photos, [])
 })
 
 test('one model response can generate only when caseId is null; existing never rewrites original', () => {
