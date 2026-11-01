@@ -16,7 +16,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   const [sample] = useState(() => createSampleAnalysisClient<GeneratedSolution>({result: existingCaseSample, getSolutionById}))
   const [generatedSample] = useState(() => createSampleAnalysisClient<GeneratedSolution>({result: generatedSampleResult, getSolutionById}))
   const [api] = useState(() => createHttpAnalysisClient({catalog: serializeCatalog(solutionCases), getSolutionById}))
-  const [mode, setMode] = useState<'sample' | 'api'>('api')
+  const [mode, setMode] = useState<'sample' | 'api'>('sample')
   const [sampleKind, setSampleKind] = useState<'existing' | 'generated'>('existing')
   const selectedSample = sampleKind === 'existing' ? sample : generatedSample
   const analysis = mode === 'api' ? api : selectedSample
@@ -29,7 +29,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   const activeId = useRef<string | null>(null)
   const cancelledId = useRef<string | null>(null)
   const mounted = useRef(false)
-  const [status, setStatus] = useState('실제 분석 모드 · 동일한 글·사진의 유효한 저장 답변은 API 없이 재사용합니다. 새 분석은 과금되며 로컬 서버가 필요합니다.')
+  const [status, setStatus] = useState('무료 샘플 모드 · 실제 API 호출 없음. 기존 사례 또는 생성 결과 샘플을 선택해 확인하세요.')
   useEffect(() => {
     mounted.current = true
     return () => {mounted.current = false; activeId.current = null; analysis.cancel()}
@@ -110,18 +110,18 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
     <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="문제 작성 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
       <a href="#home" onClick={cancel}>홈으로 이동 · 입력 초기화</a> · <a href="#components" onClick={cancel}>공통 컴포넌트 보기</a>
       <p role="status">{status}</p>
-      {import.meta.env.DEV && onConnectionLost && <button type="button" onClick={onConnectionLost}>연결 끊김 재현 · API 호출 없음</button>}
-      {import.meta.env.DEV && <button type="button" disabled={phase === 'pending'} onClick={() => {
-        cancel();setPhase('input');setClosingHome(false)
+      {onConnectionLost && <button type="button" onClick={onConnectionLost}>연결 끊김 재현 · API 호출 없음</button>}
+      {<button type="button" disabled={phase === 'pending'} onClick={() => {
+        cancel();setPhase('input');setClosingHome(false);setFeedback('');setUnsafe(false);setTimedOut(false)
         const next = mode === 'sample' ? 'api' : 'sample';setMode(next)
         setStatus(next === 'api' ? '실제 GPT 분석 모드 · 저장 답변이 없을 때만 글·사진을 OpenAI로 전달합니다. 새로운 분석은 과금됩니다.' : '무료 샘플 모드 · 실제 API 호출 없음. 성공/실패 재현 버튼으로 완료합니다.')
       }}>{mode === 'sample' ? '실제 GPT 검색 모드로 전환 · 유료' : '무료 샘플 모드로 전환'}</button>}
-      {import.meta.env.DEV && mode === 'sample' && phase !== 'pending' && <button type="button" onClick={() => setSampleKind(sampleKind === 'existing' ? 'generated' : 'existing')}>{sampleKind === 'existing' ? '생성 결과 샘플 선택' : '기존 사례 샘플 선택'}</button>}
+      {mode === 'sample' && phase !== 'pending' && <button type="button" onClick={() => setSampleKind(sampleKind === 'existing' ? 'generated' : 'existing')}>{sampleKind === 'existing' ? '생성 결과 샘플 선택' : '기존 사례 샘플 선택'}</button>}
       {mode === 'sample' && phase === 'pending' && <>
         <button type="button" onClick={() => {if(request.current)selectedSample.completeSample(request.current.requestId)}}>샘플 분석 성공 재현</button>
         <button type="button" onClick={() => {if(request.current)selectedSample.completeSample(request.current.requestId,'failure')}}>샘플 분석 실패 재현</button>
       </>}
-      {mode === 'sample' && cancelledId.current && <button type="button" onClick={() => {sample.completeSample(cancelledId.current!);setStatus('종료한 요청의 결과를 재전달했습니다. 화면과 현재 요청은 유지되어야 합니다.')}}>취소된 응답 재현 · 무시 확인</button>}
+      {mode === 'sample' && cancelledId.current && <button type="button" onClick={() => {sample.completeSample(cancelledId.current!);generatedSample.completeSample(cancelledId.current!);setStatus('종료한 요청의 결과를 재전달했습니다. 화면과 현재 요청은 유지되어야 합니다.')}}>취소된 응답 재현 · 무시 확인</button>}
     </div></details>
   </div>
 }

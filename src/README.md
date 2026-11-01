@@ -2,7 +2,7 @@
 
 React + TypeScript 앱 코드는 이 폴더에 둡니다. npm 명령은 이 폴더가 아닌 저장소 루트에서 실행합니다.
 
-공통 컴포넌트와 A/D/E/F 화면 미리보기를 구현했습니다. B 화면·분석 모듈 연결은 후속 작업입니다. 최신 상태는 [담당 화면 안내](app-screens/README.md), clone 방법은 루트 README.md를 참고하세요.
+공통 컴포넌트와 A/D/E/F·B 화면, 분석 결과 흐름을 연결했습니다. 분석은 무료 샘플이 기본이며 실제 API에는 별도 서버 설정이 필요합니다. 최신 검증 범위는 [담당 화면 안내](app-screens/README.md), 설치·업데이트 방법은 루트 README.md를 참고하세요.
 
 - `app-screens/`: 예슬 담당 화면·에셋·스타일·미리보기
 - `main.tsx`: React 앱 시작 지점
@@ -51,7 +51,7 @@ npm run build
 npm run preview
 ```
 
-`typecheck`는 TypeScript 오류를 확인하고, `build`는 배포용 `dist`를 만듭니다. `preview`는 만들어진 결과를 로컬에서 확인합니다. 현재 Android 앱 패키지를 만드는 명령은 없습니다.
+`typecheck`는 TypeScript 오류를 확인하고, `build`는 배포용 `dist`를 만듭니다. `preview`는 만들어진 결과를 로컬에서 확인합니다. Android는 `npm run android:sync` 후 Android Studio에서 빌드·Run합니다. [Android 환경 안내](../android/README.md)를 따르세요.
 
 `verify:foundations`는 아이콘 목록·파일·원본 크기와 WOFF2 파일 완전성·라이선스를 검사합니다. 브라우저에서는 색상, 글꼴 굵기, 아이콘 모양·크기를 직접 확인하고 좁은 창에서도 가로 잘림이 없는지 확인합니다. Blank 아이콘 4개가 비어 있는 것은 원본 의도입니다.
 
