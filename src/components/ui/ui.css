@@ -127,6 +127,9 @@
 }
 
 /* Show the pressed token immediately, then ease back on release. */
+.ui-list:active:not(:disabled),.ui-list[data-pressed=true]:not(:disabled) { transition-duration:0ms; }
+.ui-list.ui-tone--neutral[data-pressed=true]:not(:disabled) { background:var(--list-neutral-pressed); }
+.ui-list.ui-tone--pale[data-pressed=true]:not(:disabled) { background:var(--button-pale-pressed); }
 .ui-button:active:not(:disabled) { transition-duration:0ms; }
 .ui-button[data-pressed=true]:not(:disabled) { transition-duration:0ms; }
 .ui-button--primary[data-pressed=true]:not(:disabled) { background:var(--button-primary-pressed); }
