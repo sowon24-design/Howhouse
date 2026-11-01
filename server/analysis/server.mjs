@@ -13,7 +13,7 @@ import { checkLocalStorage } from './storage.mjs'
 
 const origins = new Set(['http://127.0.0.1:5173', 'http://localhost:5173'])
 const bodyLimit = 12 * 1024 * 1024
-const codes = new Set(['invalid-input', 'insufficient-input', 'unsafe-input', 'model-refusal', 'analysis-timeout', 'catalog-mismatch', 'budget-limit', 'server-busy', 'api-error'])
+const codes = new Set(['invalid-input', 'insufficient-input', 'unsafe-input', 'model-refusal', 'analysis-timeout', 'catalog-mismatch', 'budget-limit', 'server-busy', 'api-error', 'auth-required'])
 
 export function developmentCallLimit(args) {
   const selected = args.find(arg => arg.startsWith('--max-calls='))
@@ -85,26 +85,53 @@ export async function parseInput(req) {
 }
 
 /** Loopback-only development service; not a public production API. */
-export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, cache, matchImpl = matchCase, probeImpl = probeModelConnectivity }) {
+export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, cache, matchImpl = matchCase, probeImpl = probeModelConnectivity, trial }) {
+  if (trial && (!trial.host || !trial.origins?.length || typeof trial.authenticate !== 'function' || typeof trial.forUser !== 'function')) {
+    throw new Error('An authenticated, explicit trial policy is required')
+  }
   const token = randomBytes(32).toString('hex')
-  const analyze = createAnalysisService({ config, catalog, ledger, cache, matchImpl })
+  const analyze = trial ? null : createAnalysisService({ config, catalog, ledger, cache, matchImpl })
+  const services = new Map()
+  const allowedOrigins = trial ? new Set(trial.origins) : origins
   return createServer(async (req, res) => {
     const origin = req.headers.origin
     const host = req.headers.host ?? ''
-    const allowed = origins.has(origin) && /^(127\.0\.0\.1|localhost):\d+$/.test(host)
+    const allowedHost = trial ? host === trial.host : /^(127\.0\.0\.1|localhost):\d+$/.test(host)
+    const allowed = allowedOrigins.has(origin) && allowedHost
     const reply = (status, data) => {
       if (res.destroyed) return
       res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store',
         'X-Content-Type-Options': 'nosniff', ...(allowed ? { 'Access-Control-Allow-Origin': origin, Vary: 'Origin' } : {}) })
       res.end(JSON.stringify(data))
     }
+    // Hosting readiness probe only. No key, account, model or database content is exposed.
+    if (trial && allowedHost && req.method === 'GET' && req.url === '/health') {
+      reply(200, { service: 'howhouse-analysis', status: 'ok' }); return
+    }
     if (!allowed) { reply(403, { code: 'forbidden' }); req.resume(); return }
     if (req.method === 'OPTIONS') {
       res.writeHead(204, { 'Access-Control-Allow-Origin': origin, Vary: 'Origin',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'X-Howhouse-Session, Content-Type' })
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'X-Howhouse-Session, Content-Type, Authorization' })
       res.end(); return
     }
-    if (req.method === 'GET' && req.url === '/session') { reply(200, { token, remainingCalls: ledger.remaining() }); return }
+    if (!['/session', '/health', '/health?upstream=1', '/api/analysis/match'].includes(req.url)) { reply(404, { code: 'not-found' }); req.resume(); return }
+    let selectedAnalyze = analyze, selectedLedger = ledger
+    if (trial) {
+      try {
+        const user = await trial.authenticate(req.headers.authorization)
+        if (!services.has(user.id)) {
+          const context = trial.forUser(user.id)
+          services.set(user.id, { ledger: context.ledger, analyze: createAnalysisService({ config, catalog, ...context, matchImpl }) })
+        }
+        const service = services.get(user.id)
+        selectedAnalyze = service.analyze; selectedLedger = service.ledger
+      } catch (error) {
+        reply(error instanceof MatchError && error.code === 'auth-required' ? 401 : 503,
+          { code: error instanceof MatchError && error.code === 'auth-required' ? 'auth-required' : 'api-error' })
+        req.resume(); return
+      }
+    }
+    if (req.method === 'GET' && req.url === '/session') { reply(200, { token, remainingCalls: selectedLedger.remaining() }); return }
     if (req.method === 'GET' && req.url === '/health') {
       reply(200, { service: 'howhouse-analysis', status: 'ok' }); return
     }
@@ -124,7 +151,7 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
       requestId = input.requestId
       if (controller.signal.aborted) return
       if (input.catalogVersion !== catalog.version) throw new MatchError('catalog-mismatch')
-      const { result, reuse } = await analyze(input, { requestId, signal: controller.signal })
+      const { result, reuse } = await selectedAnalyze(input, { requestId, signal: controller.signal })
       if (!controller.signal.aborted) reply(200, { requestId, result, reuse })
     } catch (error) {
       if (error instanceof MatchError && error.requestId) requestId = error.requestId

@@ -188,3 +188,7 @@
 
 ### Button 눌림 피드백 보정 (2026-10-31)
 - 짧은 탭에도 pressed 토큰이 보이도록 :active 진입 색 전환은 즉시 적용한다. 해제는 기존 160ms 복귀를 유지한다. disabled/loading 차단과 클릭 콜백 시점은 변경하지 않는다.
+
+### ListRow 눌림 피드백 (2026-11-01)
+- 기존 neutral/pale hover·pressed 토큰을 유지한다. 포인터를 누르는 즉시 pressed를 적용하고 up/cancel/leave/blur 및 disabled 전환에서 해제한다.
+- 클릭 실행이나 화면 이동을 지연하지 않는다. 이 보정은 공통 ListRow를 사용하는 모든 화면에 적용된다.

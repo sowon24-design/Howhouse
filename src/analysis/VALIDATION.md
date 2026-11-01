@@ -124,3 +124,26 @@ USB 스크립트 문법 검사 0건 오류. ADB 미설치/기기 미연결이므
 - 로컬 기록 누적 8/10회, 2회 남음. 이번 점검에서 실제 모델을 호출하지 않았다.
 - 예전 '생성/F02 미연결' 전달 문서를 현재 계약으로 정리했다. 무료 팀원 전용 시험 서버 준비안을 DEPLOYMENT.md에 기록했다.
 - 로컬 Git의 .git 쓰기가 권한 요청 뒤에도 차단돼 CLI fetch/commit을 못 했다. 원격 main은 읽기 전용 조회로 308daa2임을 확인했다.
+
+## 2026-11-01 환경별 API 주소 후속 연결
+
+- createHttpAnalysisClient와 checkAnalysisConnection에 같은 baseUrl 옵션 추가.
+- 우선순위: 명시 옵션 → VITE_ANALYSIS_API_BASE_URL → 기존 PC 기본 주소.
+- 경로 prefix 유지, HTTPS/로컬 HTTP만 허용, 인증정보/쿼리/해시/외부 HTTP 및 잘못된 URL은 네트워크 전에 거절.
+- 무료 검사 4개 추가, 전체 75건 통과. 실제 API 호출 없음.
+- 기본 PC 흐름은 유지. API/샘플 UI와 일반 화면 F02 복귀는 예슬 담당으로 남김.
+- App.tsx, ProblemPreview.tsx, ConnectivityBoundary.tsx는 이 후속 작업에서 수정하지 않음.
+- APK/에뮬레이터의 실제 Origin·HTTP/HTTPS·서버 허용 정책은 별도 필요. 주소 설정 추가만으로 Android 또는 외부 배포 완료를 주장하지 않음.
+
+## 2026-11-01 공용 시험 서버 / 자동 임시 인증
+
+- 최신 결정: 시험 앱 사용자 모두 사용 가능, 별도 가입·로그인 화면 없음, 분석 횟수 제한 없음.
+- app-session.ts가 공개 식별 키로 임시 인증/세션 재사용/갱신. OpenAI 및 Supabase secret은 앱에 포함하지 않음.
+- trial-server/access/store, 사용자별 암호화 DB 저장과 비동기 서비스 어댑터 추가.
+- 무료 검사 90개 및 build/verify:foundations 통과. 가짜 서버/인증/DB 응답을 사용해 새로운 OpenAI 비용 없음.
+- 처음 작성한 초대 사용자 허용 목록 방식은 사용자의 '모든 앱 사용자' 정정에 따라 제거함. 공개 출시용 접근/비용 보호 완료라고 주장하지 않음.
+- 소원이 Render/Supabase 가입 및 DB 비밀번호 입력/프로젝트 생성을 직접 완료.
+- Howhouse Test / howhouse-analysis-test(서울) 생성. 승인 후 새 호출/답변 테이블과 서비스 전용 권한 설정 실행 성공.
+- 실제 SQL 조회: 두 테이블 RLS true, anon SELECT false, authenticated SELECT false, service_role SELECT true.
+- Render 생성 양식은 무료 $0 플랜·Singapore·서버 실행 명령 준비. 아직 배포·키 입력·앱 외부 API 검증 전.
+- App.tsx, ProblemPreview.tsx, ConnectivityBoundary.tsx는 이전 확인 해시와 동일. 예슬의 진행 중 코드를 이번 후속 변경에 포함하지 않음.

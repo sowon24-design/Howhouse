@@ -30,9 +30,15 @@ export function SolutionsFlow({ category, onHome, onWriteProblem, initialCaseId,
   const transition = {duration: reduced ? 0 : .32, ease: [.4, 0, .2, 1] as const}
   const data = selectedId ? getSolutionById(selectedId) : undefined
   const items = getCategoryCases(solutionCases, category).map(c => ({key: c.id, label: c.symptom}))
+  function leaveSolution() {
+    if (initialCaseId) { onHome(); return }
+    setDepth(0)
+    setSelectedId(null)
+    setContactVisited(false)
+  }
   useAndroidBack(() => {
     if (depth === 2) setDepth(1)
-    else if (depth === 1 && !initialCaseId) setDepth(0)
+    else if (depth === 1) leaveSolution()
     else onHome()
   }, active && present)
   return <motion.div inert={!present} aria-hidden={!present} className="hh-home-preview" initial={{x: reduced ? 0 : '100%'}} animate={{x: 0}} exit={{x: reduced || skipExit.current ? 0 : '100%', transition: skipExit.current ? {duration:0} : transition}} transition={transition}>
@@ -41,7 +47,7 @@ export function SolutionsFlow({ category, onHome, onWriteProblem, initialCaseId,
         <B01 categoryLabel={category} items={items} onSelect={id => {setSelectedId(id); setContactVisited(false); setDepth(1)}} onBack={onHome} onWriteProblem={() => {skipExit.current = true; onWriteProblem()}}/>
       </div>
       {data && <motion.div className="hh-solutions-layer hh-solutions-front" key={data.id} initial={{x:reduced || initialCaseId ? 0 : '100%'}} animate={{x:depth >= 1 ? 0 : '100%'}} transition={transition} inert={depth !== 1} aria-hidden={depth !== 1}>
-        <B02 data={data} onBack={() => initialCaseId ? onHome() : setDepth(0)} onComplete={onHome}
+        <B02 data={data} onBack={leaveSolution} onComplete={onHome}
           onContact={() => {setContactVisited(true);setDepth(2)}}
           onOpenVideo={() => {}} onPreviewOpinion={() => setNotice('의견 완료 UI만 표시하며 실제 저장·전송은 연결하지 않았습니다.')} />
       </motion.div>}

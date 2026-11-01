@@ -17,7 +17,7 @@ export function createAnalysisService({ config, catalog, ledger, cache, matchImp
   return async function analyze(input, { requestId, signal }) {
     if (signal.aborted) throw signal.reason
     const key = cache ? cache.key(input, context) : inputFingerprint(input, context, secret)
-    const saved = cache?.get(key)
+    const saved = await cache?.get(key)
     if (validSavedResult(saved, catalog)) return { result: saved, reuse: 'saved' }
     let job = jobs.get(key)
     const joined = !!job
@@ -28,19 +28,20 @@ export function createAnalysisService({ config, catalog, ledger, cache, matchImp
       jobs.set(key, job)
       job.promise = Promise.resolve().then(async () => {
         if (controller.signal.aborted) throw controller.signal.reason
-        ledger.reserve(requestId)
+        await ledger.reserve(requestId)
         try {
+          if (controller.signal.aborted) throw controller.signal.reason
           const { result, usage } = await runWithDeadline(
             signal => matchImpl({ ...config, catalog, text: input.text, photos: input.photos, signal }),
             { signal: controller.signal, timeoutMs: analysisTimeoutMs,
               timeoutError: () => new MatchError('analysis-timeout'), schedule: deadlineScheduler },
           )
           if (!validSavedResult(result, catalog)) throw new MatchError('api-error')
-          ledger.finish(requestId, controller.signal.aborted ? 'cancelled' : 'completed', usage)
-          if (!controller.signal.aborted) { try { cache?.set(key, result) } catch { /* Return paid answer even if cache storage fails. */ } }
+          await ledger.finish(requestId, controller.signal.aborted ? 'cancelled' : 'completed', usage)
+          if (!controller.signal.aborted) { try { await cache?.set(key, result) } catch { /* Return paid answer even if cache storage fails. */ } }
           return result
         } catch (error) {
-          try { ledger.finish(requestId, controller.signal.aborted ? 'cancelled' : 'failed', error instanceof MatchError ? error.usage : undefined) } catch { /* Reservation remains. */ }
+          try { await ledger.finish(requestId, controller.signal.aborted ? 'cancelled' : 'failed', error instanceof MatchError ? error.usage : undefined) } catch { /* Reservation remains. */ }
           throw error
         } finally { jobs.delete(key) }
       })

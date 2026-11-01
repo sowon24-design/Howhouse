@@ -1,5 +1,9 @@
 # 현재 분석 연결 — 2026-11-01
 
+> 공용 시험 서버 후속 작업: [TRIAL_SERVER.md](TRIAL_SERVER.md). 아래 누적 10회 한도는 PC 개발 서버 경로에만 해당한다. 공용 시험 경로는 모든 앱 사용자의 자동 임시 인증을 허용하고 분석 횟수 한도를 두지 않는다. 아직 실제 호스팅·앱 외부 연결 완료는 아니다.
+
+환경별 API 주소 설정은 [API_ADDRESS.md](API_ADDRESS.md). 기본 PC 주소는 유지하며 `baseUrl` 옵션 또는 `VITE_ANALYSIS_API_BASE_URL`로 분석/health 주소를 함께 지정할 수 있다.
+
 추가 검증·남은 작업은 [REMAINING.md](REMAINING.md), 폰 USB 준비는 [ANDROID_USB.md](ANDROID_USB.md).
 
 사용자가 생성 결과 미정 항목의 결정·답변 재사용·AI 화면 통합을 승인한 뒤의 기준 문서다.
@@ -134,4 +138,6 @@ npm run verify:foundations
 공통 컴포넌트·스타일·디자인 문서·의존성은 변경하지 않았다. commit/push/PR은 별도 요청 전까지 하지 않는다.
 이전 문서 변경 필요: ‘기존 사례 없으면 실패’와 샘플/미연결 설명은 현재 흐름에 맞춰 공통 문서에서 나중에 정리해야 한다.
 Android 실기기에서는 localhost가 휴대폰 자신이므로 서버 주소/HTTPS/인증·배포는 별도 연결·검증이 필요하다.
+
+
 

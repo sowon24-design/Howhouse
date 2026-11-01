@@ -16,7 +16,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   const [sample] = useState(() => createSampleAnalysisClient<GeneratedSolution>({result: existingCaseSample, getSolutionById}))
   const [generatedSample] = useState(() => createSampleAnalysisClient<GeneratedSolution>({result: generatedSampleResult, getSolutionById}))
   const [api] = useState(() => createHttpAnalysisClient({catalog: serializeCatalog(solutionCases), getSolutionById}))
-  const [mode, setMode] = useState<'sample' | 'api'>('sample')
+  const [mode, setMode] = useState<'sample' | 'api'>(import.meta.env.MODE === 'trial' ? 'api' : 'sample')
   const [sampleKind, setSampleKind] = useState<'existing' | 'generated'>('existing')
   const selectedSample = sampleKind === 'existing' ? sample : generatedSample
   const analysis = mode === 'api' ? api : selectedSample
@@ -29,7 +29,9 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   const activeId = useRef<string | null>(null)
   const cancelledId = useRef<string | null>(null)
   const mounted = useRef(false)
-  const [status, setStatus] = useState('무료 샘플 모드 · 실제 API 호출 없음. 기존 사례 또는 생성 결과 샘플을 선택해 확인하세요.')
+  const [status, setStatus] = useState(import.meta.env.MODE === 'trial'
+    ? '시험 APK · 실제 API 기본 모드. 분석 버튼을 누르면 요청하며 새 분석은 과금될 수 있습니다. 아래에서 무료 샘플로 전환할 수 있습니다.'
+    : '무료 샘플 모드 · 실제 API 호출 없음. 기존 사례 또는 생성 결과 샘플을 선택해 확인하세요.')
   useEffect(() => {
     mounted.current = true
     return () => {mounted.current = false; activeId.current = null; analysis.cancel()}
@@ -110,6 +112,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
     <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="문제 작성 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
       <a href="#home" onClick={cancel}>홈으로 이동 · 입력 초기화</a> · <a href="#components" onClick={cancel}>공통 컴포넌트 보기</a>
       <p role="status">{status}</p>
+      <p>현재 모드: {mode === 'api' ? '실제 API' : `무료 샘플 · ${sampleKind === 'existing' ? '기존 사례' : '생성 결과'}`}</p>
       {onConnectionLost && <button type="button" onClick={onConnectionLost}>연결 끊김 재현 · API 호출 없음</button>}
       {<button type="button" disabled={phase === 'pending'} onClick={() => {
         cancel();setPhase('input');setClosingHome(false);setFeedback('');setUnsafe(false);setTimedOut(false)
