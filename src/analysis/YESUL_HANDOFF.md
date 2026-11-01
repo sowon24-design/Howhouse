@@ -2,6 +2,13 @@
 
 기준: 2026-11-01. 실행·제약: [CURRENT.md](CURRENT.md), 호출 코드: [INTEGRATION.md](INTEGRATION.md).
 
+## Android 후속 연결 합의
+
+- 소원: 환경별 API 주소 옵션/환경변수 제공. [API_ADDRESS.md](API_ADDRESS.md) 참조.
+- 예슬: API/샘플 모드 UI, 일반 화면 F02 복귀와 분석 서버 확인 분리.
+- 이번 후속 변경에서는 App.tsx·ProblemPreview.tsx·ConnectivityBoundary.tsx를 수정하지 않는다.
+- 실제 APK Origin과 HTTPS 서버 주소가 정해지면 서버 허용 정책을 별도 맞춘다. 현재 PC 서버를 Android 연결 완료로 간주하지 않는다.
+
 ## 현재 전달 내용
 
 소원 쪽 분석은 실제 OpenAI API까지 연결했습니다. 글·사진으로 기존 사례를 먼저 판단하고,
@@ -56,3 +63,13 @@ APK/WebView와 외부 서버는 아직 연결하지 않았습니다. 무료 팀 
 공통 문서 갱신 필요: 기존 사례 우선/없으면 조건부 생성, no_match≠실패, 생성 결과 별도 전달,
 문의 본문 구성, 90초 제한과 F02 복구 정책. 이 PR에서는 공통 기획·디자인 문서를 직접 바꾸지 않습니다.
 이 문서는 전달용이며 다른 채팅/팀원에게 자동 메시지를 보내지 않았습니다.
+
+
+## 공용 시험 서버 후속 계약
+
+사용자 최신 결정은 모든 시험 앱 사용자 사용 가능, 별도 로그인 화면 없음, 분석 횟수 제한 없음이다.
+TRIAL_SERVER.md를 기준으로 전달한다. VITE_ANALYSIS_AUTH_URL / VITE_ANALYSIS_AUTH_PUBLISHABLE_KEY 설정 시
+기존 함수 안에서 자동 임시 인증을 사용하므로 App/ProblemPreview/ConnectivityBoundary를 소원이 수정하지 않는다.
+서버는 사용자 토큰을 검증하고 답변을 사용자별로 저장한다. auth-required(kind access)는 오프라인과 구분한다.
+OpenAI 키와 Supabase secret은 서버만 보관. Supabase publishable 값은 공개 식별 값으로 별개다.
+실제 배포 주소와 Android Origin을 확인한 뒤 예슬이 앱을 재빌드·설치해야 한다.

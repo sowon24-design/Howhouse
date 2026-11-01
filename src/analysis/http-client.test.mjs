@@ -4,10 +4,15 @@ import { readFileSync } from 'node:fs'
 import { stripTypeScriptTypes } from 'node:module'
 
 // Compile just this browser module in memory; Node can then load its typed client dependency.
+const appSessionSource = readFileSync(new URL('./app-session.ts', import.meta.url), 'utf8')
+  .replace("from './client'", `from '${new URL('./client.ts', import.meta.url).href}'`)
+const appSessionUrl = `data:text/javascript;base64,${Buffer.from(stripTypeScriptTypes(appSessionSource)).toString('base64')}`
 const source = readFileSync(new URL('./http-client.ts', import.meta.url), 'utf8')
   .replace("from './client'", `from '${new URL('./client.ts', import.meta.url).href}'`)
   .replace("from './solution'", `from '${new URL('./solution.ts', import.meta.url).href}'`)
   .replace("from './deadline'", `from '${new URL('./deadline.ts', import.meta.url).href}'`)
+  .replace("from './endpoint'", `from '${new URL('./endpoint.ts', import.meta.url).href}'`)
+  .replace("from './app-session'", `from '${appSessionUrl}'`)
 const outputText = stripTypeScriptTypes(source)
 const { createHttpAnalysisClient, checkAnalysisConnection } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`)
 const { getAnalysisFailureKind } = await import('./client.ts')
@@ -45,6 +50,33 @@ test('generated content is validated and adapted without looking up an existing 
   assert.equal(end.status, 'succeeded'); assert.equal(end.result.source, 'generated')
   assert.ok(end.result.solution.id.startsWith('generated:')); assert.equal(end.result.solution.canContact, false)
   assert.deepEqual(end.result.solution.videos, []); assert.equal(end.result.solution.steps[0].number, 1)
+})
+
+test('custom endpoint prefix is shared by session, analysis and both connectivity checks', async () => {
+  const baseUrl = 'https://team.example/howhouse/'
+  const calls = []
+  const fetchImpl = async (url, options) => {
+    calls.push(url)
+    if (url.endsWith('/session')) return Response.json({ token: 'local-ephemeral-token' })
+    if (url.includes('/health')) return Response.json({ service: 'howhouse-analysis', status: 'ok', connection: 'reachable' })
+    return Response.json({ requestId: options.body.get('requestId'), result: { source: 'existing', caseId: '욕실·수도:1' } })
+  }
+  const client = createHttpAnalysisClient({ baseUrl, catalog: '[]', getSolutionById: () => true, fetchImpl })
+  assert.equal((await client.startAnalysis(input, () => {}).completed).status, 'succeeded')
+  assert.deepEqual(await checkAnalysisConnection({ baseUrl, fetchImpl }), { status: 'reachable', scope: 'analysis-server' })
+  assert.deepEqual(await checkAnalysisConnection({ baseUrl, fetchImpl, verifyUpstream: true }), { status: 'reachable', scope: 'analysis-path' })
+  assert.deepEqual(calls, [
+    'https://team.example/howhouse/session', 'https://team.example/howhouse/api/analysis/match',
+    'https://team.example/howhouse/health', 'https://team.example/howhouse/health?upstream=1',
+  ])
+})
+
+test('invalid endpoint fails configuration before any network request', async () => {
+  let calls = 0
+  const fetchImpl = async () => { calls++; throw new Error('must not run') }
+  assert.throws(() => createHttpAnalysisClient({ baseUrl: 'https://user:secret@team.example', catalog: '[]', getSolutionById: () => true, fetchImpl }))
+  await assert.rejects(checkAnalysisConnection({ baseUrl: 'http://public.example', fetchImpl }))
+  assert.equal(calls, 0)
 })
 
 test('typed budget error preserved, unknown ID and wrong response identity rejected, no retries', async () => {
@@ -153,4 +185,28 @@ test('cancelling a connection check propagates abort without a recovery result',
   } })
   controller.abort()
   await assert.rejects(pending, { name: 'AbortError' })
+})
+
+test('hosted analysis attaches only the user token; denied/expired access is distinct from offline', async () => {
+  const seen = []
+  const client = createHttpAnalysisClient({ catalog: '[]', getSolutionById: () => true,
+    getAccessToken: async () => 'mock-user-login-token', fetchImpl: async (url, options) => {
+      seen.push(options.headers.Authorization)
+      if (url.endsWith('/session')) return Response.json({ token: 'local-session' })
+      return Response.json({ code: 'auth-required' }, { status: 401 })
+    } })
+  const event = await client.startAnalysis(input, () => {}).completed
+  assert.equal(event.error.code, 'auth-required')
+  assert.deepEqual(seen, ['Bearer mock-user-login-token', 'Bearer mock-user-login-token'])
+  assert.equal(getAnalysisFailureKind('auth-required'), 'access')
+  assert.equal((await checkAnalysisConnection({ fetchImpl: async () => new Response('', { status: 401 }) })).status, 'auth-required')
+})
+
+test('cancellation while obtaining hosted login token prevents any health request', async () => {
+  const controller = new AbortController(); let completeToken, calls = 0
+  const pending = checkAnalysisConnection({ signal: controller.signal,
+    getAccessToken: async () => await new Promise(resolve => { completeToken = resolve }),
+    fetchImpl: async () => { calls++; return Response.json({ status: 'ok' }) } })
+  controller.abort(); completeToken('late-token')
+  await assert.rejects(pending, { name: 'AbortError' }); assert.equal(calls, 0)
 })
