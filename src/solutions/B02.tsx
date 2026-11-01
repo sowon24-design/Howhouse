@@ -42,7 +42,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
           {data.duration.trim() && <div><img src={clock} alt="" /><span>예상 소요 시간</span><i /><strong>{data.duration}</strong></div>}
           {(data.responsibility.trim() || data.reference.trim()) && <div><img src={dollar} alt="" /><span>배상 책임</span><i /><div className="solutions-b02__responsibility">
             <button type="button" aria-label="배상 책임 판단 참고" disabled={!data.reference.trim()} aria-expanded={expanded} aria-controls={referenceId} onClick={() => setExpanded(!expanded)}><strong>{displayResponsibility(data.responsibility)}</strong>{data.reference.trim() && <img src={down} alt="" className={expanded ? 'is-open' : ''} />}</button>
-            <p id={referenceId} hidden={!expanded}>{data.reference}</p>
+            <div id={referenceId} className="solutions-b02__reference" data-open={expanded} aria-hidden={!expanded} inert={!expanded}><div><p>{data.reference}</p></div></div>
           </div></div>}
         </div>
       </div>

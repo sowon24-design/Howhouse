@@ -3,6 +3,7 @@ import { Button, GNB, ListRow, MessageButton, TabBar } from '../components/ui'
 import { applySentences, initialDraft, copyMessageResult, editDraft, messageBody, selectedIndexes } from './message-model'
 import type { MessageDraft, Recipient } from './message-model'
 import write from './assets/b03-write.svg'
+import { SolutionSheet } from './SolutionSheet'
 import './b03.css'
 
 async function writeClipboard(text:string) {
@@ -29,17 +30,7 @@ export function B03({recipients,onBack}:{recipients:readonly Recipient[];onBack:
   const mounted=useRef(true)
   const inFlight=useRef(false)
   useEffect(()=>{mounted.current=true;return ()=>{mounted.current=false}},[])
-  const dialog=useRef<HTMLDialogElement>(null)
-  const startedOutside=useRef(false)
   useEffect(()=>()=>{if(timer.current)clearTimeout(timer.current)},[])
-  useEffect(()=>{
-    if(!picking)return
-    const el=dialog.current!
-    const focus=document.activeElement as HTMLElement|null
-    const overflow=document.body.style.overflow
-    document.body.style.overflow='hidden';el.showModal()
-    return ()=>{el.close();document.body.style.overflow=overflow;focus?.focus({preventScroll:true})}
-  },[picking])
   function announce(text:string){if(timer.current)clearTimeout(timer.current);setToast(text);timer.current=setTimeout(()=>setToast(''),3000)}
   async function copy(){
     if(inFlight.current)return
@@ -67,14 +58,12 @@ export function B03({recipients,onBack}:{recipients:readonly Recipient[];onBack:
       </div>
       <div className="solutions-b03__actions"><div className="solutions-b03__toast" role="status">{toast&&<span>{toast}</span>}</div><Button disabled={copying} onClick={copy}>메세지 복사하기</Button><p>복사한 뒤 문자에 붙여넣어 주세요.</p></div>
     </main>
-    <dialog ref={dialog} className="solutions-message-sheet" aria-labelledby={`${base}-heading`} onCancel={e=>{e.preventDefault();setPicking(false)}}
-      onPointerDown={e=>{const b=e.currentTarget.getBoundingClientRect();startedOutside.current=e.clientX<b.left||e.clientX>b.right||e.clientY<b.top||e.clientY>b.bottom}}
-      onClick={e=>{const b=e.currentTarget.getBoundingClientRect();if(startedOutside.current&&(e.clientX<b.left||e.clientX>b.right||e.clientY<b.top||e.clientY>b.bottom))setPicking(false)}}>
+    <SolutionSheet open={picking} onClose={()=>setPicking(false)} label="메세지에 포함할 문장을 선택해 주세요." className="solutions-message-sheet">
       <div className="solutions-message-sheet__handle" aria-hidden="true"/>
       <h2 id={`${base}-heading`} className="text-heading">메세지에 포함할 문장을 선택해 주세요.</h2>
       <div className="solutions-message-sheet__sentences">{current.sentences.map((text,i)=><MessageButton key={i} selected={pending.includes(i)} onSelectedChange={selected=>setPending(previous=>selected?[...previous,i]:previous.filter(n=>n!==i))}>{text}</MessageButton>)}</div>
       <div className="solutions-message-sheet__actions"><Button variant="pale" onClick={()=>setPicking(false)}>취소하기</Button><Button onClick={()=>{setDrafts(previous=>({...previous,[target]:applySentences(draft,pending,current.sentences)}));setPicking(false)}}>수정하기</Button></div>
-    </dialog>
+    </SolutionSheet>
   </section>
 }
 

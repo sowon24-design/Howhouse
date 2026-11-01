@@ -24,7 +24,10 @@
 .solutions-b02__responsibility button { gap:var(--space-1); }
 .solutions-b02__responsibility p { margin-top:var(--space-1); }
 .solutions-b02__responsibility img { transition:transform 320ms cubic-bezier(.4,0,.2,1); }
-.solutions-b02__responsibility img.is-open { transform:rotate(180deg); }
+.solutions-b02__responsibility img.is-open { transform:rotate(-180deg); }
+.solutions-b02__reference { display:grid; grid-template-rows:0fr; opacity:0; visibility:hidden; transition:grid-template-rows var(--ui-motion) var(--ui-ease),opacity var(--ui-motion) var(--ui-ease),visibility 0s var(--ui-motion); }
+.solutions-b02__reference[data-open=true] { grid-template-rows:1fr; opacity:1; visibility:visible; transition-delay:0s; }
+.solutions-b02__reference>div { min-height:0; overflow:hidden; }
 .solutions-b02 hr { width:100%; border:0; border-top:1px solid var(--color-border); margin:0; }
 .solutions-b02__steps { display:flex; flex-direction:column; gap:var(--space-2); min-width:0; }
 .solutions-b02__supplies { display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-2); font-size:14px; font-weight:500; line-height:1.4; color:var(--color-secondary); }
@@ -63,6 +66,7 @@
 .solutions-opinion__thanks { width:186px; height:140px; position:relative; overflow:hidden; align-self:center; }
 .solutions-opinion__thanks img { position:absolute; width:112.9%; height:100%; left:-1.85%; top:0; }
 @media (prefers-reduced-motion:reduce) { .solutions-b02__responsibility img { transition:none; } }
+@media (prefers-reduced-motion:reduce) { .solutions-b02__reference { transition:none; } }
 
 /* Figma 472:13728: white header above photo and both original gradient paints. */
 .solutions-b02--case .solutions-b02__header { color:var(--color-surface); z-index:2; }
