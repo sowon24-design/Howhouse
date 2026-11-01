@@ -10,7 +10,7 @@ export type AnalysisResult<TGenerated> =
 
 export type AnalysisFailure = {
   code: 'invalid-input' | 'case-not-found' | 'sample-failure' | 'transport-error'
-    | 'insufficient-input' | 'unsafe-input' | 'catalog-mismatch' | 'budget-limit' | 'api-error'
+    | 'insufficient-input' | 'unsupported-input' | 'unsafe-input' | 'catalog-mismatch' | 'budget-limit' | 'api-error'
     | 'connection-error' | 'server-error' | 'invalid-response' | 'server-busy' | 'model-refusal' | 'analysis-timeout' | 'auth-required'
   message: string
 }
@@ -21,7 +21,7 @@ export function getAnalysisFailureKind(code: AnalysisFailure['code']) {
     case 'connection-error': return 'connection'
     case 'server-error': case 'api-error': case 'server-busy': return 'server'
     case 'invalid-response': case 'case-not-found': case 'catalog-mismatch': return 'response'
-    case 'insufficient-input': case 'unsafe-input': case 'model-refusal': case 'analysis-timeout': return 'analysis'
+    case 'insufficient-input': case 'unsupported-input': case 'unsafe-input': case 'model-refusal': case 'analysis-timeout': return 'analysis'
     case 'invalid-input': return 'input'
     case 'budget-limit': return 'limit'
     case 'auth-required': return 'access'

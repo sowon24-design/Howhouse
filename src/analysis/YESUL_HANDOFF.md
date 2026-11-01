@@ -2,6 +2,8 @@
 
 기준: 2026-11-01. 실행·제약: [CURRENT.md](CURRENT.md), 호출 코드: [INTEGRATION.md](INTEGRATION.md).
 
+최신 추가: [안전한 전문가 연결](SAFE_ESCALATION.md). 안전한 점검 요청은 정상 B02/B03 결과로 처리한다. 기존 1~8단계를 유지하며 Schema/검증/프롬프트의 범위를 일치시켰다. 새 unsupported-input은 A05 지원 범위 밖으로 표시하고 정보 부족·안전 안내 불가·모델 거절과 구분한다. B 화면·공통 UI·App 이동 코드는 변경하지 않았다. 서버와 앱 배포 반영은 별도다.
+
 ## Android 후속 연결 합의
 
 - 소원: 환경별 API 주소 옵션/환경변수 제공. [API_ADDRESS.md](API_ADDRESS.md) 참조.
@@ -18,7 +20,7 @@
 
 - 사례 ID: 현재 `src/solutions/data`의 분야+번호. 샘플 `욕실·수도:1`.
 - 생성 샘플: `generatedSampleResult` (화면 연결용임을 표시). wire 형식은 CURRENT.md, B 표시 변환은 `toGeneratedSolution`.
-- 필수 생성 항목: 제목·설명·1~8단계. 준비물 없으면 [], 문의가 불필요한 대상은 []. 문의 대상별 순서 있는 문장 최대 4개.
+- 필수 생성 항목: 제목·설명·1~8단계·예상 시간·책임 주체·판단 참고. 시간/책임 불명확 시 `-`, 판단 참고는 책임 주체가 있어도 필수다. 준비물 없으면 [], 문의가 불필요한 대상은 []. 문의 대상별 순서 있는 문장 최대 4개이며 한 문장씩 블록을 만든다. 생성 계약 버전 2와 구버전 호환은 SAFE_ESCALATION.md를 따른다.
 - 문의 메시지는 같은 분석에서 자동 작성되며 B03 진입·선택·편집·복사 때 추가 AI 호출이 없습니다.
 - `startAnalysis({analysisUserText,analysisUserPhotos}, onState)` → running / succeeded / failed / cancelled.
 - 요청 핸들의 `cancel()` 또는 클라이언트 `cancel()`. 이전/취소 요청의 늦은 응답은 무시합니다.
@@ -33,7 +35,7 @@
 | 구분 | code | 현재 연결 |
 | --- | --- | --- |
 | 연결 | connection-error | F02, 서버 응답을 받지 못함. 물리적 인터넷 단절이라고 단정하지 않음 |
-| 분석 | insufficient-input / unsafe-input / model-refusal / analysis-timeout | A05. 위험·시간 초과는 별도 안내 |
+| 분석 | insufficient-input / unsupported-input / unsafe-input / model-refusal / analysis-timeout | A05. 정보 부족·지원 범위 밖·안전 안내 불가·제공사 거절·시간 초과를 구분 |
 | 서버 | api-error / server-error / server-busy | 입력 보존 A02. busy는 실제 한도와 분리 |
 | 응답 | invalid-response / case-not-found / catalog-mismatch | 입력 보존 A02, 개발 도구에서 원인 코드 확인 |
 | 입력 | invalid-input | 형식·크기 안내, 새 모델 호출 전 거절 |

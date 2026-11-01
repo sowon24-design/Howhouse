@@ -2,13 +2,16 @@ import { screenSlidesEnabled } from '../navigation-motion'
 import { useState } from 'react'
 import { Button, GNB } from '../../components/ui'
 import { AnalysisIllustration } from './AnalysisIllustration'
+import type { AnalysisFailure } from '../../analysis/client'
+import { getAnalysisFailureCopy } from '../../analysis/failure-presentation'
 import failure from './assets/failure.png'
 import './analysis.css'
 
-export function AnalysisScreen({ failed, onCancel, onBack, onHome, unsafe = false, timedOut = false }: {
-  failed: boolean; unsafe?: boolean; timedOut?: boolean; onCancel: (target: 'input' | 'home') => void; onBack: () => void; onHome: () => void
+export function AnalysisScreen({ failed, onCancel, onBack, onHome, unsafe = false, timedOut = false, failureCode }: {
+  failed: boolean; unsafe?: boolean; timedOut?: boolean; failureCode?: AnalysisFailure['code']; onCancel: (target: 'input' | 'home') => void; onBack: () => void; onHome: () => void
 }) {
   const [leaving, setLeaving] = useState<'input' | 'home' | null>(null)
+  const failureCopy = getAnalysisFailureCopy(failureCode ?? (unsafe ? 'unsafe-input' : timedOut ? 'analysis-timeout' : 'sample-failure'))
   function leave(target: 'input' | 'home') {
     if (leaving) return
     onCancel(target) // Stop work immediately, before the visual transition finishes.
@@ -23,7 +26,7 @@ export function AnalysisScreen({ failed, onCancel, onBack, onHome, unsafe = fals
   }}>
     <GNB title="문제 분석하기" onBack={() => leave('input')} onClose={() => leave('home')} />
     <div className="hh-analysis-content">
-      <div className="hh-analysis-copy" role="status">{failed ? unsafe ? <><p>안전하게 안내하기 어려운 상황이에요.</p><p>직접 수리하지 말고 관리 담당자나 전문가에게 확인해 주세요.</p></> : timedOut ? <><p>분석 대기 시간이 초과됐어요.</p><p>입력한 내용은 유지돼요. 잠시 후 다시 시도해 주세요.</p></> : <><p>문제 분석에 실패했어요.</p><p>내용을 보완해 다시 시도해 주세요.</p></> : <><p>어디가 문제인지 알아보고 있어요.</p><p>입력한 내용과 사진을 확인하고 있어요.</p></>}</div>
+      <div className="hh-analysis-copy" role="status">{failed ? failureCopy.map(line => <p key={line}>{line}</p>) : <><p>어디가 문제인지 알아보고 있어요.</p><p>입력한 내용과 사진을 확인하고 있어요.</p></>}</div>
       <div className="hh-analysis-illustration">{failed ? <img className="hh-analysis-failure" src={failure} alt="" /> : <AnalysisIllustration />}</div>
       <div className="hh-analysis-next"><Button disabled={!failed} onClick={() => leave('input')}>{failed ? '다시 문제 알려주기' : '잠시만 기다려 주세요'}</Button></div>
     </div>

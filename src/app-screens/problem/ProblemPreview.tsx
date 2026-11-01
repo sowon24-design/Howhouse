@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useAndroidBack } from '../android-back'
 import { createSampleAnalysisClient, createHttpAnalysisClient, serializeCatalog, existingCaseSample, generatedSampleResult } from '../../analysis'
 import type { AnalysisHandle, AnalysisEvent, AnalysisResult, GeneratedSolution } from '../../analysis'
+import { getAnalysisFailureKind } from '../../analysis/client'
+import type { AnalysisFailure } from '../../analysis/client'
 import { getSolutionById, solutionCases } from '../../solutions/data'
 import { AnalysisScreen } from '../analysis/AnalysisScreen'
 import { ProblemScreen, canAnalyze } from './ProblemScreen'
@@ -23,8 +25,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   const [phase, setPhase] = useState<'input' | 'pending' | 'failed'>('input')
   const [closingHome, setClosingHome] = useState(false)
   const [feedback, setFeedback] = useState('')
-  const [unsafe, setUnsafe] = useState(false)
-  const [timedOut, setTimedOut] = useState(false)
+  const [failureCode, setFailureCode] = useState<AnalysisFailure['code'] | undefined>()
   const request = useRef<AnalysisHandle<GeneratedSolution> | null>(null)
   const activeId = useRef<string | null>(null)
   const cancelledId = useRef<string | null>(null)
@@ -53,7 +54,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
     if (!mounted.current) return
     if (event.status === 'running') {
       activeId.current = event.requestId
-      setFeedback('');setUnsafe(false);setTimedOut(false)
+      setFeedback('');setFailureCode(undefined)
       setPhase('pending')
       setStatus(event.mode === 'sample' ? '샘플 분석 대기 중 · 아래 성공/실패 버튼으로 완료합니다. 실제 API 호출은 없습니다.' : '실제 GPT가 글·사진과 기존 사례를 비교하고 있습니다. 자동 재시도는 하지 않습니다.')
       return
@@ -64,10 +65,9 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
       if (event.result.source === 'generated' || getSolutionById(event.result.caseId)) onSuccess(event.result)
       else {setPhase('failed');setStatus('지원하지 않거나 찾을 수 없는 샘플 결과입니다.')}
     } else if (event.status === 'failed') {
-      if (event.mode === 'api' && !['insufficient-input', 'unsafe-input', 'model-refusal', 'analysis-timeout'].includes(event.error.code)) setPhase('input')
+      if (event.mode === 'api' && getAnalysisFailureKind(event.error.code) !== 'analysis') setPhase('input')
       else setPhase('failed')
-      setUnsafe(event.error.code === 'unsafe-input' || event.error.code === 'model-refusal')
-      setTimedOut(event.error.code === 'analysis-timeout')
+      setFailureCode(event.error.code)
       setFeedback(event.error.code === 'budget-limit' ? '현재 분석 이용 한도에 도달했어요. 입력한 내용은 유지돼요.'
         : event.error.code === 'server-busy' ? '다른 분석이 진행 중이에요. 잠시 후 다시 시도해 주세요. 입력한 내용은 유지돼요.'
         : event.error.code === 'invalid-input' ? '입력한 글과 첨부 사진의 형식·크기를 확인해 주세요.'
@@ -103,7 +103,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
               request.current = analysis.startAnalysis(snapshot, receive)
             }} />
         </div>
-        {phase !== 'input' && <AnalysisScreen failed={phase === 'failed'} unsafe={unsafe} timedOut={timedOut}
+        {phase !== 'input' && <AnalysisScreen failed={phase === 'failed'} failureCode={failureCode}
           onCancel={target => {cancel();setClosingHome(target === 'home')}}
           onBack={() => {setPhase('input');setClosingHome(false);setStatus('입력으로 돌아왔습니다. 글·사진은 유지되며 자동 재분석하지 않습니다.')}}
           onHome={() => {window.location.hash='home'}} />}
@@ -115,7 +115,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
       <p>현재 모드: {mode === 'api' ? '실제 API' : `무료 샘플 · ${sampleKind === 'existing' ? '기존 사례' : '생성 결과'}`}</p>
       {onConnectionLost && <button type="button" onClick={onConnectionLost}>연결 끊김 재현 · API 호출 없음</button>}
       {<button type="button" disabled={phase === 'pending'} onClick={() => {
-        cancel();setPhase('input');setClosingHome(false);setFeedback('');setUnsafe(false);setTimedOut(false)
+        cancel();setPhase('input');setClosingHome(false);setFeedback('');setFailureCode(undefined)
         const next = mode === 'sample' ? 'api' : 'sample';setMode(next)
         setStatus(next === 'api' ? '실제 GPT 분석 모드 · 저장 답변이 없을 때만 글·사진을 OpenAI로 전달합니다. 새로운 분석은 과금됩니다.' : '무료 샘플 모드 · 실제 API 호출 없음. 성공/실패 재현 버튼으로 완료합니다.')
       }}>{mode === 'sample' ? '실제 GPT 검색 모드로 전환 · 유료' : '무료 샘플 모드로 전환'}</button>}
