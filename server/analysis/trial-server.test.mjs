@@ -2,12 +2,24 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
 import { createAnalysisServer } from './server.mjs'
-import { readTrialConfig } from './trial-server.mjs'
+import { readTrialConfig, trialSettingsIssues } from './trial-server.mjs'
 import { MatchError } from './matcher.mjs'
 
 const config = { apiKey: 'mock-key-never-sent-to-a-provider', model: 'gpt-6.1-terra' }
 const env = { OPENAI_API_KEY: config.apiKey, OPENAI_MODEL: config.model, ANALYSIS_PRIVATE_TRIAL: '1',
   ANALYSIS_PUBLIC_URL: 'https://trial.example', ANALYSIS_ALLOWED_ORIGINS: 'https://localhost' }
+
+test('startup diagnostics identify invalid fields without returning any credential values', () => {
+  const complete = { ...env, SUPABASE_URL: 'https://project.supabase.co',
+    SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_test', SUPABASE_SECRET_KEY: 'sb_secret_private_test',
+    ANALYSIS_CACHE_ENCRYPTION_KEY: Buffer.alloc(32, 7).toString('base64') }
+  assert.deepEqual(trialSettingsIssues(complete), [])
+  const bad = { ...complete, OPENAI_API_KEY: 'private secret value', SUPABASE_SECRET_KEY: 'wrong-private-secret',
+    ANALYSIS_CACHE_ENCRYPTION_KEY: 'a'.repeat(64) }
+  const issues = trialSettingsIssues(bad)
+  assert.deepEqual(issues, ['OPENAI_API_KEY', 'SUPABASE_SECRET_KEY', 'ANALYSIS_CACHE_ENCRYPTION_KEY (32-byte base64)'])
+  for (const secret of [bad.OPENAI_API_KEY, bad.SUPABASE_SECRET_KEY, bad.ANALYSIS_CACHE_ENCRYPTION_KEY]) assert.equal(JSON.stringify(issues).includes(secret), false)
+})
 
 test('hosted trial never silently turns into a public no-auth endpoint', () => {
   assert.equal(readTrialConfig(env).host, 'trial.example')
