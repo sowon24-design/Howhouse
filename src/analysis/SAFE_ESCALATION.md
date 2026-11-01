@@ -62,6 +62,13 @@ B02/StepCards 원본은 변경하지 않았다. 실제 steps 배열 길이로 �
 - Android Studio 내장 Java 25가 Gradle 8.14.3과 호환되지 않아 공식 Temurin JDK 21을 runtime.local에 준비했다. 시스템 Java/프로젝트 Gradle 설정은 바꾸지 않았다. 기존 승인된 SDK 라이선스로 Platform 36과 Build-Tools 35를 설치하고 assembleDebug에 성공했다.
 - `android/app/build/outputs/apk/debug/app-debug.apk`를 Pixel_10 에뮬레이터(emulator-5554)에 install -r로 설치·실행했고 실행 프로세스를 확인했다. SHA256: `BE6D373BBD7C473C4B9B202F1ECF3179936A7E679E2011F0311D04D8DE592645`. 갤럭시 실물 기기 설치·실서버 새 응답의 APK 조작 검증은 미완료다.
 
+### 수동 배포 후 실제 확인
+
+- 소원이 17:52:43 KST에 68d0711 Live를 확인했다. 공개 health에서도 analysis-v4-safe-escalation-facts-sentences / 생성 계약 2 응답을 확인했다.
+- 개인정보 없는 창문 결로 예제로 실제 분석 API를 1회 요청했지만 502/api-error로 실패했다. 기존 응답은 모델 오류·검증 실패·DB 실패를 구분하지 않아 원인과 모델 과금 발생 여부는 아직 확정할 수 없다. 성공 화면·신규 생성 품질 검증 완료가 아니다.
+- 서버에 허용된 고정 진단값만 추가했다. 제공사 HTTP 상태, 미완료 응답, 응답 검증 실패, 답변 조회/호출 예약/완료 기록 실패를 구분한다. 키·사용자 입력·DB/제공사 오류 원문은 응답하지 않는다. 분석 성공/실패 정책과 자동 재시도 정책은 변경하지 않았다.
+- 진단 수정 후 서버·분석 무료 검사 103개 통과. 서버 진단 배포 후 단일 분석을 다시 확인해야 한다. APK 변경은 없다.
+
 ## 변경 파일
 
 - 서버: `server/analysis/matcher.mjs`, `server.mjs`, `evaluation-cases.mjs`, `evaluation.test.mjs`, 신규 `safe-escalation.test.mjs`.

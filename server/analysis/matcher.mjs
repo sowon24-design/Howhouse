@@ -1,7 +1,7 @@
 import { generatedContentSchema, generatedStepLimits, readGeneratedContent } from '../../src/analysis/solution.ts'
 export const analysisVersion = 'analysis-v4-safe-escalation-facts-sentences'
 export class MatchError extends Error {
-  constructor(code) { super(code); this.code = code }
+  constructor(code, diagnostic) { super(code); this.code = code; if (diagnostic) this.diagnostic = diagnostic }
 }
 
 export const matchingInstructions = `어쩌집 주거 문제 분석 담당이다. 다음 순서를 반드시 따른다.
@@ -84,7 +84,7 @@ export async function matchCase({ apiKey, model, catalog, text, photos, signal, 
     method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(buildMatchingRequest({ model, catalog, text, photos })), signal,
   })
-  if (!response.ok) throw new MatchError('api-error')
+  if (!response.ok) throw new MatchError('api-error', `provider-http-${response.status}`)
   const data = await response.json()
   const usage = {
     inputTokens: Number.isSafeInteger(data.usage?.input_tokens) ? data.usage.input_tokens : null,
@@ -92,5 +92,11 @@ export async function matchCase({ apiKey, model, catalog, text, photos, signal, 
     cachedInputTokens: Number.isSafeInteger(data.usage?.input_tokens_details?.cached_tokens) ? data.usage.input_tokens_details.cached_tokens : null,
   }
   try { return { result: parseMatchingResponse(data, catalog), usage } }
-  catch (error) { if (error instanceof MatchError) error.usage = usage; throw error }
+  catch (error) {
+    if (error instanceof MatchError) {
+      error.usage = usage
+      if (error.code === 'api-error') error.diagnostic = data?.status === 'incomplete' ? 'provider-incomplete' : 'provider-response-invalid'
+    }
+    throw error
+  }
 }
