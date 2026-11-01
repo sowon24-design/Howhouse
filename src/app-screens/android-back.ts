@@ -32,6 +32,10 @@ export function useAndroidBackBridge() {
       if (disposed) return
       // Android consumes Back for the IME first. Once delivered to the app,
       // close the top dialog through its existing cancel handler, not .close().
+      if (document.querySelector('[data-connectivity-suspended="true"]')) {
+        window.dispatchEvent(new Event(backEvent, { cancelable: true }))
+        return
+      }
       const dialogs = document.querySelectorAll<HTMLDialogElement>('dialog[open]')
       const dialog = dialogs.item(dialogs.length - 1)
       if (dialog) {

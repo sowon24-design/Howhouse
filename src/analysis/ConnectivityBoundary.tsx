@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import type { ReactNode } from 'react'
+import { Network } from '@capacitor/network'
+import { App as NativeApp } from '@capacitor/app'
+import { Capacitor } from '@capacitor/core'
 import { OfflineScreen } from '../app-screens/system/SystemPreview'
-import { checkAnalysisConnection } from './http-client'
+import { minimizeAndroidApp } from '../app-screens/android-back'
 import { createRecoveryRouteGuard } from './recovery-route'
 
 /** Keep ordinary screens mounted (including edited B03 text), cancel active analysis via suspended. */
@@ -9,9 +12,8 @@ export function ConnectivityBoundary({ children }: {
   children: (suspended: boolean, onConnectionLost: () => void) => ReactNode
 }) {
   const [offline, setOffline] = useState(false)
-  const [retrying, setRetrying] = useState(false)
   const [status, setStatus] = useState('')
-  const checking = useRef<AbortController | null>(null)
+  const [retrying, setRetrying] = useState(false)
   const [route] = useState(() => createRecoveryRouteGuard({
     readHash: () => window.location.hash,
     replaceHash: hash => window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}${hash}`),
@@ -28,29 +30,47 @@ export function ConnectivityBoundary({ children }: {
     }
   }, [route])
   useEffect(() => {
-    window.addEventListener('offline', lost)
-    return () => { window.removeEventListener('offline', lost); checking.current?.abort() }
+    let disposed = false
+    const check = async () => {
+      try {
+        const state = await Network.getStatus()
+        if (!disposed && !state.connected) lost()
+      } catch { /* A failed local query is not proof of disconnection. */ }
+    }
+    const subscription = Network.addListener('networkStatusChange', state => {
+      if (!disposed && !state.connected) lost()
+    })
+    void subscription.then(() => { if (!disposed) void check() }).catch(() => {})
+    const resume = Capacitor.isNativePlatform()
+      ? NativeApp.addListener('appStateChange', state => { if (state.isActive) void check() })
+      : null
+    return () => {
+      disposed = true
+      void subscription.then(handle => handle.remove()).catch(() => {})
+      void resume?.then(handle => handle.remove()).catch(() => {})
+    }
   }, [lost])
   useEffect(() => {
     if (!offline) return
     // Hidden screens must not consume Android Back and clear their preserved draft.
-    const stopBack = (event: Event) => { event.preventDefault(); event.stopImmediatePropagation() }
+    const stopBack = (event: Event) => { event.preventDefault(); event.stopImmediatePropagation(); minimizeAndroidApp() }
     window.addEventListener('howhouse:android-back', stopBack, { capture: true })
     return () => window.removeEventListener('howhouse:android-back', stopBack, { capture: true })
   }, [offline])
   async function retry() {
-    if (checking.current) return
-    const controller = new AbortController(); checking.current = controller; setRetrying(true)
+    // Device connectivity only: this does not prove Internet or API availability.
+    if (retrying) return
+    setRetrying(true)
     try {
-      const result = await checkAnalysisConnection({ signal: controller.signal, verifyUpstream: true })
-      if (controller.signal.aborted) return
-      if (result.status === 'reachable') { route.release(); setOffline(false) }
-      else setStatus('아직 연결을 확인하지 못했어요. 잠시 후 다시 시도해 주세요.')
-    } catch { /* Unmount/cancel does not restore a screen. */ }
-    finally { if (!controller.signal.aborted) setRetrying(false); checking.current = null }
+      const state = await Network.getStatus()
+      if (state.connected) { route.release(); setOffline(false) }
+      else setStatus('아직 기기가 오프라인이에요. 연결 후 다시 시도해 주세요.')
+    } catch {
+      setStatus('기기의 연결 상태를 확인하지 못했어요. 다시 시도해 주세요.')
+    } finally { setRetrying(false) }
   }
   return <>
-    <div inert={offline} aria-hidden={offline} style={offline ? { display: 'none' } : undefined}>{children(offline, lost)}</div>
+    <div data-connectivity-suspended={offline || undefined} inert={offline} aria-hidden={offline} style={offline ? { display: 'none' } : undefined}>{children(offline, lost)}</div>
     {offline && <div className="hh-home-preview">
       <div className="hh-home-preview-frame hh-system-frame"><OfflineScreen retrying={retrying} onRetry={() => { void retry() }} /></div>
       <p role="status" className="ui-sr-only">{status}</p>
