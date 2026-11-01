@@ -10,6 +10,7 @@ import dollar from './assets/b02-dollar.svg'
 import down from './assets/b02-down.svg'
 import external from './assets/b02-external.svg'
 import warning from './assets/b02-warning.svg'
+import back from './assets/b02-back.svg'
 import './b02.css'
 
 /** View data only. This is NOT the team's final analysis response / sheet schema. */
@@ -29,9 +30,9 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
     if (value === 'down' && rating !== value) setSheet('edit')
   }
   return <section className="solutions-b02 solutions-b02--case" data-without-photos={data.photos.length === 0} aria-label="해결 방법">
-    {data.photos.length > 0 && <div className="solutions-b02__photos">{data.photos.map((photo, i) => <img key={i} src={photo.src} alt={photo.alt} />)}</div>}
+    {data.photos.length > 0 && <div className="solutions-b02__media"><div className="solutions-b02__photos">{data.photos.map((photo, i) => <img key={i} src={photo.src} alt={photo.alt} />)}</div></div>}
     <header className="solutions-b02__header">
-      <button type="button" aria-label="뒤로" disabled={!onBack} onClick={onBack}><img src="/components/figma/back-light.svg" alt="" /></button>
+      <button type="button" aria-label="뒤로" disabled={!onBack} onClick={onBack}><img src={data.photos.length ? back : '/components/figma/back-light.svg'} alt="" /></button>
       <h2 className="text-heading">해결 방법</h2><span aria-hidden="true" className="solutions-b02__header-spacer" />
     </header>
     <main className="solutions-b02__content">
@@ -41,7 +42,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
           {data.duration.trim() && <div><img src={clock} alt="" /><span>예상 소요 시간</span><i /><strong>{data.duration}</strong></div>}
           {(data.responsibility.trim() || data.reference.trim()) && <div><img src={dollar} alt="" /><span>배상 책임</span><i /><div className="solutions-b02__responsibility">
             <button type="button" aria-label="배상 책임 판단 참고" disabled={!data.reference.trim()} aria-expanded={expanded} aria-controls={referenceId} onClick={() => setExpanded(!expanded)}><strong>{displayResponsibility(data.responsibility)}</strong>{data.reference.trim() && <img src={down} alt="" className={expanded ? 'is-open' : ''} />}</button>
-            <p id={referenceId} hidden={!expanded}>{data.reference}</p>
+            <div id={referenceId} className="solutions-b02__reference" data-open={expanded} aria-hidden={!expanded} inert={!expanded}><div><p>{data.reference}</p></div></div>
           </div></div>}
         </div>
       </div>

@@ -24,7 +24,10 @@
 .solutions-b02__responsibility button { gap:var(--space-1); }
 .solutions-b02__responsibility p { margin-top:var(--space-1); }
 .solutions-b02__responsibility img { transition:transform 320ms cubic-bezier(.4,0,.2,1); }
-.solutions-b02__responsibility img.is-open { transform:rotate(180deg); }
+.solutions-b02__responsibility img.is-open { transform:rotate(-180deg); }
+.solutions-b02__reference { display:grid; grid-template-rows:0fr; opacity:0; visibility:hidden; transition:grid-template-rows var(--ui-motion) var(--ui-ease),opacity var(--ui-motion) var(--ui-ease),visibility 0s var(--ui-motion); }
+.solutions-b02__reference[data-open=true] { grid-template-rows:1fr; opacity:1; visibility:visible; transition-delay:0s; }
+.solutions-b02__reference>div { min-height:0; overflow:hidden; }
 .solutions-b02 hr { width:100%; border:0; border-top:1px solid var(--color-border); margin:0; }
 .solutions-b02__steps { display:flex; flex-direction:column; gap:var(--space-2); min-width:0; }
 .solutions-b02__supplies { display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-2); font-size:14px; font-weight:500; line-height:1.4; color:var(--color-secondary); }
@@ -63,9 +66,12 @@
 .solutions-opinion__thanks { width:186px; height:140px; position:relative; overflow:hidden; align-self:center; }
 .solutions-opinion__thanks img { position:absolute; width:112.9%; height:100%; left:-1.85%; top:0; }
 @media (prefers-reduced-motion:reduce) { .solutions-b02__responsibility img { transition:none; } }
+@media (prefers-reduced-motion:reduce) { .solutions-b02__reference { transition:none; } }
 
-/* CSV-driven cases have no decorative/Figma hero. Future photos are ID-mapped. */
-.solutions-b02--case .solutions-b02__header { color:var(--color-on-surface); }
+/* Figma 472:13728: white header above photo and both original gradient paints. */
+.solutions-b02--case .solutions-b02__header { color:var(--color-surface); z-index:2; }
+.solutions-b02__media { position:relative; overflow:hidden; border-radius:0 0 var(--rounded-lg) var(--rounded-lg); }
+.solutions-b02__media::after { content:''; position:absolute; top:0; left:0; width:calc(100% + 2px); height:255px; pointer-events:none; background:linear-gradient(to top, rgb(0 0 0 / 0) 51.079%, rgb(0 0 0 / .25) 115.49%),linear-gradient(to bottom, rgb(0 0 0 / .8), rgb(0 0 0 / 0) 70.276%); }
 .solutions-b02--case .solutions-b02__content { padding-top:var(--space-5); }
 .solutions-b02__photos { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; }
 .solutions-b02__photos img { width:100%; flex:0 0 100%; max-height:254px; object-fit:cover; scroll-snap-align:start; }
@@ -77,10 +83,11 @@
 /* Local native controls: shared UI components keep their own pressed states. */
 .solutions-b02__header { position:absolute; top:0; left:0; right:0; }
 .solutions-b02__header-spacer { width:24px; }
-/* Generated answers may have no photo: retain the existing 56px header in normal flow. */
-.solutions-b02--case[data-without-photos=true] .solutions-b02__header { position:relative; }
 .solutions-b02__photos { height:254px; border-radius:0 0 var(--rounded-lg) var(--rounded-lg); }
 .solutions-b02__photos img { height:254px; object-fit:contain; }
 .solutions-b02__header>button,.solutions-b02__previous,.solutions-b02__feedback button,.solutions-b02__video { transition:filter 160ms cubic-bezier(.4,0,.2,1); }
 .solutions-b02__header>button:active:not(:disabled),.solutions-b02__previous:active:not(:disabled),.solutions-b02__feedback button:active:not(:disabled),.solutions-b02__video:active { filter:brightness(.94); }
 @media(prefers-reduced-motion:reduce){.solutions-b02__header>button,.solutions-b02__previous,.solutions-b02__feedback button,.solutions-b02__video{transition:none;}}
+
+/* Preserve main generated-result layout when there is no hero photo. */
+.solutions-b02--case[data-without-photos=true] .solutions-b02__header { position:relative; color:var(--color-on-surface); }
