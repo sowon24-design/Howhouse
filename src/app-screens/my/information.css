@@ -21,6 +21,7 @@
 .hh-contact-content section { padding:0; }
 .hh-contact-content h1 { margin-bottom:var(--space-1); }
 .hh-contact-content ul { margin:0; padding-left:var(--space-6); font-size:var(--text-base); line-height:1.5; color:var(--color-secondary); }
+.hh-contact-content .hh-contact-note { color:var(--color-secondary); }
 .hh-contact-art { flex:1; min-height:180px; display:grid; place-items:center; }
 .hh-contact-art img { width:220.24px; height:154.168px; object-fit:cover; max-width:100%; }
 .hh-information a { -webkit-tap-highlight-color:transparent; }
