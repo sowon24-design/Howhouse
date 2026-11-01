@@ -10,6 +10,7 @@ import dollar from './assets/b02-dollar.svg'
 import down from './assets/b02-down.svg'
 import external from './assets/b02-external.svg'
 import warning from './assets/b02-warning.svg'
+import back from './assets/b02-back.svg'
 import './b02.css'
 
 /** View data only. This is NOT the team's final analysis response / sheet schema. */
@@ -29,9 +30,9 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
     if (value === 'down' && rating !== value) setSheet('edit')
   }
   return <section className="solutions-b02 solutions-b02--case" aria-label="해결 방법">
-    {data.photos.length > 0 && <div className="solutions-b02__photos">{data.photos.map((photo, i) => <img key={i} src={photo.src} alt={photo.alt} />)}</div>}
+    {data.photos.length > 0 && <div className="solutions-b02__media"><div className="solutions-b02__photos">{data.photos.map((photo, i) => <img key={i} src={photo.src} alt={photo.alt} />)}</div></div>}
     <header className="solutions-b02__header">
-      <button type="button" aria-label="뒤로" disabled={!onBack} onClick={onBack}><img src="/components/figma/back-light.svg" alt="" /></button>
+      <button type="button" aria-label="뒤로" disabled={!onBack} onClick={onBack}><img src={back} alt="" /></button>
       <h2 className="text-heading">해결 방법</h2><span aria-hidden="true" className="solutions-b02__header-spacer" />
     </header>
     <main className="solutions-b02__content">
