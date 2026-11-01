@@ -3,7 +3,7 @@
 
 ## 팀원 개발 시작
 
-현재 공통 컴포넌트와 예슬 담당 A/D/E/F 화면 미리보기를 제공합니다. B 화면·실제 분석·영구 저장·Android 연결은 후속 통합 대상입니다. [현재 구현·PR 범위](src/app-screens/README.md)를 먼저 확인하세요.
+현재 공통 컴포넌트와 A/D/E/F·B 화면 연결, 닉네임 기기 저장, Android 기본 연결을 제공합니다. 웹·Android 분석은 무료 샘플이 기본이며 실제 API는 별도 서버 설정 후 명시적으로 선택합니다. [현재 구현·검증 범위](src/app-screens/README.md)를 먼저 확인하세요.
 
 Git과 Node.js 24.15.0(npm 11.12.1)을 준비하세요. 이 변경이 main에 병합된 이후 처음 받는 팀원은 다음을 실행합니다.
 
@@ -17,6 +17,27 @@ npm run dev
 병합 전에는 clone의 브랜치를 feature/app-screens로 지정합니다. 원격에 push된 내용까지만 받을 수 있습니다. 터미널 주소 뒤에 /#components, /#home, /#problem, /#onboarding, /#my, /#system을 붙여 확인합니다. 폰트 설치나 API 키는 필요 없습니다.
 
 기존 팀원은 다시 clone하지 않습니다. 자기 변경을 먼저 커밋하거나 안전하게 보관하고 원격 main을 fetch한 뒤 현재 담당 브랜치에 병합합니다. 충돌 시 양쪽 기능을 유지하고 빌드를 확인합니다. package-lock.json이 바뀌면 개발 서버를 종료하고 npm ci 후 다시 실행합니다.
+
+### 이번 통합 변경을 받는 순서
+
+이 PR이 main에 병합된 후, 현재 작업을 보존한 담당 브랜치에서 실행합니다. 이전 main을 따로 먼저 받을 필요는 없습니다.
+
+```sh
+git fetch origin
+git merge origin/main
+npm ci
+npm run build
+npm run dev
+```
+
+충돌이 발생하면 병합을 해결한 뒤 다음 명령으로 넘어갑니다. 폴더를 통째로 덮어쓰지 않습니다.
+
+Android 담당자는 `npm run android:sync` → `npm run android:open` → Android Studio에서 빌드·Run으로 다시 설치합니다. 이번에는 Network 네이티브 플러그인이 추가되어 웹 새로고침만으로 반영되지 않습니다. JDK·SDK 준비와 Windows 경로 안내는 [Android README](android/README.md)를 따릅니다. 웹 개발만 하는 팀원은 Android Studio 설치가 필요 없습니다.
+
+- 무료 샘플: A02 개발용 도구에서 기존/생성 결과 선택 → 입력 후 분석 시작 → 샘플 성공/실패 버튼으로 확인합니다. API 키나 서버는 필요 없습니다.
+- F02: Android 실제 연결 상태를 감지합니다. 연결 복구 후 사용자가 재시도를 눌러 복귀하며 분석은 자동 재요청하지 않습니다. 분석 서버 가동 여부로 일반 화면 복귀를 막지 않습니다.
+- 실제 API: 소원 담당 서버 안내를 따르며 비밀 키는 GitHub나 프런트엔드에 넣지 않습니다. 이번 검증에서는 유료 API를 호출하지 않았습니다.
+- [이번 PR 설명·검증과 남은 항목](docs/PR_app-screens_network.md)
 
 예슬은 A/D/E/F 화면·전체 연결·공통 코드 검토, 연우는 B 화면·사례 데이터, 소원은 분석·API를 담당합니다. 예슬 브랜치는 feature/app-screens이며 팀원은 각자 담당 브랜치를 유지합니다. 공유 파일 수정은 사전에 알리고 main 반영은 PR 검토·승인을 거칩니다.
 
