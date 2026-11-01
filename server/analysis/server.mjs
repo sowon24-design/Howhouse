@@ -11,6 +11,7 @@ import { createAnswerCache } from './answer-cache.mjs'
 import { probeModelConnectivity } from './connectivity.mjs'
 import { checkLocalStorage } from './storage.mjs'
 import { generatedContentVersion, toLegacyGeneratedContent } from '../../src/analysis/solution.ts'
+import { createFeedbackService, parseFeedbackBody, FeedbackError, feedbackStatus } from './feedback.mjs'
 
 const origins = new Set(['http://127.0.0.1:5173', 'http://localhost:5173'])
 const bodyLimit = 12 * 1024 * 1024
@@ -86,13 +87,15 @@ export async function parseInput(req) {
 }
 
 /** Loopback-only development service; not a public production API. */
-export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, cache, matchImpl = matchCase, probeImpl = probeModelConnectivity, trial }) {
+export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, cache, matchImpl = matchCase, probeImpl = probeModelConnectivity, trial, feedbackStore }) {
   if (trial && (!trial.host || !trial.origins?.length || typeof trial.authenticate !== 'function' || typeof trial.forUser !== 'function')) {
     throw new Error('An authenticated, explicit trial policy is required')
   }
   const token = randomBytes(32).toString('hex')
   const analyze = trial ? null : createAnalysisService({ config, catalog, ledger, cache, matchImpl })
   const services = new Map()
+  const feedback = trial && feedbackStore ? createFeedbackService({ store: feedbackStore, catalog }) : undefined
+  const feedbackPaths = new Map([['/api/feedback/state', 'state'], ['/api/feedback/rating', 'rating'], ['/api/feedback/opinions', 'opinions']])
   const allowedOrigins = trial ? new Set(trial.origins) : origins
   return createServer(async (req, res) => {
     const origin = req.headers.origin
@@ -115,11 +118,13 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'X-Howhouse-Session, X-Howhouse-Content-Version, Content-Type, Authorization' })
       res.end(); return
     }
-    if (!['/session', '/health', '/health?upstream=1', '/api/analysis/match'].includes(req.url)) { reply(404, { code: 'not-found' }); req.resume(); return }
+    if (!['/session', '/health', '/health?upstream=1', '/api/analysis/match'].includes(req.url) && !feedbackPaths.has(req.url)) { reply(404, { code: 'not-found' }); req.resume(); return }
     let selectedAnalyze = analyze, selectedLedger = ledger
+    let selectedOwnerId
     if (trial) {
       try {
         const user = await trial.authenticate(req.headers.authorization)
+        selectedOwnerId = user.id
         if (!services.has(user.id)) {
           const context = trial.forUser(user.id)
           services.set(user.id, { ledger: context.ledger, analyze: createAnalysisService({ config, catalog, ...context, matchImpl }) })
@@ -131,6 +136,19 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
           { code: error instanceof MatchError && error.code === 'auth-required' ? 'auth-required' : 'api-error' })
         req.resume(); return
       }
+    }
+    if (feedbackPaths.has(req.url)) {
+      if (req.method !== 'POST') { reply(405, { code: 'method-not-allowed' }); req.resume(); return }
+      if (!feedback) { reply(503, { code: 'feedback-not-configured' }); req.resume(); return }
+      try {
+        const body = await parseFeedbackBody(req)
+        const data = await feedback.handle(feedbackPaths.get(req.url), selectedOwnerId, body)
+        reply(200, data)
+      } catch (error) {
+        const code = error instanceof FeedbackError ? error.code : 'storage-unavailable'
+        reply(feedbackStatus(code), { code }); req.resume()
+      }
+      return
     }
     if (req.method === 'GET' && req.url === '/session') { reply(200, { token, remainingCalls: selectedLedger.remaining(), generatedContentVersion }); return }
     if (req.method === 'GET' && req.url === '/health') {
@@ -155,7 +173,14 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
       const { result, reuse } = await selectedAnalyze(input, { requestId, signal: controller.signal })
       const compatibleResult = result.source === 'generated' && req.headers['x-howhouse-content-version'] !== generatedContentVersion
         ? { source: 'generated', solution: toLegacyGeneratedContent(result.solution) } : result
-      if (!controller.signal.aborted) reply(200, { requestId, result: compatibleResult, reuse })
+      if (!controller.signal.aborted) {
+        let feedbackAvailable = false
+        if (feedback) {
+          try { await feedback.recordResult(selectedOwnerId, requestId, result); feedbackAvailable = true }
+          catch { /* Keep the paid analysis answer available. Feedback must still verify its own durable result reference. */ }
+        }
+        if (!controller.signal.aborted) reply(200, { requestId, result: compatibleResult, reuse, feedbackAvailable })
+      }
     } catch (error) {
       if (error instanceof MatchError && error.requestId) requestId = error.requestId
       if (!controller.signal.aborted) {
