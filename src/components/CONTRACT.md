@@ -10,6 +10,20 @@
 - native button/input의 키보드 조작을 유지한다. 접근성 이름을 전달하고 포커스 표시를 지우지 않는다.
 - 아래 `?`는 선택 prop이다. 네이티브 속성 확장은 각 소스의 TypeScript 타입을 최종 기준으로 한다.
 
+## SolutionStep (2026-11-03)
+
+소스: [SolutionStep.tsx](ui/SolutionStep.tsx), [Figma 725:28299](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=725-28299).
+
+- 필수 Props: `number: number`, `title: string`, `description: string`. number는 화면이 전달하는 양의 단계 번호다.
+- 선택 Props: `active?: boolean`(기본 false), `materials?: readonly StepMaterial[]`(기본 빈 배열), `onMaterialClick?: (material: StepMaterial) => void`.
+- StepMaterial: `id: string`, `label: string`, `disabled?: boolean`. id는 목록 내 고유값이다.
+- 사용자 확정: 강조 여부는 화면이 스크롤 위치에 따라 계산해 active로 전달한다. 이 컴포넌트 자체에는 스크롤 감지·단계 클릭 선택·상태 저장을 넣지 않는다. active이면 흰 카드·파란 번호 및 aria-current=step을 표시한다.
+- 준비물 수에 제한을 두지 않는다. 부모 폭에 맞춰 줄바꿈하며 긴 이름도 넘치지 않는다. 빈 배열이면 준비물 영역과 해당 간격을 렌더링하지 않는다.
+- 준비물 버튼은 클릭한 항목만 콜백으로 전달한다. disabled 또는 콜백 부재 시 비활성이다. 링크·검색·외부 브라우저는 화면 책임이며 현재 API 요청을 하지 않는다.
+- 원본 외부 링크 아이콘은 `public/components/figma/solution-step-external-link.svg`(725:31185), 16×16 그대로 사용한다.
+- W10 색상은 `solution-step.css`에 한정한다. 기존 화면 전역 색상과 B02는 이번 추가로 변경하지 않는다.
+- 준비물 누름에는 기존 승인 밝기 피드백을 사용하고 키보드 focus-visible을 유지한다. 강조 전환 모션은 아직 확정하지 않아 임의 애니메이션을 넣지 않는다.
+
 ## Button
 
 소스: [Button.tsx](ui/Button.tsx)

@@ -1,4 +1,6 @@
 /* Review-page layout only; these are not release-screen component styles. */
+.demo-step-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.demo-solution-steps { display: flex; flex-direction: column; gap: 64px; padding: 20px 0; width: 100%; max-width: 364px; align-self: center; }
 .foundation-preview { max-width: 1200px; margin: 0 auto; padding: var(--space-40) var(--space-6) var(--space-64); }
 .preview-header { padding: var(--space-6) 0 var(--space-40); }
 .preview-header h1 { margin: var(--space-3) 0; }

@@ -50,3 +50,9 @@ html[data-app-horizontal-lock=true] :is(.hh-home-preview-frame,.hh-solutions-lay
 html[data-app-horizontal-lock=true] :is(.solutions-b02__track,.solutions-b02__photos) {
   overscroll-behavior-x:contain;
 }
+
+/* Temporary screenshot build: hide controls and reclaim their 32px footer. */
+html[data-capture-mode=true] .hh-preview-disclosure { display:none; }
+html[data-capture-mode=true] .hh-home-preview:has(> .hh-preview-disclosure) > .hh-home-preview-frame {
+  height:100dvh; --solutions-screen-height:100dvh;
+}

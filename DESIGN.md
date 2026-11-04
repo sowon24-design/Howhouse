@@ -1,10 +1,12 @@
 ---
 "project": "어쩌집"
-"updated": "2026-10-30"
+"updated": "2026-11-03"
 "scope": "Light 웹 구현. Dark는 Figma 등록값만 보존"
 "sources":
   "figma_file": "6WGOaMy4R6jiO6Q7fQ09w8"
-  "launch_section": "462:8452"
+  "launch_page": "717:15736"
+  "launch_section": "462:8452" # 이전 대표 화면 기록
+  "solution_step": "725:28299"
   "components": "336:27325"
   "icons": "355:6642"
   "contract": "src/components/CONTRACT.md"
@@ -23,28 +25,28 @@
   -
     "name": "Color/neutral"
     "type": "COLOR"
-    "light": "#F5F7FB ← Primitive/color/Neutral-100"
+    "light": "#EDF2FA ← Primitive/color/Neutural-200"
     "dark": "#19212E ← Primitive/color/Neutural-900"
     "scope": "FRAME_FILL, SHAPE_FILL"
     "description": "화면 배경"
   -
     "name": "Color/surface"
     "type": "COLOR"
-    "light": "#FFFFFF ← Primitive/color/Neutral-white"
+    "light": "#F8FAFF ← Primitive/color/Neutral-100"
     "dark": "#19212E ← Primitive/color/Neutural-900"
     "scope": "FRAME_FILL, SHAPE_FILL"
     "description": "카드·시트 배경. Dark는 neutral과 같은 짙은색으로 통합"
   -
     "name": "Color/primary"
     "type": "COLOR"
-    "light": "#365EFF ← Primitive/color/Primary-700"
+    "light": "#1157CE ← Primitive/color/Primary-700"
     "dark": "#365EFF ← Primitive/color/Primary-700"
     "scope": "FRAME_FILL, SHAPE_FILL"
     "description": "주요 버튼·선택; 모드 공통 브랜드 파랑"
   -
     "name": "Color/primary-pressed"
     "type": "COLOR"
-    "light": "#1B43E4 ← Primitive/color/Primary-800"
+    "light": "#000E45 ← Primitive/color/Primary-800"
     "dark": "#1B43E4 ← Primitive/color/Primary-800"
     "scope": "FRAME_FILL, SHAPE_FILL"
     "description": "눌린 주요 버튼; primary와 구분 유지"
@@ -65,14 +67,14 @@
   -
     "name": "Color/border"
     "type": "COLOR"
-    "light": "#D7DEE7 ← Primitive/color/Neutural-200"
+    "light": "#DEE5F0 ← Primitive/color/Neutral-300"
     "dark": "#5F6979 ← Primitive/color/Neutural-500"
     "scope": "STROKE_COLOR"
     "description": "구분선·테두리"
   -
     "name": "Color/disabled"
     "type": "COLOR"
-    "light": "#898F98 ← Primitive/color/Neutral-disabled"
+    "light": "#D6DEEB ← Primitive/color/Neutural-400"
     "dark": "#5F6979 ← Primitive/color/Neutural-500"
     "scope": "SHAPE_FILL, TEXT_FILL, STROKE_COLOR"
     "description": "비활성 글자·아이콘"
@@ -289,7 +291,7 @@
   -
     "name": "Primitive/color/Neutral-100"
     "type": "COLOR"
-    "light": "#F5F7FB"
+    "light": "#F8FAFF"
     "dark": "#F5F7FB"
     "scope": "미지정"
     "description": "워크숍 참조용 원시 값"
@@ -310,14 +312,14 @@
   -
     "name": "Primitive/color/Primary-700"
     "type": "COLOR"
-    "light": "#365EFF"
+    "light": "#1157CE"
     "dark": "#365EFF"
     "scope": "미지정"
     "description": "워크숍 참조용 원시 값"
   -
     "name": "Primitive/color/Primary-800"
     "type": "COLOR"
-    "light": "#1B43E4"
+    "light": "#000E45"
     "dark": "#1B43E4"
     "scope": "미지정"
     "description": "워크숍 참조용 원시 값"
@@ -331,14 +333,14 @@
   -
     "name": "Primitive/color/Neutural-400"
     "type": "COLOR"
-    "light": "#B6C0D0"
+    "light": "#D6DEEB"
     "dark": "#B6C0D0"
     "scope": "미지정"
     "description": "워크숍 참조용 원시 값"
   -
     "name": "Primitive/color/Neutural-200"
     "type": "COLOR"
-    "light": "#D7DEE7"
+    "light": "#EDF2FA"
     "dark": "#D7DEE7"
     "scope": "미지정"
     "description": "워크숍 참조용 원시 값"
@@ -422,8 +424,8 @@
   -
     "name": "Primitive/shadow-color"
     "type": "COLOR"
-    "light": "#6683B5 / alpha 0.1"
-    "dark": "#000000 / alpha 0.35"
+    "light": "#6683B51A"
+    "dark": "#00000059"
     "scope": "미지정"
     "description": "Light 원본 그림자 색상; Dark 워크숍 제안"
   -
@@ -531,6 +533,13 @@
     "dark": "6"
     "scope": "미지정"
     "description": "—"
+  -
+    "name": "Primitive/color/Neutral-300"
+    "type": "COLOR"
+    "light": "#DEE5F0"
+    "dark": "#FFFFFF"
+    "scope": "Figma 원본"
+    "description": "2026-11-03 MCP 확인"
 "text_styles":
   -
     "name": "어쩌집/Body rg"
@@ -581,7 +590,7 @@
     "size_px": "14"
     "line_height": "140%"
     "line_height_px": "19.6"
-"web_tokens":
+"web_tokens": # 기존 런타임 값. 이번 요청은 문서 갱신만 하므로 전역 CSS는 유지
   "--font-family": "Pretendard, sans-serif"
   "--color-neutral": "#f5f7fb"
   "--color-surface": "#ffffff"
@@ -617,6 +626,17 @@
   "--rounded-sm": "12px"
   "--rounded-lg": "24px"
   "--rounded-full": "100px"
+"solution_step": # Figma 725:28299 — 새 컴포넌트에만 적용
+  "primary": "#1157CE"
+  "material_and_number_background": "#DEE5F0"
+  "number_label": "#414B5B"
+  "surface": "#FFFFFF"
+  "title": "#000000"
+  "shadow": "0 3px 12px 0 rgb(102 131 181 / 10%)"
+  "number_width_px": 28
+  "number_top_px": 7
+  "number_radius_px": 16
+  "material_radius_px": 24
 "component_values":
   "button_height_px": 56 # Button의 고정 높이
   "photo_size_px": 82.5 # Photo와 AddImage의 정사각형 크기
@@ -660,7 +680,7 @@
 - **확정:** 기존 변수·텍스트 스타일 기록, 사용자가 정정한 Pretendard SemiBold, 아이콘 방향·크기, 출시 제외 범위 및 요청한 모션. 실제 코드의 동작은 [CONTRACT.md](src/components/CONTRACT.md)에 별도로 기록한다.
 - **관찰:** 아래 대표 화면의 구조·치수는 작성일에 Figma MCP로 다시 조회했다. 관찰값을 모든 화면에 적용하는 규칙으로 승격하지 않는다.
 - **확인 필요:** 화면 이동·저장·취소·입력 검증 시점의 미정 사항은 기능정의 문서에서 관리하며 확정 규칙에 포함하지 않는다. 이 문서 작성이 팀 전체 승인이나 실제 화면 조립 검증 완료를 뜻하지 않는다.
-- 변수 전체와 텍스트 스타일 값은 기존 조회 기록을 보존했다. 이번 작업에서는 전체 변수의 최신 값 재검증을 수행하지 않았다.
+- 2026-11-03: 출시용 화면 페이지(717:15736)와 새 단계 컴포넌트(725:28299)를 확인하고 w9 워크숍 컬렉션의 전체 색상 변수·alias·Light/Dark 값을 MCP로 재조회했다. 색 이외 변수·텍스트 스타일 및 기존 대표 화면 관찰 기록은 이전 검증 범위다.
 
 핵심 경로를 포함하도록 다음 대표 화면을 선정했다.
 
@@ -671,6 +691,10 @@
 | B03-2 문의 메세지_전문 업체 | 수신자 탭, 메시지 편집·복사 | [원본](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=472-16668) |
 
 ## Colors
+
+2026-11-03 색상 기준은 상단 `figma_variables`의 최신 값이다. `web_tokens`는 아직 이전 앱 구현값이며 이번에는 `src/styles/tokens.css`를 바꾸지 않았다. 기존 화면 전체 색상 전환은 후속 작업이다. 새 SolutionStep에만 최신 색을 제한 적용한다.
+
+`Color/surface`는 이제 옅은 배경색이며 새 단계의 흰 카드·번호 글자는 별도 Blue glass의 surface(흰색)를 사용한다. `Color/disabled`의 alias도 변경됐다. Button 컬렉션은 별도 값이므로 primary 의미색만으로 기존 버튼 상태 색을 추정하지 않는다.
 
 일반 면은 `Color/neutral`과 `Color/surface`, 주요 행동·선택은 `Color/primary`, 본문은 `Color/on-surface`, 보조 글은 `Color/secondary`, 경계는 `Color/border`, 오류는 `Color/error`를 쓴다. 웹에서는 대응하는 `--color-*` 토큰을 사용한다.
 
@@ -705,6 +729,8 @@
 2026-10-31 사용자 승인: 별도 상태 디자인이 없는 화면 이동용 배너·카테고리·프로필 버튼은 눌리는 동안 `motion.navigation_pressed_brightness`로 어둡게 표시한다. 전환은 `motion.color_ms`와 `motion.easing`을 사용한다. native button의 `:active:not(:disabled)`를 사용하고 터치 스크롤을 막거나 눌림 상태를 고정하지 않는다. 해제·스크롤 취소 후 복원을 확인한다. 새 hover 효과는 필요하지 않으며, 기존 공통 컴포넌트의 상태 토큰을 이 밝기 효과로 대체하거나 중복 적용하지 않는다. 포커스 표시를 유지하고 움직임 줄이기에서는 전환을 생략한다.
 
 공통 구현은 [src/components/ui](src/components/ui)에 있다. 주요 행동은 Button, 아이콘만 있는 다음 행동은 ArrowButton, 복수 선택은 Checkbox, 단일 선택은 Radio, 수신자 전환은 TabBar를 사용한다. ListRow는 목록 행동, MessageButton은 문장 포함 여부, GNB는 헤더, Accordion은 펼침 설명, AddImage·Photo는 사진 추가·표시, ActionSheet는 행동 선택, Overlay는 확인에 사용한다.
+
+SolutionStep은 단계 번호·제목·설명·가변 준비물 버튼을 표시한다. 강조 상태는 호출 화면이 전달하며, 스크롤 감지·자동 전환은 후속 화면 연결에서 담당한다. 준비물 버튼은 배열 수에 따라 줄바꿈하고 없으면 영역을 숨긴다. 이번 추가는 기존 B02 화면 교체를 포함하지 않는다.
 
 정확한 Props·기본값·이벤트·닫힘·접근성·모션은 [CONTRACT.md](src/components/CONTRACT.md)를 따른다. 모션 값은 상단 `motion`에 기록한다. 미리보기의 예시 상태나 콜백을 실제 화면 정책으로 확정하지 않는다.
 

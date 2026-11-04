@@ -6,6 +6,17 @@
 
 ## 구현 목록과 파일
 
+2026-11-03 추가: `SolutionStep` — [Figma 725:28299](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=725-28299).
+미리보기의 첫 카드에서 기본·강조 상태와 준비물 추가/제거를 확인할 수 있습니다. `active`는 나중에 화면의 스크롤 위치에서 계산해 전달합니다. 기존 B02에 자동 연결되지는 않습니다.
+
+```tsx
+<SolutionStep number={1} title="단계 제목" description="내용" active={isCurrentStep}
+  materials={[{ id: 'towel', label: '마른 수건' }]}
+  onMaterialClick={material => handleMaterial(material.id)} />
+```
+
+준비물 배열은 개수 제한 없이 줄바꿈하고, 빈 배열이면 숨깁니다. 실제 링크는 호출 화면에서 연결하세요. 이번 색상 문서 갱신은 기존 `tokens.css` 전체 교체와 별도입니다.
+
 | Figma | 내보내는 이름 / 파일 | 기본 동작 |
 | --- | --- | --- |
 | Arrow Button (`549:9825`) | `ArrowButton` / ArrowButton.tsx | 오른쪽 화살표, 40×40px, Hover·Pressed·Disabled, 클릭 콜백 |
