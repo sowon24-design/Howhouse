@@ -27,7 +27,7 @@
 .solutions-b02 button { cursor:pointer; }
 .solutions-b02 button:disabled { cursor:default; }
 .solutions-b02 button:focus-visible { outline:2px solid var(--color-primary); outline-offset:3px; }
-.solutions-b02__content { padding:180px var(--space-6) var(--space-6); display:flex; flex-direction:column; gap:28px; }
+.solutions-b02__content { padding:180px var(--space-6) var(--space-6); display:flex; flex-direction:column; gap:36px; }
 .solutions-b02__intro { display:flex; flex-direction:column; gap:var(--space-4); }
 .solutions-b02__intro h1 { font-size:32px; font-weight:700; line-height:1.4; margin-bottom:var(--space-1); }
 .solutions-b02__intro p { color:var(--color-secondary); }
@@ -104,3 +104,36 @@
 .solutions-b02__header, .solutions-b02__media { flex:none; }
 .solutions-b02__content { flex:1; }
 .solutions-b02__actions { margin-top:auto; }
+
+/* W10 launch B02: responsive hero and screen-owned vertical step focus. */
+.solutions-b02__photos { height:auto; aspect-ratio:412 / 220; }
+.solutions-b02__photos img { height:100%; max-height:none; object-fit:cover; }
+.solutions-b02__media::after { width:100%; height:100%; }
+.solutions-b02__facts>div>span { flex:none; }
+.solutions-b02__step-count { color:var(--color-primary); }
+.solutions-b02__vertical-steps { display:flex; flex-direction:column; gap:32px; padding:var(--space-3); background:var(--surface-white); border-radius:var(--rounded-sm); box-shadow:0 3px 12px rgb(102 131 181 / 2%); }
+.solutions-cost-reference { position:relative; display:flex; gap:4px; align-items:flex-start; margin-top:4px; }
+.solutions-cost-reference__toggle::after { content:''; position:absolute; inset:0; }
+.solutions-cost-reference__clip { flex:1; min-width:0; overflow:hidden; transition:height var(--ui-motion) var(--ui-ease); }
+.solutions-cost-reference p { margin:0; color:var(--color-secondary); font-size:14px; line-height:21px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+.solutions-cost-reference[data-wrapping=true] p { white-space:normal; }
+.solutions-cost-reference button { flex:none; width:20px; height:21px; }
+.solutions-cost-reference button img { width:16px; height:16px; transition:transform var(--ui-motion) var(--ui-ease); }
+.solutions-cost-reference[data-open=true] button img { transform:rotate(180deg); }
+.solutions-resolution { padding:16px 24px 64px; border:0; border-radius:20px 20px 0 0; background:var(--color-surface); color:var(--color-on-surface); }
+.solutions-resolution__body { display:flex; flex-direction:column; align-items:center; gap:24px; }
+.solutions-resolution__art { width:186px; max-width:100%; height:auto; object-fit:contain; }
+.solutions-resolution__actions { display:flex; gap:12px; }
+.solutions-resolution__actions>* { flex:1; min-width:0; white-space:normal; }
+@media(prefers-reduced-motion:reduce) { .solutions-b02__vertical-steps .ui-solution-step__content,.solutions-b02__vertical-steps .ui-solution-step__number,.solutions-cost-reference__clip,.solutions-cost-reference button img { transition:none; } }
+
+.solutions-b02[data-generated=true] .solutions-b02__media { background:var(--color-surface); }
+.solutions-b02[data-generated=true] .solutions-b02__media::after { display:none; }
+.solutions-b02[data-generated=true] .solutions-b02__photos img { object-fit:contain; }
+
+.solutions-b02__vertical-steps > .ui-solution-step { position:relative; }
+.solutions-b02__vertical-steps > .ui-solution-step:not(:last-child)::before { content:""; position:absolute; left:14px; top:14px; height:calc(100% + 32px); width:1px; background:var(--color-neutral); }
+
+.solutions-b02[data-generated=true] .solutions-b02__header { margin-bottom:0; background:var(--color-surface); }
+.solutions-opinion__thanks { width:186px; height:auto; overflow:visible; }
+.solutions-opinion__thanks img { position:static; display:block; width:100%; height:auto; object-fit:contain; }

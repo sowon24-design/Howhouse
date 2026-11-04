@@ -35,7 +35,7 @@
 /* Screen slides temporarily disabled; keep in sync with navigation-motion.ts. */
 .hh-home-preview :is(.hh-problem, .hh-analysis, .hh-my, .hh-my-editor) { animation:none; }
 
-/* Lock the outer page as well as each vertical scroller. Never applies to #my (D).
+/* Lock the outer page as well as each vertical scroller. Includes #my (D).
    Do not set touch-action on ancestors: B02 cards/photos still need horizontal input. */
 html[data-app-horizontal-lock=true],
 html[data-app-horizontal-lock=true] body {
@@ -44,9 +44,15 @@ html[data-app-horizontal-lock=true] body {
 html[data-app-horizontal-lock=true] :is(#root,.hh-screen-stack,.hh-screen-stack-front,.hh-home-preview) {
   min-width:0; max-width:100%; overflow-x:clip; overscroll-behavior-x:none;
 }
-html[data-app-horizontal-lock=true] :is(.hh-home-preview-frame,.hh-solutions-layer,.hh-home,.hh-problem-fields,.hh-intro-content,.hh-welcome-content,.hh-terms-content,.hh-nickname-content,.hh-offline,.hh-preview-disclosure-panel,.solutions-sheet) {
+html[data-app-horizontal-lock=true] :is(.hh-home-preview-frame,.hh-my-content,.hh-information-scroll,.hh-solutions-layer,.hh-home,.hh-problem-fields,.hh-intro-content,.hh-welcome-content,.hh-terms-content,.hh-nickname-content,.hh-offline,.hh-preview-disclosure-panel,.solutions-sheet) {
   min-width:0; max-width:100%; overflow-x:hidden; overscroll-behavior-x:none;
 }
 html[data-app-horizontal-lock=true] :is(.solutions-b02__track,.solutions-b02__photos) {
   overscroll-behavior-x:contain;
+}
+
+/* Temporary screenshot build: hide controls and reclaim their 32px footer. */
+html[data-capture-mode=true] .hh-preview-disclosure { display:none; }
+html[data-capture-mode=true] .hh-home-preview:has(> .hh-preview-disclosure) > .hh-home-preview-frame {
+  height:100dvh; --solutions-screen-height:100dvh;
 }

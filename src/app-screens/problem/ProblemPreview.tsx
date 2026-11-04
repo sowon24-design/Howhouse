@@ -1,3 +1,4 @@
+import { AnalysisConfirmation } from '../analysis/AnalysisConfirmation'
 import { useEffect, useRef, useState } from 'react'
 import { useAndroidBack } from '../android-back'
 import { createSampleAnalysisClient, createHttpAnalysisClient, serializeCatalog, existingCaseSample, generatedSampleResult } from '../../analysis'
@@ -22,7 +23,9 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   const [sampleKind, setSampleKind] = useState<'existing' | 'generated'>('existing')
   const selectedSample = sampleKind === 'existing' ? sample : generatedSample
   const analysis = mode === 'api' ? api : selectedSample
-  const [phase, setPhase] = useState<'input' | 'pending' | 'failed'>('input')
+  const [phase, setPhase] = useState<'input' | 'pending' | 'failed' | 'confirm'>('input')
+  const [result, setResult] = useState<AnalysisResult<GeneratedSolution> | null>(null)
+  const solution = result?.source === 'existing' ? getSolutionById(result.caseId) : result?.solution
   const [closingHome, setClosingHome] = useState(false)
   const [feedback, setFeedback] = useState('')
   const [failureCode, setFailureCode] = useState<AnalysisFailure['code'] | undefined>()
@@ -40,13 +43,14 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   useEffect(() => {
     if (suspended) {
       activeId.current = null; request.current?.cancel(); request.current = null
-      setPhase('input');setClosingHome(false)
+      setResult(null);setPhase('input');setClosingHome(false)
       setStatus('연결 중단으로 분석을 종료했습니다. 글·사진은 유지되며 복구 후 버튼을 눌러야 새 요청이 시작됩니다.')
     }
   }, [suspended])
   function cancel() {
     if (request.current) cancelledId.current = request.current.requestId
     activeId.current = null
+    setResult(null)
     request.current?.cancel()
     request.current = null
   }
@@ -62,7 +66,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
     if (event.requestId !== activeId.current) return
     activeId.current = null
     if (event.status === 'succeeded') {
-      if (event.result.source === 'generated' || getSolutionById(event.result.caseId)) onSuccess(event.result)
+      if (event.result.source === 'generated' || getSolutionById(event.result.caseId)) {setResult(event.result);setPhase('confirm')}
       else {setPhase('failed');setStatus('지원하지 않거나 찾을 수 없는 샘플 결과입니다.')}
     } else if (event.status === 'failed') {
       if (event.mode === 'api' && getAnalysisFailureKind(event.error.code) !== 'analysis') setPhase('input')
@@ -83,6 +87,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
       if (onInputBack) onInputBack(); else window.location.hash = 'home'
     } else {
       setPhase('input')
+      setFeedback('')
       setClosingHome(false)
       setStatus('입력으로 돌아왔습니다. 글·사진은 유지되며 자동 재분석하지 않습니다.')
     }
@@ -103,10 +108,12 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
               request.current = analysis.startAnalysis(snapshot, receive)
             }} />
         </div>
-        {phase !== 'input' && <AnalysisScreen failed={phase === 'failed'} failureCode={failureCode}
+        {(phase === 'pending' || phase === 'failed') && <AnalysisScreen failed={phase === 'failed'} failureCode={failureCode}
           onCancel={target => {cancel();setClosingHome(target === 'home')}}
-          onBack={() => {setPhase('input');setClosingHome(false);setStatus('입력으로 돌아왔습니다. 글·사진은 유지되며 자동 재분석하지 않습니다.')}}
+          onBack={() => {setFeedback('');setResult(null);setPhase('input');setClosingHome(false);setStatus('입력으로 돌아왔습니다. 글·사진은 유지되며 자동 재분석하지 않습니다.')}}
           onHome={() => {window.location.hash='home'}} />}
+        {phase === 'confirm' && result && solution && <AnalysisConfirmation title={solution.title} description={solution.description} stepCount={solution.steps.length}
+          onConfirm={() => onSuccess(result)} onBack={() => {setResult(null);setPhase('input')}} onHome={() => {cancel();window.location.hash='home'}} />}
       </div>
     </div>
     <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="문제 작성 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
@@ -115,7 +122,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
       <p>현재 모드: {mode === 'api' ? '실제 API' : `무료 샘플 · ${sampleKind === 'existing' ? '기존 사례' : '생성 결과'}`}</p>
       {onConnectionLost && <button type="button" onClick={onConnectionLost}>연결 끊김 재현 · API 호출 없음</button>}
       {<button type="button" disabled={phase === 'pending'} onClick={() => {
-        cancel();setPhase('input');setClosingHome(false);setFeedback('');setFailureCode(undefined)
+        cancel();setResult(null);setPhase('input');setClosingHome(false);setFeedback('');setFailureCode(undefined)
         const next = mode === 'sample' ? 'api' : 'sample';setMode(next)
         setStatus(next === 'api' ? '실제 GPT 분석 모드 · 저장 답변이 없을 때만 글·사진을 OpenAI로 전달합니다. 새로운 분석은 과금됩니다.' : '무료 샘플 모드 · 실제 API 호출 없음. 성공/실패 재현 버튼으로 완료합니다.')
       }}>{mode === 'sample' ? '실제 GPT 검색 모드로 전환 · 유료' : '무료 샘플 모드로 전환'}</button>}

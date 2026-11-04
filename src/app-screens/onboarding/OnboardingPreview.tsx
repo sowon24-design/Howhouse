@@ -4,9 +4,10 @@ import { Button, GNB } from '../../components/ui'
 import { TermsScreen } from './TermsScreen'
 import { NicknameScreen } from './NicknameScreen'
 import welcome from './assets/welcome.png'
-import intro1 from './assets/intro-1.png'
-import intro2 from './assets/intro-2.png'
-import intro3 from './assets/intro-3.png'
+import welcomeOverlay from './assets/welcome-overlay.png'
+import intro1 from './assets/intro-1.svg'
+import intro2 from './assets/intro-2.svg'
+import intro3 from './assets/intro-3.svg'
 import '../home/home-preview.css'
 import './onboarding.css'
 
@@ -30,8 +31,8 @@ export function OnboardingScreen({ step, onStepChange, onContinue }: {
   return <main className={`hh-onboarding${step === 0 ? ' hh-onboarding--welcome' : ''}`} aria-label={step === 0 ? '환영' : `서비스 소개 ${step}`}>
     <GNB onBack={step > 0 ? () => onStepChange(step - 1) : undefined} onClose={step > 0 ? () => onStepChange(0) : undefined} />
     {step === 0 ? <div className="hh-welcome-content">
-      <div className="hh-welcome-copy"><h1>반가워요,<br />집 문제는 맡겨주세요!</h1><p>어쩌집이 평온한 자취를 위해 도와줄게요.</p></div>
-      <div className="hh-welcome-art-space"><div className="hh-welcome-art"><img src={welcome} alt="" /></div></div>
+      <div className="hh-welcome-copy"><h1>우리 집 문제,<br />혼자 고민하지 마세요</h1><p>상황에 맞는 해결 방법을 찾아드릴게요.</p></div>
+      <div className="hh-welcome-art-space"><div className="hh-welcome-art"><img src={welcome} alt="" /><div className="hh-welcome-art-crop"><img src={welcomeOverlay} alt="" /></div></div></div>
     </div> : <div className="hh-intro-content">
       <div className="hh-intro-story" key={step}>
         <div className={`hh-intro-art hh-intro-art--${step}`}><img src={page.image} alt="" /></div>

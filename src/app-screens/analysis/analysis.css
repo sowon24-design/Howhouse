@@ -11,6 +11,40 @@
 .hh-analysis-art { position:relative; width:276px; height:140.481px; flex:none; }
 .hh-analysis-art img { display:block; max-width:none; }
 .hh-analysis-rotator { position:absolute; display:flex; align-items:center; justify-content:center; }
-.hh-analysis-failure { width:230px; height:152px; object-fit:cover; transform:scaleX(-1); }
+.hh-analysis-failure { width:234px; max-width:100%; height:auto; flex:none; object-fit:contain; }
 .hh-analysis-next { flex:none; padding-bottom:var(--space-40); }
 @media(prefers-reduced-motion:reduce) { .hh-analysis { animation:none; } }
+
+.hh-analysis-art {width:308px;height:194px;}
+.hh-analysis-art > img,.hh-analysis-art img {width:100%;height:100%;}
+.hh-analysis-art div > div {width:100%;height:100%;}
+
+
+.hh-analysis-confirm h1 {font-size:20px;font-weight:600;line-height:30px;margin:0;}
+.hh-confirm-center {flex:1;display:flex;align-items:center;min-height:min-content;padding-block:24px;}
+.hh-confirm-card {width:100%;padding:16px;background:var(--color-neutral);border-radius:12px;display:flex;flex-direction:column;gap:40px;}
+.hh-confirm-card h2 {margin:0 0 4px;font-size:32px;line-height:1.4;color:var(--color-primary-pressed);overflow-wrap:anywhere;}
+.hh-confirm-card p {margin:0;font-size:16px;line-height:1.5;color:var(--color-secondary);}
+.hh-confirm-tag {align-self:center;border-radius:100px;padding:8px 12px;min-height:44px;background:var(--button-pale);color:var(--color-primary);font-size:16px;line-height:28px;}
+.hh-confirm-actions {display:flex;gap:12px;}
+.hh-confirm-actions > button {flex:1;min-width:0;white-space:normal;}
+.hh-confirm-sheet {width:412px;max-width:100%;text-align:center;}
+.hh-confirm-sheet h2 {font-size:20px;line-height:30px;margin:24px 0 8px;}
+.hh-confirm-sheet p {font-size:14px;line-height:1.5;margin:0;color:var(--color-secondary);}
+.hh-confirm-sheet > .ui-dialog-inner > img {display:block;width:178px;height:140px;object-fit:contain;margin:24px auto;}
+
+.hh-confirm-sheet[open] {gap:36px;}
+.hh-confirm-sheet h2 {margin:0 0 4px;}
+.hh-confirm-sheet p {line-height:1.4;}
+.hh-confirm-sheet-content {display:flex;flex-direction:column;align-items:center;gap:24px;width:100%;}
+.hh-confirm-sheet-content img {width:178px;max-width:100%;height:auto;aspect-ratio:178 / 140;object-fit:contain;flex:none;}
+.hh-confirm-sheet .hh-confirm-actions {width:100%;}
+.hh-confirm-sheet .ui-button {padding-inline:8px;}
+
+/* Keep the sheet in the viewport without an independently scrolling body. */
+.hh-confirm-sheet {overflow:hidden;max-height:100dvh;}
+.hh-confirm-sheet[open] {gap:clamp(8px,4dvh,36px);padding-bottom:clamp(12px,7dvh,64px);}
+.hh-confirm-sheet-content {flex:0 1 auto;min-height:0;gap:clamp(8px,2.64dvh,24px);overflow:hidden;}
+.hh-confirm-sheet-content > div,.hh-confirm-sheet .hh-confirm-actions {flex:none;}
+.hh-confirm-sheet-content img {width:min(178px,30.5143dvh);}
+.hh-analysis-art > img {object-fit:cover;}

@@ -4,7 +4,8 @@
 .solutions-b03__top h2 { margin:0 0 var(--space-2); }
 .solutions-b03__top h2 span { color:var(--color-primary); }
 .solutions-b03__top textarea { display:block; width:100%; min-height:248px; height:auto; field-sizing:content; resize:vertical; border:0; border-radius:var(--rounded-sm); background:var(--color-neutral); padding:var(--space-5); color:var(--color-on-surface); margin-top:var(--space-3); line-height:1.5; }
-.solutions-b03__top textarea:focus-visible { outline:2px solid var(--color-primary); outline-offset:3px; }
+.solutions-b03__top textarea { max-height:320px; overflow-y:auto; resize:none; }
+.solutions-b03__top textarea:focus { outline:none; box-shadow:none; }
 .solutions-b03__top p,.solutions-b03__actions p { font-size:14px; line-height:1.4; color:var(--color-secondary); margin:var(--space-3) 0 0; }
 .solutions-b03__actions { position:relative; }
 .solutions-b03__actions p { text-align:center; }

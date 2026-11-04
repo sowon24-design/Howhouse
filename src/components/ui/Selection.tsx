@@ -15,7 +15,7 @@ export function Checkbox({ label, checked, variant = 'fill', className = '', ...
 
 export function Radio({ label, checked, className = '', ...props }: ChoiceProps) {
   return <label className={`ui-choice ${className}`}>
-    <span className={`ui-choice-control ${checked ? '' : 'ui-radio-off'}`}><input {...props} type="radio" checked={checked} />
+    <span className={`ui-choice-control ${checked ? 'ui-radio-on' : 'ui-radio-off'}`}><input {...props} type="radio" checked={checked} />
       {checked && <Asset name="radio-on" />}
     </span><span>{label}</span>
   </label>

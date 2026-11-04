@@ -1,10 +1,12 @@
 ---
 "project": "어쩌집"
-"updated": "2026-10-30"
+"updated": "2026-11-03"
 "scope": "Light 웹 구현. Dark는 Figma 등록값만 보존"
 "sources":
   "figma_file": "6WGOaMy4R6jiO6Q7fQ09w8"
-  "launch_section": "462:8452"
+  "launch_page": "717:15736"
+  "launch_section": "462:8452" # 이전 대표 화면 기록
+  "solution_step": "725:28299"
   "components": "336:27325"
   "icons": "355:6642"
   "contract": "src/components/CONTRACT.md"
@@ -23,28 +25,28 @@
   -
     "name": "Color/neutral"
     "type": "COLOR"
-    "light": "#F5F7FB ← Primitive/color/Neutral-100"
+    "light": "#EDF2FA ← Primitive/color/Neutural-200"
     "dark": "#19212E ← Primitive/color/Neutural-900"
     "scope": "FRAME_FILL, SHAPE_FILL"
     "description": "화면 배경"
   -
     "name": "Color/surface"
     "type": "COLOR"
-    "light": "#FFFFFF ← Primitive/color/Neutral-white"
+    "light": "#F8FAFF ← Primitive/color/Neutral-100"
     "dark": "#19212E ← Primitive/color/Neutural-900"
     "scope": "FRAME_FILL, SHAPE_FILL"
     "description": "카드·시트 배경. Dark는 neutral과 같은 짙은색으로 통합"
   -
     "name": "Color/primary"
     "type": "COLOR"
-    "light": "#365EFF ← Primitive/color/Primary-700"
+    "light": "#1157CE ← Primitive/color/Primary-700"
     "dark": "#365EFF ← Primitive/color/Primary-700"
     "scope": "FRAME_FILL, SHAPE_FILL"
     "description": "주요 버튼·선택; 모드 공통 브랜드 파랑"
   -
     "name": "Color/primary-pressed"
     "type": "COLOR"
-    "light": "#1B43E4 ← Primitive/color/Primary-800"
+    "light": "#000E45 ← Primitive/color/Primary-800"
     "dark": "#1B43E4 ← Primitive/color/Primary-800"
     "scope": "FRAME_FILL, SHAPE_FILL"
     "description": "눌린 주요 버튼; primary와 구분 유지"
@@ -65,14 +67,14 @@
   -
     "name": "Color/border"
     "type": "COLOR"
-    "light": "#D7DEE7 ← Primitive/color/Neutural-200"
+    "light": "#DEE5F0 ← Primitive/color/Neutral-300"
     "dark": "#5F6979 ← Primitive/color/Neutural-500"
     "scope": "STROKE_COLOR"
     "description": "구분선·테두리"
   -
     "name": "Color/disabled"
     "type": "COLOR"
-    "light": "#898F98 ← Primitive/color/Neutral-disabled"
+    "light": "#D6DEEB ← Primitive/color/Neutural-400"
     "dark": "#5F6979 ← Primitive/color/Neutural-500"
     "scope": "SHAPE_FILL, TEXT_FILL, STROKE_COLOR"
     "description": "비활성 글자·아이콘"
@@ -289,7 +291,7 @@
   -
     "name": "Primitive/color/Neutral-100"
     "type": "COLOR"
-    "light": "#F5F7FB"
+    "light": "#F8FAFF"
     "dark": "#F5F7FB"
     "scope": "미지정"
     "description": "워크숍 참조용 원시 값"
@@ -310,14 +312,14 @@
   -
     "name": "Primitive/color/Primary-700"
     "type": "COLOR"
-    "light": "#365EFF"
+    "light": "#1157CE"
     "dark": "#365EFF"
     "scope": "미지정"
     "description": "워크숍 참조용 원시 값"
   -
     "name": "Primitive/color/Primary-800"
     "type": "COLOR"
-    "light": "#1B43E4"
+    "light": "#000E45"
     "dark": "#1B43E4"
     "scope": "미지정"
     "description": "워크숍 참조용 원시 값"
@@ -331,14 +333,14 @@
   -
     "name": "Primitive/color/Neutural-400"
     "type": "COLOR"
-    "light": "#B6C0D0"
+    "light": "#D6DEEB"
     "dark": "#B6C0D0"
     "scope": "미지정"
     "description": "워크숍 참조용 원시 값"
   -
     "name": "Primitive/color/Neutural-200"
     "type": "COLOR"
-    "light": "#D7DEE7"
+    "light": "#EDF2FA"
     "dark": "#D7DEE7"
     "scope": "미지정"
     "description": "워크숍 참조용 원시 값"
@@ -422,8 +424,8 @@
   -
     "name": "Primitive/shadow-color"
     "type": "COLOR"
-    "light": "#6683B5 / alpha 0.1"
-    "dark": "#000000 / alpha 0.35"
+    "light": "#6683B51A"
+    "dark": "#00000059"
     "scope": "미지정"
     "description": "Light 원본 그림자 색상; Dark 워크숍 제안"
   -
@@ -531,6 +533,13 @@
     "dark": "6"
     "scope": "미지정"
     "description": "—"
+  -
+    "name": "Primitive/color/Neutral-300"
+    "type": "COLOR"
+    "light": "#DEE5F0"
+    "dark": "#FFFFFF"
+    "scope": "Figma 원본"
+    "description": "2026-11-03 MCP 확인"
 "text_styles":
   -
     "name": "어쩌집/Body rg"
@@ -581,25 +590,25 @@
     "size_px": "14"
     "line_height": "140%"
     "line_height_px": "19.6"
-"web_tokens":
+"web_tokens": # 2026-11-04 공통 컴포넌트 색상 대조 후 런타임 반영
   "--font-family": "Pretendard, sans-serif"
-  "--color-neutral": "#f5f7fb"
-  "--color-surface": "#ffffff"
-  "--color-primary": "#365eff"
-  "--color-primary-pressed": "#1b43e4"
+  "--color-neutral": "#edf2fa"
+  "--color-surface": "#f8faff"
+  "--color-primary": "#1157ce"
+  "--color-primary-pressed": "#000e45"
   "--color-on-surface": "#19212e"
   "--color-secondary": "#5f6979"
-  "--color-border": "#d7dee7"
-  "--color-disabled": "#898f98"
+  "--color-border": "#dee5f0"
+  "--color-disabled": "#d6deeb"
   "--color-error": "#ff0000"
-  "--button-primary-hover": "#234fff"
-  "--button-primary-pressed": "#1b45f0"
-  "--button-pale": "#e8f0ff"
-  "--button-pale-hover": "#e0ebff"
-  "--button-pale-pressed": "#d9e6ff"
+  "--button-primary-hover": "#0e54cc"
+  "--button-primary-pressed": "#084ec6"
+  "--button-pale": "#ddeaff"
+  "--button-pale-hover": "#d5e4fc"
+  "--button-pale-pressed": "#d1dff7"
   "--button-disabled-background": "#d7dee7"
-  "--list-neutral-hover": "#f1f4fa"
-  "--list-neutral-pressed": "#ebeff7"
+  "--list-neutral-hover": "#ecf1f9"
+  "--list-neutral-pressed": "#e8eef7"
   "--text-sm": "14px"
   "--text-base": "16px"
   "--text-lg": "20px"
@@ -617,6 +626,23 @@
   "--rounded-sm": "12px"
   "--rounded-lg": "24px"
   "--rounded-full": "100px"
+  "--list-pale-hover": "#d6e4f9"
+  "--arrow-primary-hover": "#0e54cb"
+  "--legacy-neutral": "#f5f7fb"
+  "--legacy-border": "#d7dee7"
+  "--surface-white": "#ffffff"
+  "--disabled-label": "#898f98"
+"solution_step": # Figma 725:28299 — 공통 색상 토큰 재사용
+  "primary": "#1157CE"
+  "material_and_number_background": "#DEE5F0"
+  "number_label": "#414B5B"
+  "surface": "#FFFFFF"
+  "title": "#000000"
+  "shadow": "0 3px 12px 0 rgb(102 131 181 / 10%)"
+  "number_width_px": 28
+  "number_top_px": 7
+  "number_radius_px": 16
+  "material_radius_px": 24
 "component_values":
   "button_height_px": 56 # Button의 고정 높이
   "photo_size_px": 82.5 # Photo와 AddImage의 정사각형 크기
@@ -660,7 +686,7 @@
 - **확정:** 기존 변수·텍스트 스타일 기록, 사용자가 정정한 Pretendard SemiBold, 아이콘 방향·크기, 출시 제외 범위 및 요청한 모션. 실제 코드의 동작은 [CONTRACT.md](src/components/CONTRACT.md)에 별도로 기록한다.
 - **관찰:** 아래 대표 화면의 구조·치수는 작성일에 Figma MCP로 다시 조회했다. 관찰값을 모든 화면에 적용하는 규칙으로 승격하지 않는다.
 - **확인 필요:** 화면 이동·저장·취소·입력 검증 시점의 미정 사항은 기능정의 문서에서 관리하며 확정 규칙에 포함하지 않는다. 이 문서 작성이 팀 전체 승인이나 실제 화면 조립 검증 완료를 뜻하지 않는다.
-- 변수 전체와 텍스트 스타일 값은 기존 조회 기록을 보존했다. 이번 작업에서는 전체 변수의 최신 값 재검증을 수행하지 않았다.
+- 2026-11-03: 출시용 화면 페이지(717:15736)와 새 단계 컴포넌트(725:28299)를 확인하고 w9 워크숍 컬렉션의 전체 색상 변수·alias·Light/Dark 값을 MCP로 재조회했다. 색 이외 변수·텍스트 스타일 및 기존 대표 화면 관찰 기록은 이전 검증 범위다.
 
 핵심 경로를 포함하도록 다음 대표 화면을 선정했다.
 
@@ -671,6 +697,10 @@
 | B03-2 문의 메세지_전문 업체 | 수신자 탭, 메시지 편집·복사 | [원본](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=472-16668) |
 
 ## Colors
+
+2026-11-04 공통 컴포넌트 원본과 색상을 대조해 `web_tokens`와 `src/styles/tokens.css`를 동기화했다. 토큰을 참조하는 화면에도 새 색이 반영된다. 화면별 고정색·일러스트·아이콘 전체 라이브러리 교체는 별도 화면 검토 범위다.
+
+`Color/surface`는 이제 옅은 배경색이며 새 단계의 흰 카드·번호 글자는 별도 Blue glass의 surface(흰색)를 사용한다. `Color/disabled`의 alias도 변경됐다. 컴포넌트의 상태 색상은 실제 variant를 기준으로 한다. Button hover와 ArrowButton hover, pale Button hover와 pale List/Message hover는 서로 다르므로 각각 전용 토큰을 사용한다. 탭·사진 추가의 배경과 라디오·아코디언 선은 원본의 Blue glass 값을 유지한다. 비활성 CTA는 원본대로 homecare-line을 사용한다.
 
 일반 면은 `Color/neutral`과 `Color/surface`, 주요 행동·선택은 `Color/primary`, 본문은 `Color/on-surface`, 보조 글은 `Color/secondary`, 경계는 `Color/border`, 오류는 `Color/error`를 쓴다. 웹에서는 대응하는 `--color-*` 토큰을 사용한다.
 
@@ -706,6 +736,8 @@
 
 공통 구현은 [src/components/ui](src/components/ui)에 있다. 주요 행동은 Button, 아이콘만 있는 다음 행동은 ArrowButton, 복수 선택은 Checkbox, 단일 선택은 Radio, 수신자 전환은 TabBar를 사용한다. ListRow는 목록 행동, MessageButton은 문장 포함 여부, GNB는 헤더, Accordion은 펼침 설명, AddImage·Photo는 사진 추가·표시, ActionSheet는 행동 선택, Overlay는 확인에 사용한다.
 
+SolutionStep은 단계 번호·제목·설명·가변 준비물 버튼을 표시한다. 강조 상태는 호출 화면이 전달하며, 스크롤 감지·자동 전환은 후속 화면 연결에서 담당한다. 준비물 버튼은 배열 수에 따라 줄바꿈하고 없으면 영역을 숨긴다. 이번 추가는 기존 B02 화면 교체를 포함하지 않는다.
+
 정확한 Props·기본값·이벤트·닫힘·접근성·모션은 [CONTRACT.md](src/components/CONTRACT.md)를 따른다. 모션 값은 상단 `motion`에 기록한다. 미리보기의 예시 상태나 콜백을 실제 화면 정책으로 확정하지 않는다.
 
 ## Do's and Don'ts
@@ -722,3 +754,17 @@
 
 ### CTA 눌림 피드백 (2026-10-31)
 - 기존 pressed 색 토큰을 누르는 순간 즉시 적용하고 손을 떼면 기존 color_ms로 복귀한다. 짧은 탭을 위해 이벤트 실행을 지연하지 않는다.
+
+### 일러스트·사진 비율 (2026-11-04 사용자 확정)
+
+- F/E/A 및 이후 B/D 수정에서도 원본 이미지 비율을 유지한다. 반응형 축소 시 가로·세로를 같은 배율로 조절한다.
+- 일러스트 전체를 보여주는 영역은 `contain` 또는 한 축의 자동 크기를 사용한다. 고정 프레임을 채우기 위해 캐릭터를 늘리거나 자르지 않는다.
+- 합성 모션은 정적인 배치와 모션을 분리하며, 이미지 자체를 비균등하게 늘리지 않는다.
+
+- 이미지 원본 기준은 업로드 파일의 정사각 캔버스가 아니라 Figma에서 승인한 이미지 레이어다. 크롭·변형된 이미지 채움은 해당 레이어를 내보내 사용하고, 내보낸 이미지의 종횡비를 유지한다. 모션은 레이어별 원본 비율과 배치를 유지한다.
+
+### 이미지 해상도와 원본 비율
+
+- 화면 표시 크기로 축소 저장하지 않는다. 래스터 이미지의 긴 변은 최소 1000px 이상인 원본을 사용한다.
+- Figma 합성 일러스트는 원본 이미지와 마스크를 보존한 SVG도 사용할 수 있다. 화면 표시 크기와 원본 비율은 유지한다.
+- 작은 원본을 단순 확대해도 실제 디테일은 증가하지 않는다. 사례 사진 등 고해상도 원본이 없는 자산은 별도 교체 대상으로 명시한다.
