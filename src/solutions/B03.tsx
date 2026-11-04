@@ -45,23 +45,23 @@ export function B03({recipients,onBack}:{recipients:readonly Recipient[];onBack:
   if(!recipients.length)return null
   const current=recipients.find(r=>r.id===target)!
   const draft=drafts[target]
-  return <section className="solutions-b03" aria-label="문의 메세지">
-    <GNB title="문의 메세지 작성하기" onBack={onBack}/>
+  return <section className="solutions-b03" aria-label="문의 메시지">
+    <GNB title="문의 메시지 작성하기" onBack={onBack}/>
     <main className="solutions-b03__content" onClick={event=>{if(!(event.target instanceof HTMLTextAreaElement) && document.activeElement instanceof HTMLTextAreaElement) document.activeElement.blur()}}>
       <div className="solutions-b03__top">
         {recipients.length>1&&<TabBar label="문의 대상" options={recipients.map(r=>({value:r.id,label:r.label,panelId:`${base}-${r.id}`}))} value={target} onChange={value=>{setTarget(value);setToast('')}}/>}
         {recipients.map(r=><section key={r.id} id={`${base}-${r.id}`} role="tabpanel" aria-label={r.label} hidden={target!==r.id}>
-          <h2 className="text-body-sb"><span>{r.title}</span>에게 보낼 메세지</h2>
-          <ListRow variant="pale" icon={<img src={write} alt=""/>} onClick={()=>{setPending(selectedIndexes(drafts[r.id]));setPicking(true)}}>메세지에 넣을 내용을 선택해 주세요.</ListRow>
+          <h2 className="text-body-sb"><span>{r.title}</span>에게 보낼 메시지</h2>
+          <ListRow variant="pale" icon={<img src={write} alt=""/>} onClick={()=>{setPending(selectedIndexes(drafts[r.id]));setPicking(true)}}>메시지에 넣을 내용을 선택해 주세요.</ListRow>
           <textarea aria-label={`${r.label} 메시지 본문`} value={messageBody(drafts[r.id])} onChange={e=>setDrafts(previous=>({...previous,[r.id]:editDraft(previous[r.id],e.target.value)}))}/>
-          <p>* 메세지창을 클릭해서 직접 수정할 수도 있어요.</p>
+          <p>* 메시지를 직접 수정할 수 있어요.</p>
         </section>)}
       </div>
-      <div className="solutions-b03__actions"><div className="solutions-b03__toast" role="status">{toast&&<span key={toastSequence}>{toast}</span>}</div><Button disabled={copying} onClick={copy}>메세지 복사하기</Button><p>복사한 뒤 문자에 붙여넣어 주세요.</p></div>
+      <div className="solutions-b03__actions"><div className="solutions-b03__toast" role="status">{toast&&<span key={toastSequence}>{toast}</span>}</div><Button disabled={copying} onClick={copy}>메시지 복사하기</Button><p>복사한 뒤 문자에 붙여넣어 주세요.</p></div>
     </main>
-    <SolutionSheet open={picking} onClose={()=>setPicking(false)} label="메세지에 포함할 문장을 선택해 주세요." className="solutions-message-sheet">
+    <SolutionSheet open={picking} onClose={()=>setPicking(false)} label="메시지에 포함할 문장을 선택해 주세요." className="solutions-message-sheet">
       <div className="solutions-message-sheet__handle" aria-hidden="true"/>
-      <h2 id={`${base}-heading`} className="text-heading">메세지에 포함할 문장을 선택해 주세요.</h2>
+      <h2 id={`${base}-heading`} className="text-heading">메시지에 포함할 문장을 선택해 주세요.</h2>
       <div className="solutions-message-sheet__sentences">{current.sentences.map((text,i)=><MessageButton key={i} selected={pending.includes(i)} onSelectedChange={selected=>setPending(previous=>selected?[...previous,i]:previous.filter(n=>n!==i))}>{text}</MessageButton>)}</div>
       <div className="solutions-message-sheet__actions"><Button variant="pale" onClick={()=>setPicking(false)}>취소하기</Button><Button onClick={()=>{setDrafts(previous=>({...previous,[target]:applySentences(draft,pending,current.sentences)}));setPicking(false)}}>수정하기</Button></div>
     </SolutionSheet>

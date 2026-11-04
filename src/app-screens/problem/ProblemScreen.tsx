@@ -97,17 +97,17 @@ export function ProblemScreen({ input, onChange, onBack, onAnalyze, onCapture, a
       if (ready) onAnalyze({ ...input, analysisUserPhotos: [...input.analysisUserPhotos] })
     }}>
       <div className="hh-problem-fields">
-        <div className="hh-problem-intro"><h1>어떤 문제가 생겼나요?</h1><p>문제가 생긴 곳과 증상을 편하게 작성해 주세요.</p></div>
+        <div className="hh-problem-intro"><h1>어떤 문제가 생겼나요?</h1><p>문제가 생긴 곳과 증상을 편하게 알려주세요.</p></div>
         <div className="hh-problem-field">
           <label htmlFor="analysis-user-text">문제 상황</label>
-          <textarea ref={textarea} id="analysis-user-text" placeholder="문제 상황을 자세히 작성해 주세요." value={input.analysisUserText}
+          <textarea ref={textarea} id="analysis-user-text" placeholder="예) 싱크대 안에 물이 새고 안이 젖어 있음" value={input.analysisUserText}
             onChange={event => onChange({ ...input, analysisUserText: event.target.value })} />
         </div>
         <section className="hh-problem-field" aria-labelledby="photo-label">
           <h2 id="photo-label">사진 첨부하기 ({input.analysisUserPhotos.length}/5)</h2>
           <div className="hh-problem-photos">
-            {input.analysisUserPhotos.length < 5 && <motion.div key="add-photo" layout="position" transition={{ layout: photoTransition }}><AddImage disabled={attaching} onClick={() => { if (!busy.current) setSheet(true) }} /></motion.div>}
-            {input.analysisUserPhotos.map((file, index) => <motion.div key={photoKey(file)} layout="position" transition={{ layout: photoTransition }}>
+            {input.analysisUserPhotos.length < 5 && <motion.div key="add-photo" layout="position" layoutDependency={input.analysisUserPhotos} transition={{ layout: photoTransition }}><AddImage disabled={attaching} onClick={() => { if (!busy.current) setSheet(true) }} /></motion.div>}
+            {input.analysisUserPhotos.map((file, index) => <motion.div key={photoKey(file)} layout="position" layoutDependency={input.analysisUserPhotos} transition={{ layout: photoTransition }}>
               <AttachedPhoto file={file} index={index}
                 onRemove={() => onChange({ ...input, analysisUserPhotos: input.analysisUserPhotos.filter((_, i) => i !== index) })} />
             </motion.div>)}
@@ -116,7 +116,7 @@ export function ProblemScreen({ input, onChange, onBack, onAnalyze, onCapture, a
           {analysisError && <p role="alert" className="hh-problem-error">{analysisError}</p>}
         </section>
       </div>
-      <div ref={cta} className="hh-problem-next"><Button type="submit" disabled={!ready}>지금 해야 할 일 보러가기</Button></div>
+      <div ref={cta} className="hh-problem-next"><Button type="submit" disabled={!ready}>문제 분석하기</Button></div>
     </form>
     <input ref={picker} type="file" accept="image/*" hidden aria-label="첨부할 사진 선택" onChange={event => {
       const file = event.target.files?.[0]

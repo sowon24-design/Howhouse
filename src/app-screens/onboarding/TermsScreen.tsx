@@ -23,7 +23,7 @@ export function TermsScreen({ onBack, onClose, onContinue }: { onBack: () => voi
       </div>
     </div>
     <footer className="hh-onboarding-next"><Button disabled={!all} onClick={() => { if (all) onContinue() }}>동의하고 시작하기</Button></footer>
-    <Dialog open={open} onClose={() => setOpen(false)} label={title} className="ui-action-sheet hh-terms-sheet">
+    <Dialog open={open} onClose={() => setOpen(false)} label={title} className="ui-action-sheet hh-terms-sheet" closeOnBackdrop swipeDismiss>
       <div className="ui-sheet-handle" aria-hidden="true" />
       <div className="hh-terms-sheet-content">
         <h2>{title}</h2>

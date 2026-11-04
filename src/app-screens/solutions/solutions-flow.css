@@ -5,5 +5,10 @@
 .hh-solutions-layer .solutions-b03__content { min-height:calc(var(--solutions-screen-height) - 56px); }
 .hh-solutions-front { box-shadow:-8px 0 24px #19212e14; }
 
-.hh-solutions-layer:has(> .solutions-b01) { overflow:hidden; overscroll-behavior:none; }
-.hh-solutions-layer .solutions-b01 { min-height:0; height:100%; overflow:hidden; }
+.hh-solutions-layer:has(> .solutions-b01) { overflow-x:hidden; overflow-y:auto; }
+.hh-solutions-layer .solutions-b01 { min-height:100%; height:auto; }
+
+.hh-solutions-layer:has(> .solutions-b03) { overflow:hidden; }
+.hh-solutions-layer .solutions-b03 { height:100%; min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+.hh-solutions-layer .solutions-b03__content { flex:1; min-height:0; overflow:hidden; }
+.hh-solutions-layer .solutions-b03__top { min-height:0; }

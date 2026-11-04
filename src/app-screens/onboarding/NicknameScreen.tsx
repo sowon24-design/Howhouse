@@ -46,7 +46,7 @@ export function NicknameScreen({ onBack, onClose, onComplete, initialValue = '',
             onBlur={() => { if (!composingRef.current) normalize() }} />
           <span id={`${id}-count`} className="hh-nickname-count">{Math.min(Array.from(value).length, 10)}/10</span>
         </div>
-        <p id={`${id}-error`} className="hh-nickname-error" data-visible={error} aria-hidden={!error} role="alert"><span className="hh-nickname-warning" aria-hidden="true"><img src={warning} alt="" /></span><span>{spaceError || value.trim().length === 0 ? '공백만으로는 닉네임을 만들 수 없어요.' : '한글·영어·숫자와 띄어쓰기로 10자 이내로 입력해 주세요.'}</span></p>
+        <p id={`${id}-error`} className="hh-nickname-error" data-visible={error} aria-hidden={!error} role="alert"><span className="hh-nickname-warning" aria-hidden="true"><img src={warning} alt="" /></span><span>{spaceError || value.trim().length === 0 ? '공백만으로는 닉네임을 만들 수 없어요.' : '한글 · 영문 · 숫자 10자 이내로 입력해 주세요.'}</span></p>
       </div>
       <footer ref={cta} className="hh-nickname-next"><Button type="submit" disabled={!valid || !changed}>{mode === 'edit' ? '수정하기' : value.length === 0 ? '다음으로' : '시작하기'}</Button></footer>
     </form>

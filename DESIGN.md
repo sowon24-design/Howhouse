@@ -590,25 +590,25 @@
     "size_px": "14"
     "line_height": "140%"
     "line_height_px": "19.6"
-"web_tokens": # 기존 런타임 값. 이번 요청은 문서 갱신만 하므로 전역 CSS는 유지
+"web_tokens": # 2026-11-04 공통 컴포넌트 색상 대조 후 런타임 반영
   "--font-family": "Pretendard, sans-serif"
-  "--color-neutral": "#f5f7fb"
-  "--color-surface": "#ffffff"
-  "--color-primary": "#365eff"
-  "--color-primary-pressed": "#1b43e4"
+  "--color-neutral": "#edf2fa"
+  "--color-surface": "#f8faff"
+  "--color-primary": "#1157ce"
+  "--color-primary-pressed": "#000e45"
   "--color-on-surface": "#19212e"
   "--color-secondary": "#5f6979"
-  "--color-border": "#d7dee7"
-  "--color-disabled": "#898f98"
+  "--color-border": "#dee5f0"
+  "--color-disabled": "#d6deeb"
   "--color-error": "#ff0000"
-  "--button-primary-hover": "#234fff"
-  "--button-primary-pressed": "#1b45f0"
-  "--button-pale": "#e8f0ff"
-  "--button-pale-hover": "#e0ebff"
-  "--button-pale-pressed": "#d9e6ff"
+  "--button-primary-hover": "#0e54cc"
+  "--button-primary-pressed": "#084ec6"
+  "--button-pale": "#ddeaff"
+  "--button-pale-hover": "#d5e4fc"
+  "--button-pale-pressed": "#d1dff7"
   "--button-disabled-background": "#d7dee7"
-  "--list-neutral-hover": "#f1f4fa"
-  "--list-neutral-pressed": "#ebeff7"
+  "--list-neutral-hover": "#ecf1f9"
+  "--list-neutral-pressed": "#e8eef7"
   "--text-sm": "14px"
   "--text-base": "16px"
   "--text-lg": "20px"
@@ -626,7 +626,13 @@
   "--rounded-sm": "12px"
   "--rounded-lg": "24px"
   "--rounded-full": "100px"
-"solution_step": # Figma 725:28299 — 새 컴포넌트에만 적용
+  "--list-pale-hover": "#d6e4f9"
+  "--arrow-primary-hover": "#0e54cb"
+  "--legacy-neutral": "#f5f7fb"
+  "--legacy-border": "#d7dee7"
+  "--surface-white": "#ffffff"
+  "--disabled-label": "#898f98"
+"solution_step": # Figma 725:28299 — 공통 색상 토큰 재사용
   "primary": "#1157CE"
   "material_and_number_background": "#DEE5F0"
   "number_label": "#414B5B"
@@ -692,9 +698,9 @@
 
 ## Colors
 
-2026-11-03 색상 기준은 상단 `figma_variables`의 최신 값이다. `web_tokens`는 아직 이전 앱 구현값이며 이번에는 `src/styles/tokens.css`를 바꾸지 않았다. 기존 화면 전체 색상 전환은 후속 작업이다. 새 SolutionStep에만 최신 색을 제한 적용한다.
+2026-11-04 공통 컴포넌트 원본과 색상을 대조해 `web_tokens`와 `src/styles/tokens.css`를 동기화했다. 토큰을 참조하는 화면에도 새 색이 반영된다. 화면별 고정색·일러스트·아이콘 전체 라이브러리 교체는 별도 화면 검토 범위다.
 
-`Color/surface`는 이제 옅은 배경색이며 새 단계의 흰 카드·번호 글자는 별도 Blue glass의 surface(흰색)를 사용한다. `Color/disabled`의 alias도 변경됐다. Button 컬렉션은 별도 값이므로 primary 의미색만으로 기존 버튼 상태 색을 추정하지 않는다.
+`Color/surface`는 이제 옅은 배경색이며 새 단계의 흰 카드·번호 글자는 별도 Blue glass의 surface(흰색)를 사용한다. `Color/disabled`의 alias도 변경됐다. 컴포넌트의 상태 색상은 실제 variant를 기준으로 한다. Button hover와 ArrowButton hover, pale Button hover와 pale List/Message hover는 서로 다르므로 각각 전용 토큰을 사용한다. 탭·사진 추가의 배경과 라디오·아코디언 선은 원본의 Blue glass 값을 유지한다. 비활성 CTA는 원본대로 homecare-line을 사용한다.
 
 일반 면은 `Color/neutral`과 `Color/surface`, 주요 행동·선택은 `Color/primary`, 본문은 `Color/on-surface`, 보조 글은 `Color/secondary`, 경계는 `Color/border`, 오류는 `Color/error`를 쓴다. 웹에서는 대응하는 `--color-*` 토큰을 사용한다.
 
@@ -748,3 +754,17 @@ SolutionStep은 단계 번호·제목·설명·가변 준비물 버튼을 표시
 
 ### CTA 눌림 피드백 (2026-10-31)
 - 기존 pressed 색 토큰을 누르는 순간 즉시 적용하고 손을 떼면 기존 color_ms로 복귀한다. 짧은 탭을 위해 이벤트 실행을 지연하지 않는다.
+
+### 일러스트·사진 비율 (2026-11-04 사용자 확정)
+
+- F/E/A 및 이후 B/D 수정에서도 원본 이미지 비율을 유지한다. 반응형 축소 시 가로·세로를 같은 배율로 조절한다.
+- 일러스트 전체를 보여주는 영역은 `contain` 또는 한 축의 자동 크기를 사용한다. 고정 프레임을 채우기 위해 캐릭터를 늘리거나 자르지 않는다.
+- 합성 모션은 정적인 배치와 모션을 분리하며, 이미지 자체를 비균등하게 늘리지 않는다.
+
+- 이미지 원본 기준은 업로드 파일의 정사각 캔버스가 아니라 Figma에서 승인한 이미지 레이어다. 크롭·변형된 이미지 채움은 해당 레이어를 내보내 사용하고, 내보낸 이미지의 종횡비를 유지한다. 모션은 레이어별 원본 비율과 배치를 유지한다.
+
+### 이미지 해상도와 원본 비율
+
+- 화면 표시 크기로 축소 저장하지 않는다. 래스터 이미지의 긴 변은 최소 1000px 이상인 원본을 사용한다.
+- Figma 합성 일러스트는 원본 이미지와 마스크를 보존한 SVG도 사용할 수 있다. 화면 표시 크기와 원본 비율은 유지한다.
+- 작은 원본을 단순 확대해도 실제 디테일은 증가하지 않는다. 사례 사진 등 고해상도 원본이 없는 자산은 별도 교체 대상으로 명시한다.

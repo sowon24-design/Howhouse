@@ -27,10 +27,12 @@
 .hh-home-shadow.s3 { left: 127px; top: 123px; }
 .hh-home-shadow.s4 { left: 162px; top: 114px; }
 .hh-home-character { left: 56px; top: 0; width: 252px; height: 157px; object-fit: cover; }
-.hh-home-banner { border: 0; padding: var(--space-4); border-radius: var(--rounded-lg); min-height: 88px; width: 100%; display: flex; align-items: center; gap: var(--space-3); color: white; text-align: left; cursor: pointer; background: linear-gradient(126.671deg,rgba(100,233,248,0) 50%,rgba(100,233,248,.7) 97.623%),var(--color-primary); box-shadow: inset -2px -2px 2px rgba(255,255,255,.15); }
-.hh-home-book { width: 56px; height: 56px; border-radius: 28px; background: rgba(100,233,248,.1); display: grid; place-items: center; flex: none; }
+.hh-home-banner { border: 0; padding: var(--space-4); border-radius: var(--rounded-lg); min-height: 88px; width: 100%; display: flex; align-items: center; gap: var(--space-3); color: white; text-align: left; cursor: pointer; background: linear-gradient(126.671deg,rgba(16,138,238,0) 50%,rgba(16,138,238,.7) 97.623%),var(--color-primary); box-shadow: inset -2px -2px 2px rgba(255,255,255,.15); }
+.hh-home-book { position: relative; width: 56px; height: 56px; border-radius: 28px; background: rgba(100,233,248,.1); display: grid; place-items: center; flex: none; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+/* Figma 717:16000: glass light at -45deg; its drop shadow is disabled. */
+.hh-home-book::before { content: ''; position: absolute; inset: 0; padding: 1px; border-radius: inherit; pointer-events: none; background: linear-gradient(135deg,#fff,rgba(255,255,255,.08) 35%,rgba(255,255,255,0) 50%,rgba(255,255,255,.08) 65%,rgba(255,255,255,.5)); -webkit-mask: linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite: exclude; }
 .hh-home-banner-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.hh-home-banner-copy > span { font-size: 14px; font-weight: 500; line-height: 1.4; color: var(--button-pale); }
+.hh-home-banner-copy > span { font-size: 14px; font-weight: 500; line-height: 1.4; color: #E8F0FF; }
 .hh-home-banner-copy strong { font-size: 16px; font-weight: 600; line-height: 1.5; }
 .hh-home-section { display: flex; flex-direction: column; gap: var(--space-2); }
 .hh-home-section h2 { font-size: var(--text-lg); font-weight: 600; line-height: 1.5; }
@@ -41,5 +43,13 @@
 .hh-home .hh-home-problem { background: var(--color-surface); box-shadow: 0 6px 22.8px rgba(102,131,181,.1); }
 .hh-home .hh-home-problem:active:not(:disabled) { background: var(--list-neutral-pressed); }
 /* Replace only this instance's arrow with the original blue A01 asset. */
-.hh-home-problem > .ui-asset { content: url('./assets/imgIconArrowLeft.svg'); }
+.hh-home-problem > .ui-asset { content: url('./assets/w10-imgIconArrowLeft.svg'); }
 @media (max-width:360px) { .hh-home-banner { gap: var(--space-2); } .hh-home-categories { padding-inline: var(--space-2); gap: 20px 4px; } }
+
+.hh-home-greeting {margin-bottom:-12px;}
+.hh-home-art {height:140px;}
+.hh-home-art-stage {width:215.385px;height:140px;}
+.hh-home-art-stage div > div {width:100%;height:100%;}
+.hh-home-art-stage img {width:100%;height:100%;object-fit:contain;}
+.hh-home-categories {background:#fff;}
+.hh-home .hh-home-problem {background:var(--color-neutral);box-shadow:none;}

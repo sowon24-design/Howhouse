@@ -4,7 +4,7 @@ import { InformationScreen, type InformationPage } from './InformationScreen'
 import { NicknameScreen } from '../onboarding/NicknameScreen'
 import { useState } from 'react'
 import { GNB } from '../../components/ui'
-import crab from './assets/profile-crab.png'
+import crab from './assets/profile-w10.png'
 import edit from './assets/edit-profile.svg'
 import './my.css'
 

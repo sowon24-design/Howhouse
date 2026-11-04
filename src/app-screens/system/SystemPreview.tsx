@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from '../../components/ui'
 import symbol from './assets/logo-symbol.svg'
 import wordmark from './assets/logo-wordmark.svg'
-import offline from './assets/offline.png'
+import offline from './assets/offline.svg'
 import '../home/home-preview.css'
 import './system.css'
 

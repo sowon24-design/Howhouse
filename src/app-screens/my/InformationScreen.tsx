@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, GNB } from '../../components/ui'
 import draft from './information-draft.json'
-import contactCrab from './assets/contact-crab.png'
+import contactCrab from './assets/contact-w10.png'
 import './information.css'
 
 export type InformationPage = 'app' | 'data' | 'terms' | 'privacy' | 'ai' | 'contact'
@@ -59,8 +59,7 @@ export function InformationScreen({ page, onBack }: { page: InformationPage; onB
     }} tabIndex={0} role="region" aria-label={`${titles[page]} 본문`}>
       {page === 'contact' ? <div className="hh-contact-content">
         <section><h1>{draft.contact.title}</h1><p>{draft.contact.intro}</p></section>
-        <ul>{draft.contact.topics.map(topic => <li key={topic}>{topic}</li>)}</ul>
-        <p className="hh-contact-note">{draft.contact.note}</p>
+        <ul>{draft.contact.topics.map(topic => <li key={topic}>{topic}</li>)}<li>{draft.contact.note}</li></ul>
         <div className="hh-contact-art"><img src={contactCrab} alt="전화로 문의를 받는 소라게" /></div>
       </div> : <div className="hh-information-sections">
         {draft[page].map((section, index) => {
