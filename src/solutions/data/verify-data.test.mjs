@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 import { parseCsv, convertCsv, createCaseLookup, splitSupplies } from './convert.ts'
 import { videoSupplements } from './video-supplements.ts'
 import { isActiveCase } from './deleted-cases.ts'
-import { casePhotos } from './photos.ts'
+
 import { categories, getCategoryCases } from './categories.ts'
 import { displayResponsibility } from './presentation.ts'
 const files = {'욕실·수도':'욕실·수도 (1)', '난방·전기':'난방·전기', '가전':'가전', '해충·곰팡이':'해충·곰팡이 (1)'}
@@ -57,8 +57,14 @@ test('blank video is empty array, absent steps are not invented; CSV quoting wor
   assert.deepEqual(c.videos,[])
   assert.deepEqual(parseCsv('a,b\r\n"x,y","line1\nline2 ""quoted"""'),[['a','b'],['x,y','line1\nline2 "quoted"']])
 })
-test('photos remain unassigned; separate responsibility file is not merged',()=>{
-  assert.deepEqual(casePhotos,{})
+test('all active cases have exactly one planned image, all planned local files exist',()=>{
+  const source=readFileSync(new URL('./photos.ts',import.meta.url),'utf8')
+  const rows=[...source.matchAll(/'([^']+)': \[\{src:(P\d+)/g)].map(m=>[m[1],m[2]])
+  const plan=JSON.parse(readFileSync(new URL('../assets/cases/image-plan.json',import.meta.url),'utf8').replace(/^\uFEFF/,''))
+  assert.equal(rows.length,53)
+  assert.equal(new Set(rows.map(r=>r[0])).size,53)
+  for(const [id,image] of rows){assert.ok(get(id));assert.ok(plan.images.find(p=>p.imageId===image).caseIds.includes(id))}
+  for(const image of plan.images)assert.ok(readFileSync(new URL('../assets/cases/'+(image.generatedFile??'p01-drain.jpg'),import.meta.url)).length>0)
   assert.equal(get('욕실·수도:1').reference,'평소 청소로 해결되는 관리 영역이에요.')
   assert.ok(readFileSync(new URL('./raw/책임 판단 기준.csv',import.meta.url),'utf8').startsWith('구분,내용'))
 })

@@ -21,8 +21,9 @@
 .hh-contact-content section { padding:0; }
 .hh-contact-content h1 { margin-bottom:var(--space-1); }
 .hh-contact-content ul { margin:0; padding-left:var(--space-6); font-size:var(--text-base); line-height:1.5; color:var(--color-secondary); }
+.hh-contact-content .hh-contact-note { color:var(--color-secondary); }
 .hh-contact-art { flex:1; min-height:180px; display:grid; place-items:center; }
-.hh-contact-art img { width:220.24px; height:154.168px; object-fit:cover; max-width:100%; }
+.hh-contact-art img { width:264px; height:auto; object-fit:contain; max-width:100%; }
 .hh-information a { -webkit-tap-highlight-color:transparent; }
 .hh-information a:focus-visible,.hh-information-scroll:focus-visible { outline:2px solid var(--color-primary); outline-offset:-2px; }
 
@@ -44,3 +45,8 @@
   100% { opacity:0; transform:translateY(4px) scale(.98); }
 }
 @media(prefers-reduced-motion:reduce) { .hh-contact-copy-status span { animation:none; } }
+
+.hh-information { min-width:0; max-width:100%; overflow-x:clip; overscroll-behavior-x:none; }
+.hh-information-scroll { min-width:0; max-width:100%; overflow-x:hidden; overscroll-behavior-x:none; touch-action:pan-y pinch-zoom; }
+.hh-information-sections, .hh-contact-content { min-width:0; max-width:100%; }
+.hh-information-buttons > * { white-space:normal; overflow-wrap:anywhere; text-align:center; }

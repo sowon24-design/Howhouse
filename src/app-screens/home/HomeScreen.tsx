@@ -1,21 +1,18 @@
+import { HomeIllustration } from './HomeIllustration'
 import { ListRow } from '../../components/ui'
 import { HomePressButton } from './HomePressButton'
-import illustration from './assets/imgImage150.png'
 import logo from './assets/imgVector132Stroke.svg'
 import profile from './assets/imgIconProfile.svg'
-import book from './assets/imgIconBook.svg'
-import arrow from './assets/imgIconArrowRight.svg'
-import shadow1 from './assets/imgEllipse118.svg'
-import shadow2 from './assets/imgEllipse119.svg'
-import shadow3 from './assets/imgEllipse121.svg'
-import boiler from './assets/imgIcon.svg'
-import bathroom from './assets/imgIcon1.svg'
-import refrigerator from './assets/imgIcon2.svg'
-import water from './assets/imgIcon3.svg'
-import electricity from './assets/imgIcon4.svg'
-import washer from './assets/imgIcon5.svg'
-import pests from './assets/imgIcon6.svg'
-import mold from './assets/imgIcon7.svg'
+import book from './assets/w10-imgIconBook.svg'
+import arrow from './assets/w10-imgIconArrowRight.svg'
+import boiler from './assets/w10-imgIcon.svg'
+import bathroom from './assets/w10-imgIcon1.svg'
+import refrigerator from './assets/w10-imgIcon2.svg'
+import water from './assets/w10-imgIcon3.svg'
+import electricity from './assets/w10-imgIcon4.svg'
+import washer from './assets/w10-imgIcon5.svg'
+import pests from './assets/w10-imgIcon6.svg'
+import mold from './assets/w10-imgIcon7.svg'
 import './home.css'
 
 // Presentation keys, not database category IDs. Integration maps these explicitly.
@@ -54,17 +51,11 @@ export function HomeScreen({ nickname, month, popularProblems, onProfile, onStar
       </div>
       <section className="hh-home-help" aria-label="직접 문제 작성">
         <div className="hh-home-art" aria-hidden="true">
-          <div className="hh-home-art-stage">
-            <img className="hh-home-shadow s1" src={shadow1} alt="" />
-            <img className="hh-home-shadow s2" src={shadow2} alt="" />
-            <img className="hh-home-shadow s3" src={shadow2} alt="" />
-            <img className="hh-home-shadow s4" src={shadow3} alt="" />
-            <img className="hh-home-character" src={illustration} alt="" />
-          </div>
+          <HomeIllustration />
         </div>
         <HomePressButton type="button" className="hh-home-banner" onClick={onStartProblem}>
           <span className="hh-home-book"><img src={book} alt="" /></span>
-          <span className="hh-home-banner-copy"><span>우리집 문제에 대한</span><strong>해결 방법을 찾아 볼까요?</strong></span>
+          <span className="hh-home-banner-copy"><span>우리집 문제에 대한</span><strong>해결 방법을 찾아볼까요?</strong></span>
           <img src={arrow} alt="" />
         </HomePressButton>
       </section>

@@ -22,3 +22,6 @@
 
 .hh-nickname--edit .hh-nickname-content h1 { font-size:var(--text-base); margin-bottom:var(--space-2); }
 @media (prefers-reduced-motion: reduce) { .hh-nickname-next { transition:none; } }
+
+/* E04 latest Figma; keep D02 edit styling unchanged. */
+.hh-nickname:not(.hh-nickname--edit) .hh-nickname-count { color:var(--color-secondary); }

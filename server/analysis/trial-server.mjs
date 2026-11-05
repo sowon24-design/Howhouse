@@ -3,6 +3,7 @@ import { validateConfig } from './verify-openai.mjs'
 import { createTrialAccess } from './trial-access.mjs'
 import { createTrialStore } from './trial-store.mjs'
 import { createAnalysisServer } from './server.mjs'
+import { createFeedbackStore, readFeedbackRetention } from './feedback-store.mjs'
 
 /** Return field names only. Never return values, exceptions, URLs or credentials. */
 export function trialSettingsIssues(env) {
@@ -57,8 +58,13 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const store = createTrialStore(config)
     stage = 'database-connection'
     await store.check()
+    let feedbackStore
+    try {
+      const retentionDays = readFeedbackRetention(process.env)
+      if (retentionDays !== undefined) feedbackStore = createFeedbackStore({ ...config, retentionDays })
+    } catch { console.error('의견 저장 설정을 확인하세요. 의견 저장은 비활성화하고 기존 분석 서버는 유지합니다. 비밀 값은 표시하지 않습니다.') }
     stage = 'analysis-server-initialization'
-    const server = createAnalysisServer({ config, trial: {
+    const server = createAnalysisServer({ config, feedbackStore, trial: {
       host: config.host, origins: config.origins, authenticate, forUser: id => store.forUser(id),
     } })
     server.on('error', () => { console.error('시험 서버 포트/설정을 확인하세요. 비밀 값은 표시하지 않습니다.'); process.exitCode = 1 })

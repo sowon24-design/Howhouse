@@ -17,12 +17,12 @@ const outputText = stripTypeScriptTypes(source)
 const { createHttpAnalysisClient, checkAnalysisConnection } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`)
 const { getAnalysisFailureKind } = await import('./client.ts')
 
-function fixture(responder) {
+function fixture(responder, { contentVersion = '2' } = {}) {
   const calls = []
   const client = createHttpAnalysisClient({ catalog: '[]', getSolutionById: id => id === '욕실·수도:1',
     fetchImpl: async (url, options) => {
       calls.push({ url, options })
-      if (url.endsWith('/session')) return Response.json({ token: 'local-ephemeral-token' })
+      if (url.endsWith('/session')) return Response.json({ token: 'local-ephemeral-token', ...(contentVersion ? { generatedContentVersion: contentVersion } : {}) })
       return responder(options)
     } })
   return { client, calls }
@@ -40,16 +40,55 @@ test('HTTP client sends agreed FormData, fingerprint, request ID and cancellatio
   assert.match(options.body.get('catalogVersion'), /^[a-f0-9]{64}$/)
   assert.equal(options.body.get('requestId'), handle.requestId)
   assert.equal(options.headers['X-Howhouse-Session'], 'local-ephemeral-token')
+  assert.equal(options.headers['X-Howhouse-Content-Version'], '2')
   assert.ok(options.signal instanceof AbortSignal)
 })
 
 test('generated content is validated and adapted without looking up an existing ID', async () => {
-  const content = { title: '제목', description: '설명', supplies: [], steps: [{ title: '단계', description: '내용' }], contacts: { landlord: [], company: [] } }
+  const content = { title: '제목', description: '설명', duration: '-', responsibility: '-', reference: '판단 참고 테스트', supplies: [], steps: [{ title: '단계', description: '내용' }], contacts: { landlord: [], company: [] } }
   const { client } = fixture(({ body }) => Response.json({ requestId: body.get('requestId'), result: { source: 'generated', solution: content } }))
   const end = await client.startAnalysis(input, () => {}).completed
   assert.equal(end.status, 'succeeded'); assert.equal(end.result.source, 'generated')
   assert.ok(end.result.solution.id.startsWith('generated:')); assert.equal(end.result.solution.canContact, false)
   assert.deepEqual(end.result.solution.videos, []); assert.equal(end.result.solution.steps[0].number, 1)
+})
+
+test('expert referral is a successful generated result; 1, 2, 5 and 8 steps keep their count and contacts', async () => {
+  for (const count of [1, 2, 5, 8]) {
+    const content = { title: '전문가 점검을 요청해요', description: '직접 수리 대신 안전한 확인과 문의를 안내해요.', duration: '-', responsibility: '-', reference: '점검 전에는 책임을 단정할 수 없어요.', supplies: [],
+      steps: Array.from({ length: count }, (_, i) => ({ title: `테스트 ${i + 1}`, description: '실제 수리 안내가 아닌 연결 확인' })),
+      contacts: { landlord: ['설비 이상에 대해 점검을 부탁드립니다.'], company: [] } }
+    const { client } = fixture(({ body }) => Response.json({ requestId: body.get('requestId'), result: { source: 'generated', solution: content } }))
+    const end = await client.startAnalysis(input, () => {}).completed
+    assert.equal(end.status, 'succeeded')
+    assert.equal(end.result.solution.steps.length, count)
+    assert.equal(end.result.solution.canContact, true)
+    assert.deepEqual(end.result.solution.contacts.landlord.sentences, content.contacts.landlord)
+  }
+})
+
+test('server failure reasons reach the screen unchanged without automatic retry', async () => {
+  for (const code of ['insufficient-input', 'unsupported-input', 'unsafe-input', 'model-refusal']) {
+    const { client, calls } = fixture(({ body }) => Response.json({ requestId: body.get('requestId'), code }, { status: 422 }))
+    const end = await client.startAnalysis(input, () => {}).completed
+    assert.equal(end.status, 'failed')
+    assert.equal(end.error.code, code)
+    assert.equal(getAnalysisFailureKind(code), 'analysis')
+    assert.equal(calls.length, 2) // Session + one analysis, not a fallback generation.
+  }
+})
+
+test('old server compatibility does not send an unsupported version header or invent missing metadata', async () => {
+  const legacy = { title: '이전 서버 결과', description: '설명', supplies: [], steps: [{ title: '단계', description: '내용' }], contacts: { landlord: ['안녕하세요. 점검을 부탁드립니다.'], company: [] } }
+  const { client, calls } = fixture(({ body }) => Response.json({ requestId: body.get('requestId'), result: { source: 'generated', solution: legacy } }), { contentVersion: null })
+  const end = await client.startAnalysis(input, () => {}).completed
+  assert.equal(end.status, 'succeeded')
+  assert.equal(calls[1].options.headers['X-Howhouse-Content-Version'], undefined)
+  assert.equal(end.result.solution.duration, '-')
+  assert.match(end.result.solution.reference, /이전 버전/)
+  assert.deepEqual(end.result.solution.contacts.landlord.sentences, ['안녕하세요.', '점검을 부탁드립니다.'])
+  const strict = fixture(({ body }) => Response.json({ requestId: body.get('requestId'), result: { source: 'generated', solution: legacy } }))
+  assert.equal((await strict.client.startAnalysis(input, () => {}).completed).status, 'failed')
 })
 
 test('custom endpoint prefix is shared by session, analysis and both connectivity checks', async () => {

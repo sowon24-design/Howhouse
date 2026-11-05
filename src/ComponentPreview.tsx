@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Accordion, ActionSheet, AddImage, ArrowButton, Button, Checkbox, GNB, HomeIcon, ListRow, MessageButton, Overlay, Photo, Radio, TabBar } from './components/ui'
+import { Accordion, ActionSheet, AddImage, ArrowButton, Button, Checkbox, GNB, HomeIcon, ListRow, MessageButton, Overlay, Photo, Radio, SolutionStep, TabBar } from './components/ui'
 
 const notices = [
   '이름, 전화번호, 주소 등 개인정보가 노출되지 않도록 주의해 주세요.',
@@ -19,6 +19,8 @@ export function ComponentPreview() {
   const [sheet, setSheet] = useState(false)
   const [overlay, setOverlay] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [materialCount, setMaterialCount] = useState(2)
+  const [stepActive, setStepActive] = useState(true)
   const [result, setResult] = useState('컴포넌트를 눌러 동작을 확인해 보세요.')
   useEffect(() => {
     if (!busy) return
@@ -26,10 +28,29 @@ export function ComponentPreview() {
     return () => window.clearTimeout(timer)
   }, [busy])
   return <section id="components" className="preview-section" aria-labelledby="components-title">
-    <div className="section-heading"><h2 id="components-title" className="text-heading">04 공통 컴포넌트</h2><span className="text-caption-rg">Figma 13종 · 직접 눌러 확인</span></div>
+    <div className="section-heading"><h2 id="components-title" className="text-heading">04 공통 컴포넌트</h2><span className="text-caption-rg">Figma 공통 컴포넌트 · 직접 눌러 확인</span></div>
     <p className="preview-muted">버튼·체크·탭·펼침·사진 삭제·시트 열고 닫기를 확인해요. 아래 문구와 사진은 검토용 예시입니다.</p>
     <p className="preview-result" role="status">{result}</p>
     <div className="component-preview-grid">
+      <article className="component-demo component-demo--wide" id="solution-step-preview"><h3>SolutionStep · 단계와 준비물</h3>
+        <div className="demo-stack">
+          <p className="preview-muted">새 출시용 컴포넌트 · 스크롤에 따른 강조는 화면 연결 시 적용합니다.</p>
+          <div className="demo-step-controls">
+            <button type="button" disabled={materialCount === 0} onClick={() => setMaterialCount(count => count - 1)}>준비물 줄이기</button>
+            <button type="button" onClick={() => setMaterialCount(count => count + 1)}>준비물 늘리기</button>
+            <button type="button" aria-pressed={stepActive} onClick={() => setStepActive(value => !value)}>강조 전환</button>
+            <span>준비물 {materialCount}개</span>
+          </div>
+          <div className="demo-solution-steps">
+            <SolutionStep number={1} title="단계 제목" description="내용"
+              materials={Array.from({ length: materialCount }, (_, i) => ({ id: String(i), label: '준비물' }))}
+              onMaterialClick={() => setResult('준비물 클릭 확인 · 실제 링크는 화면에서 연결합니다.')} />
+            <SolutionStep number={1} title="단계 제목" description="내용" active={stepActive}
+              materials={Array.from({ length: materialCount }, (_, i) => ({ id: String(i), label: '준비물' }))}
+              onMaterialClick={() => setResult('준비물 클릭 확인 · 실제 링크는 화면에서 연결합니다.')} />
+          </div>
+        </div>
+      </article>
       <article id="arrow-button" className="component-demo"><h3>Arrow Button</h3>
         <div className="demo-arrow-buttons">
           <div><ArrowButton label="화살표 버튼 확인" onClick={() => setResult('화살표 버튼 클릭')} /><p className="text-caption-rg">기본 · Hover · Pressed</p></div>

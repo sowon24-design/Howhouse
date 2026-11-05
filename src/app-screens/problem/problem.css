@@ -29,3 +29,10 @@
 .hh-problem .ui-icon-button:active { filter: brightness(.94); }
 @media (prefers-reduced-motion: reduce) { .hh-problem .ui-icon-button { transition: none; } .hh-problem { animation: none; } }
 @media (prefers-reduced-motion: reduce) { .hh-problem-next { transition: none; } }
+
+.hh-problem, .hh-problem-content, .hh-problem-fields { min-width:0; max-width:100%; overflow-x:hidden; }
+.hh-problem-fields { overflow-wrap:anywhere; }
+
+.hh-problem .ui-add-image {background:var(--color-neutral);}
+
+.hh-problem-next .ui-button:disabled {background:#D6DEEB;}

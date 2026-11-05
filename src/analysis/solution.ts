@@ -26,7 +26,7 @@ export const generatedContentSchema = {
     steps: { type: 'array', minItems: generatedStepLimits.min, maxItems: generatedStepLimits.max, items: { type: 'object', additionalProperties: false,
       properties: { title: text, description: text }, required: ['title', 'description'] } },
     contacts: { type: 'object', additionalProperties: false,
-      properties: { landlord: strings, company: strings }, required: ['landlord', 'company'] },
+      properties: { landlord: { ...strings, maxItems: 4 }, company: { ...strings, maxItems: 4 } }, required: ['landlord', 'company'] },
   }, required: ['title', 'description', 'duration', 'responsibility', 'reference', 'supplies', 'steps', 'contacts'],
 }
 const object = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x)

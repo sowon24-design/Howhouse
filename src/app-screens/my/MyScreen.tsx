@@ -4,7 +4,7 @@ import { InformationScreen, type InformationPage } from './InformationScreen'
 import { NicknameScreen } from '../onboarding/NicknameScreen'
 import { useState } from 'react'
 import { GNB } from '../../components/ui'
-import crab from './assets/profile-crab.png'
+import crab from './assets/profile-w10.png'
 import edit from './assets/edit-profile.svg'
 import './my.css'
 
@@ -55,9 +55,9 @@ export function MyPreview({ nickname = '자취하는 소라게', onNicknameChang
     else if (information) closeInformation()
     else window.location.hash = 'home'
   })
-  const [status, setStatus] = useState('버전은 Figma 예시값입니다. 수정 완료한 닉네임은 기기에 저장합니다. 저장 결과는 홈 개발용 도구에서 확인할 수 있습니다. 빨간 본문은 수정 예정인 임시 문구입니다. 이메일 복사는 테스트 문자열 test.email.com을 복사합니다.')
+  const status = '정보·약관은 2026-11-06 Figma 검토안입니다. 보관 기간·국외 처리 조건은 확정 전이며 공개 Notion 동기화는 아직 완료되지 않았습니다. 닉네임은 기기에 저장하며 문의 이메일은 happytanglee@gmail.com입니다.'
   return <div className="hh-home-preview">
-    <div className="hh-home-preview-frame hh-my-frame hh-my-stack"><div className="hh-my-base" inert={editing || information !== null} aria-hidden={editing || information !== null}><MyScreen nickname={nickname} version="v 1.0.1" onBack={() => { window.location.hash = 'home' }} onEdit={() => { setClosingEdit(false); setEditing(true) }} onMenu={id => { if (id === 'ai') setStatus('AI 활용 정보 · 상세 시안 확인 후 연결 예정'); else { setClosingInformation(false); setInformation(id) } }} /></div>
+    <div className="hh-home-preview-frame hh-my-frame hh-my-stack"><div className="hh-my-base" inert={editing || information !== null} aria-hidden={editing || information !== null}><MyScreen nickname={nickname} version="v 1.0.1" onBack={() => { window.location.hash = 'home' }} onEdit={() => { setClosingEdit(false); setEditing(true) }} onMenu={id => { setClosingInformation(false); setInformation(id) }} /></div>
       {information && <div className={`hh-my-editor${closingInformation ? ' hh-my-editor--leaving' : ''}`} inert={closingInformation} onAnimationEnd={event => { if (event.target === event.currentTarget && event.animationName === 'hh-my-out') { setInformation(null); setClosingInformation(false) } }}>
         <InformationScreen page={information} onBack={closeInformation} />
       </div>}

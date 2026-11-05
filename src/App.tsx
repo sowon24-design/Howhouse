@@ -3,7 +3,7 @@ import { AnimatePresence } from 'motion/react'
 import { SolutionsFlow, categoryForHome } from './app-screens/solutions/SolutionsFlow'
 import { SystemPreview } from './app-screens/system/SystemPreview'
 import { MyPreview } from './app-screens/my/MyScreen'
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { HomePreview } from './app-screens/home/HomePreview'
 import { OnboardingPreview } from './app-screens/onboarding/OnboardingPreview'
 import { ProblemPreview } from './app-screens/problem/ProblemPreview'
@@ -19,21 +19,26 @@ import type { AnalysisResult, GeneratedSolution } from './analysis'
 import { ConnectivityBoundary } from './analysis/ConnectivityBoundary'
 
 const colors = [
-  ['neutral', '화면 배경', '#F5F7FB'], ['surface', '카드·시트', '#FFFFFF'],
-  ['primary', '브랜드 파랑', '#365EFF'], ['primary-pressed', '기본 토큰 · 눌림', '#1B43E4'],
+  ['neutral', '화면 배경', '#EDF2FA'], ['surface', '기본 표면·시트', '#F8FAFF'],
+  ['primary', '브랜드 파랑', '#1157CE'], ['primary-pressed', '기본 토큰 · 눌림', '#000E45'],
   ['on-surface', '제목·본문', '#19212E'], ['secondary', '보조 글자', '#5F6979'],
-  ['border', '테두리', '#D7DEE7'], ['disabled', '비활성 글자·아이콘', '#898F98'],
+  ['border', '테두리', '#DEE5F0'], ['disabled', '비활성 영역', '#D6DEEB'],
   ['error', '오류', '#FF0000'],
 ]
 const componentColors = [
-  ['button-primary-hover', '주요 버튼 · Hover', '#234FFF'],
-  ['button-primary-pressed', '주요 버튼 · Pressed', '#1B45F0'],
-  ['button-pale', '보조 버튼 · Default', '#E8F0FF'],
-  ['button-pale-hover', '보조 버튼 · Hover', '#E0EBFF'],
-  ['button-pale-pressed', '보조 버튼 · Pressed', '#D9E6FF'],
+  ['arrow-primary-hover', '원형 화살표 · Hover', '#0E54CB'],
+  ['list-pale-hover', '파란 목록·문장 · Hover', '#D6E4F9'],
+  ['legacy-neutral', '탭·사진 추가 배경', '#F5F7FB'],
+  ['surface-white', '탭 선택·단계 카드', '#FFFFFF'],
+  ['legacy-border', '라디오·아코디언 선', '#D7DEE7'],
+  ['button-primary-hover', '주요 버튼 · Hover', '#0E54CC'],
+  ['button-primary-pressed', '주요 버튼 · Pressed', '#084EC6'],
+  ['button-pale', '보조 버튼 · Default', '#DDEAFF'],
+  ['button-pale-hover', '보조 버튼 · Hover', '#D5E4FC'],
+  ['button-pale-pressed', '보조 버튼 · Pressed', '#D1DFF7'],
   ['button-disabled-background', '비활성 버튼 배경', '#D7DEE7'],
-  ['list-neutral-hover', '목록 · Hover', '#F1F4FA'],
-  ['list-neutral-pressed', '목록 · Pressed', '#EBEFF7'],
+  ['list-neutral-hover', '목록 · Hover', '#ECF1F9'],
+  ['list-neutral-pressed', '목록 · Pressed', '#E8EEF7'],
 ]
 const typography = [
   ['display', 'Display bd', '700', '26', '36.4'],
@@ -86,6 +91,13 @@ function AppContent({ suspended, onConnectionLost }: { suspended: boolean; onCon
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult<GeneratedSolution> | null>(null)
   const [problemBackground, setProblemBackground] = useState<CategoryId>()
   const [hash, setHash] = useState(window.location.hash)
+  // Keep the outer viewport horizontally locked for every app screen, including D.
+  useLayoutEffect(() => {
+    const enabled = !hash || hash === '#' || ['#home', '#my', '#problem', '#onboarding', '#system', '#analysis-result'].includes(hash) || hash.startsWith('#solutions/') || hash.startsWith('#case/')
+    if (enabled) document.documentElement.dataset.appHorizontalLock = 'true'
+    else delete document.documentElement.dataset.appHorizontalLock
+    return () => { delete document.documentElement.dataset.appHorizontalLock }
+  }, [hash])
   useEffect(() => {
     if (!hash || hash === '#') window.location.replace(`#${profile?.setupComplete ? 'home' : 'onboarding'}`)
   }, [hash, profile?.setupComplete])

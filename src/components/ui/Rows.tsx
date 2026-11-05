@@ -1,11 +1,19 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import { useEffect, useState } from 'react'
 import { Icon } from '../Icon/Icon'
 import { Asset } from './Asset'
 import './ui.css'
 
 type RowProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'neutral' | 'pale'; icon?: ReactNode }
 export function ListRow({ variant = 'neutral', icon, children, className = '', type = 'button', ...props }: RowProps) {
-  return <button {...props} type={type} className={`ui-list ui-tone--${variant} ${className}`}>
+  const [pressed, setPressed] = useState(false)
+  useEffect(() => { if (props.disabled) setPressed(false) }, [props.disabled])
+  return <button {...props} type={type} className={`ui-list ui-tone--${variant} ${className}`} data-pressed={pressed && !props.disabled || undefined}
+    onPointerDown={event => { props.onPointerDown?.(event); if (!event.defaultPrevented && event.button === 0) setPressed(true) }}
+    onPointerUp={event => { props.onPointerUp?.(event); setPressed(false) }}
+    onPointerCancel={event => { props.onPointerCancel?.(event); setPressed(false) }}
+    onPointerLeave={event => { props.onPointerLeave?.(event); setPressed(false) }}
+    onBlur={event => { props.onBlur?.(event); setPressed(false) }}>
     {icon}<span className="ui-row-label">{children}</span><Asset name="arrow-right" />
   </button>
 }

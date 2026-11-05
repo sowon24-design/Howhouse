@@ -17,3 +17,5 @@
 .hh-terms-document h3 { font-size:16px; font-weight:600; line-height:24px; margin:0 0 8px; }
 .hh-terms-document p { font-size:14px; line-height:1.4; color:var(--color-secondary); margin:0; overflow-wrap:anywhere; }
 .hh-terms-sheet-content > .ui-button { flex:none; }
+
+.hh-terms, .hh-terms-sheet { -webkit-tap-highlight-color:transparent; }

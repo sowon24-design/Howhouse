@@ -1,14 +1,31 @@
 # CONTRACT.md — 어쩌집 공통 컴포넌트
 
-기준일: 2026-10-30. 현재 `src/components/ui` 및 `src/components/Icon` 코드와 사용자 확정 사항을 대조한 문서다. 새 화면 동작을 승인하거나 구현 완료로 간주하는 문서가 아니다. 시각 규칙과 수치는 [DESIGN.md](../../DESIGN.md), 화면별 정책은 [기능정의](../../docs/화면별_기능정의.md), 예제는 [사용 안내](ui/README.md)를 따른다.
+최종 동작 대조: 2026-11-05. 현재 `src/components/ui` 및 `src/components/Icon` 코드와 사용자 확정 사항을 대조한 문서다. 새 화면 동작을 승인하거나 구현 완료로 간주하는 문서가 아니다. 시각 규칙과 수치는 [DESIGN.md](../../DESIGN.md), 화면별 정책은 [기능정의](../../docs/화면별_기능정의.md), 예제는 [사용 안내](ui/README.md)를 따른다.
 
 ## 공통 원칙
+
+- 모달·바텀시트가 열려 있는 동안 배경의 터치·휠 스크롤을 차단한다. 닫힘 모션이 끝난 뒤 잠금을 해제한다. 시트 안에서 허용한 스크롤 영역(약관 본문·입력창)은 유지하되, 양 끝에서 배경으로 스크롤이 전달되지 않게 한다.
+- 바텀시트 드래그 닫기는 상단 중앙 손잡이와 그 주변 터치 영역에서 시작할 때만 허용한다. 본문·배경 드래그는 시트를 이동시키지 않으며 배경 드래그를 클릭 닫기로 처리하지 않는다.
 
 - 선택값·열림 상태는 호출한 화면이 보관한다. 컴포넌트는 콜백으로 변경을 요청하며 화면이 새 prop을 내려줘야 표시가 바뀐다.
 - 기본 버튼은 `type="button"`이다. 네이티브 버튼 props를 받는 컴포넌트는 필요한 경우 화면에서 type을 바꿀 수 있다.
 - 서버 요청·화면 이동·저장·카메라·권한 처리는 화면 담당이다. 클릭 콜백이 있다는 사실이 해당 기능 구현 완료를 뜻하지 않는다.
 - native button/input의 키보드 조작을 유지한다. 접근성 이름을 전달하고 포커스 표시를 지우지 않는다.
 - 아래 `?`는 선택 prop이다. 네이티브 속성 확장은 각 소스의 TypeScript 타입을 최종 기준으로 한다.
+
+## SolutionStep (2026-11-03)
+
+소스: [SolutionStep.tsx](ui/SolutionStep.tsx), [Figma 725:28299](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=725-28299).
+
+- 필수 Props: `number: number`, `title: string`, `description: string`. number는 화면이 전달하는 단계 번호다. B02 준비물은 0, 해결 단계는 1부터 표시한다.
+- 선택 Props: `active?: boolean`(기본 false), `materials?: readonly StepMaterial[]`(기본 빈 배열), `onMaterialClick?: (material: StepMaterial) => void`.
+- StepMaterial: `id: string`, `label: string`, `disabled?: boolean`. id는 목록 내 고유값이다.
+- 최신 Figma 840:8523: 연한 번호 배경과 파란 숫자의 고정 행이다. active는 이전 호출 호환용이며 시각 변화와 aria-current를 만들지 않는다. B02는 모든 행을 하나의 흰 카드와 세로 연결선으로 묶는다.
+- 준비물 수에 제한을 두지 않는다. 부모 폭에 맞춰 줄바꿈하며 긴 이름도 넘치지 않는다. 빈 배열이면 준비물 영역과 해당 간격을 렌더링하지 않는다.
+- 준비물 버튼은 클릭한 항목만 콜백으로 전달한다. disabled 또는 콜백 부재 시 비활성이다. 링크·검색·외부 브라우저는 화면 책임이며 현재 API 요청을 하지 않는다.
+- 원본 외부 링크 아이콘은 `public/components/figma/solution-step-external-link.svg`(725:31185), 16×16 그대로 사용한다.
+- W10 색상은 공통 토큰을 재사용한다. B02의 SolutionSteps가 이 컴포넌트를 조립한다.
+- 준비물 누름에는 기존 승인 밝기 피드백을 사용하고 키보드 focus-visible을 유지한다. B02는 하나의 흰 카드 안에서 단계를 고정 표시하며 스크롤에 따라 바꾸지 않는다. 공통 컴포넌트 자체는 스크롤을 감지하지 않는다.
 
 ## Button
 
@@ -39,6 +56,7 @@
 - Checkbox 추가 Props: `variant?: 'fill' | 'stroke'`, 기본 `fill`.
 - 상태 변경 시 native `onChange(event)`를 사용한다. 화면은 `event.target.checked`를 상태에 반영한다.
 - Checkbox는 선택/해제를 지원한다. Radio는 같은 그룹에 동일한 name을 전달해 하나만 선택하게 한다. 서로 다른 그룹은 다른 name을 쓴다.
+- Radio 선택 표시는 테두리 원과 중앙 점으로 구성한다. 중앙 점을 컨트롤 전체 크기로 늘리지 않는다.
 - native Space·방향키 동작을 유지한다. disabled input은 변경할 수 없다. 시각용 원본 에셋과 실제 input을 함께 사용한다.
 - ‘모두 동의’와 개별 동의의 연동은 컴포넌트 내부 기능이 아니며 화면에서 구현한다.
 
@@ -101,7 +119,20 @@
 - SheetAction: `id: string`, `label: string`, `onClick: () => void`, `disabled?: boolean`. id는 목록 내 고유값이다.
 - 액션 클릭은 해당 onClick만 호출하며 자동 닫힘이 아니다. 화면에서 필요 시 open을 false로 변경한다.
 - 취소·Escape·배경 바깥 클릭은 onClose를 호출한다. 배경 클릭은 포인터 시작과 종료가 모두 dialog 바깥일 때 처리한다.
-- 아래에서 올라와 열리고 아래로 내려가 닫힌다. 손잡이는 시각 요소이며 드래그/스와이프 닫기를 구현한 것은 아니다.
+- 아래에서 올라와 열리고 아래로 내려가 닫힌다. 상단 중앙 손잡이 주변에서 시작한 드래그로 닫을 수 있다. 아래 Dialog 계약을 따른다.
+
+## Dialog / 화면용 바텀시트 (2026-11-05)
+
+소스: [Dialogs.tsx](ui/Dialogs.tsx), [스크롤 잠금](ui/modalScrollLock.ts), [B 화면 어댑터](../solutions/SolutionSheet.tsx).
+
+- 필수 Props: `open`, `onClose`, `children`, `label`, `className`. 선택 Props: `closeOnBackdrop`(기본 true), `swipeDismiss`(기본 false).
+- ActionSheet와 B 화면 SolutionSheet는 손잡이 드래그를 사용한다. 일반 Dialog는 화면에서 `swipeDismiss`를 지정한다. B 화면은 별도 드래그 처리를 중복 등록하지 않는다.
+- 드래그 시작 영역은 상단 중앙 112×40px이며 작은 화면에서는 시트 너비를 넘지 않는다. 손잡이 밖의 본문·배경에서 시작한 드래그는 시트를 움직이지 않는다.
+- 아래로 시트 높이의 20% 또는 100px 중 작은 값 이상 끌면 onClose를 호출한다. 미달이면 200ms ease-out으로 복귀하며, 포인터 취소 시 원위치로 복원한다.
+- 배경 클릭 닫기는 시작·끝이 모두 시트 밖이고 드래그가 아닐 때만 허용한다. 배경 드래그는 닫기 클릭으로 취급하지 않는다.
+- 배경 휠·터치 스크롤은 차단한다. 시트 내부의 허용된 스크롤 영역은 유지하며, 시작·끝 경계에서는 배경으로 전달하지 않는다. 닫힘 애니메이션 중에도 잠금을 유지한다.
+- 약관 외 시트는 본문 전체를 별도 스크롤 영역으로 만들지 않는다. 약관 전문과 긴 입력창 내부의 스크롤은 예외다.
+- 시트 너비는 앱 프레임과 현재 보이는 화면 영역에 맞춰 조정한다. 412px 고정 너비를 호출 조건으로 요구하지 않는다.
 
 ## Overlay
 
@@ -120,7 +151,7 @@
 - onClose를 받으면 화면이 open=false로 바꿔야 한다. 컴포넌트는 닫힘 애니메이션 동안 dialog를 유지하며 내부를 inert 처리한다.
 - 닫힘 완료 후 dialog를 닫고 스크롤과 이전 포커스를 복원한다. 언마운트 시에도 복원한다.
 - 자식은 닫힌 뒤에도 마운트되어 있다. 다시 열 때 선택값을 초기화할지는 화면이 명시적으로 정한다.
-- 움직임 줄이기 설정에서는 애니메이션을 생략한다. Android WebView 뒤로가기 연동은 아직 별도 작업이다.
+- 움직임 줄이기 설정에서는 애니메이션을 생략한다. Android 뒤로가기는 화면 연결 계층에서 열린 dialog의 cancel 이벤트로 전달하며, 컴포넌트가 직접 화면 목적지를 결정하지 않는다.
 
 ## Icon
 
@@ -188,3 +219,25 @@
 
 ### Button 눌림 피드백 보정 (2026-10-31)
 - 짧은 탭에도 pressed 토큰이 보이도록 :active 진입 색 전환은 즉시 적용한다. 해제는 기존 160ms 복귀를 유지한다. disabled/loading 차단과 클릭 콜백 시점은 변경하지 않는다.
+
+### ListRow 눌림 피드백 (2026-11-01)
+- 기존 neutral/pale hover·pressed 토큰을 유지한다. 포인터를 누르는 즉시 pressed를 적용하고 up/cancel/leave/blur 및 disabled 전환에서 해제한다.
+- 클릭 실행이나 화면 이동을 지연하지 않는다. 이 보정은 공통 ListRow를 사용하는 모든 화면에 적용된다.
+
+## 색상 동기화 (2026-11-04)
+
+- 최신 Figma 컴포넌트의 default·hover·pressed·disabled 색상을 토큰과 원본 SVG에 반영했다. 기존 클릭·선택·모션 동작은 유지한다.
+- Button과 ArrowButton의 hover, pale Button과 List/Message의 hover는 각각 별도 토큰을 사용한다.
+- TabBar 선택 배경은 흰색, 탭 바탕·AddImage는 기존 Blue glass 배경이다. GNB light·ActionSheet는 새 surface 색을 사용한다.
+- 일반 disabled 영역과 disabled CTA 배경은 Figma에서 서로 다른 토큰이므로 합치지 않는다.
+
+### Dialog의 선택적 상단 끌어 닫기
+
+- `swipeDismiss` 기본값은 `false`. 약관 시트 등 명시한 인스턴스에서만 사용한다.
+- 상단40px에서 아래로 끌어100px(또는 시트 높이20% 중 작은 값)에 도달하면 `onClose`를 호출한다. 짧게 끌면 원위치로 복귀한다.
+- 본문 스크롤·바깥 터치·Escape/Android 취소·기존 열림/닫힘 모션은 유지한다. 닫기는 동의나 제출로 처리하지 않는다.
+
+- 약관을 제외한 바텀시트는 내부 콘텐츠를 스크롤하지 않고 아래로 끌어 닫는다. 약관 본문 스크롤은 유지한다.
+
+### 바텀시트 반응형 너비
+- 모든 ui-action-sheet는 호출 화면의 앱 프레임 너비와 좌측 위치를 따른다. 프레임이 없는 공통 미리보기에서는 브라우저 가시 영역을 따른다. 열려 있는 동안 리사이즈·회전에도 갱신하며 402/412px 상한을 적용하지 않는다.

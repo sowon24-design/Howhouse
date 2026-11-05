@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, Checkbox, GNB } from '../../components/ui'
 import { Dialog } from '../../components/ui/Dialogs'
-import draft from './terms-draft.json'
+import information from '../my/information-draft.json'
 import './terms.css'
 
 export function TermsScreen({ onBack, onClose, onContinue }: { onBack: () => void; onClose: () => void; onContinue: () => void }) {
@@ -23,12 +23,12 @@ export function TermsScreen({ onBack, onClose, onContinue }: { onBack: () => voi
       </div>
     </div>
     <footer className="hh-onboarding-next"><Button disabled={!all} onClick={() => { if (all) onContinue() }}>동의하고 시작하기</Button></footer>
-    <Dialog open={open} onClose={() => setOpen(false)} label={title} className="ui-action-sheet hh-terms-sheet">
+    <Dialog open={open} onClose={() => setOpen(false)} label={title} className="ui-action-sheet hh-terms-sheet" closeOnBackdrop swipeDismiss>
       <div className="ui-sheet-handle" aria-hidden="true" />
       <div className="hh-terms-sheet-content">
         <h2>{title}</h2>
         <div className="hh-terms-document" key={`${sheet}-${open}`} tabIndex={0} role="region" aria-label={`${title} 전문`}>
-          {draft[sheet].map(section => <section key={section.title}><h3>{section.title}</h3>{section.paragraphs.map((text, index) => <p key={index}>{text}</p>)}</section>)}
+          {(sheet === 'service' ? information.terms : information.privacy).map(section => <section key={section.title}><h3>{section.title}</h3>{section.paragraphs.map((text, index) => <p key={index}>{text}</p>)}</section>)}
         </div>
         <Button onClick={() => setOpen(false)}>닫기</Button>
       </div>
