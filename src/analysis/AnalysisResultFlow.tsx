@@ -3,6 +3,7 @@ import { B02 } from '../solutions/B02'
 import type { B02ViewData } from '../solutions/B02'
 import { B03 } from '../solutions/B03'
 import { toMessageRecipients } from '../solutions/message-model'
+import type { ResolutionStatus } from '../solutions/resolution-message'
 import { useAndroidBack } from '../app-screens/android-back'
 import '../app-screens/solutions/solutions-flow.css'
 import '../app-screens/home/home-preview.css'
@@ -11,15 +12,16 @@ import '../app-screens/home/home-preview.css'
 export function AnalysisResultFlow({ data, onHome, onConnectionLost }: { data: B02ViewData; onHome: () => void; onConnectionLost?: () => void }) {
   const [contact, setContact] = useState(false)
   const [visited, setVisited] = useState(false)
+  const [resolution, setResolution] = useState<ResolutionStatus | undefined>()
   useAndroidBack(() => contact ? setContact(false) : onHome())
   return <div className="hh-home-preview">
     <div className="hh-home-preview-frame hh-solutions-frame">
       <div className="hh-solutions-layer" inert={contact} aria-hidden={contact}>
         <B02 data={data} onBack={onHome} onComplete={onHome}
-          onContact={() => { setVisited(true); setContact(true) }} onOpenVideo={() => {}} onPreviewOpinion={() => {}} />
+          onContact={status => { setResolution(status);setVisited(true);setContact(true) }} onOpenVideo={() => {}} onPreviewOpinion={() => {}} />
       </div>
       {visited && <div className="hh-solutions-layer hh-solutions-front" hidden={!contact} inert={!contact} aria-hidden={!contact}>
-        <B03 recipients={toMessageRecipients(data)} onBack={() => setContact(false)} />
+        <B03 recipients={toMessageRecipients(data)} resolution={resolution} contextual={data.source === 'generated'} onBack={() => setContact(false)} />
       </div>}
     </div>
     <details className="hh-home-preview-tools hh-preview-disclosure"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">

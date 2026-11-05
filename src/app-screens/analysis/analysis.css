@@ -48,3 +48,17 @@
 .hh-confirm-sheet-content > div,.hh-confirm-sheet .hh-confirm-actions {flex:none;}
 .hh-confirm-sheet-content img {width:min(178px,30.5143dvh);}
 .hh-analysis-art > img {object-fit:cover;}
+
+/* Fixed examples only: opening this guidance never requests analysis. */
+.hh-confirm-guide { margin-top:var(--space-4);text-align:left; }
+.hh-confirm-guide ul { margin:0 0 var(--space-3);padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--space-2); }
+.hh-confirm-guide li { display:grid;grid-template-columns:70px minmax(0,1fr);gap:var(--space-2);font-size:14px;line-height:1.4;color:var(--color-secondary); }
+.hh-confirm-guide strong { font-weight:600;color:var(--color-on-surface); }
+.hh-confirm-guide > p { text-align:center; }
+@media(max-height:600px) {
+  .hh-confirm-sheet-content img { display:none; }
+  .hh-confirm-guide { margin-top:var(--space-2); }
+  .hh-confirm-guide ul { gap:var(--space-1);margin-bottom:var(--space-2); }
+  .hh-confirm-guide li,.hh-confirm-guide > p { font-size:12px; }
+  .hh-confirm-sheet h2 { font-size:18px;line-height:24px; }
+}
