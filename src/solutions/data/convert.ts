@@ -63,7 +63,7 @@ export function convertCsv(field: Field, csv: string, supplements: Readonly<Reco
     return {
       id, field, number: value(0), category: value(1), symptom: value(2), source: 'existing',
       title: value(4), description: value(3), supplies: splitSupplies(value(5)), duration: value(6), responsibility: value(7), reference: value(8), steps, videos,
-      contacts: { landlord: {label:value(18),sentences:row.slice(20,24)}, company:{label:value(19),sentences:row.slice(24,28)} },
+      contacts: { landlord: {label:value(18),sentences:row.slice(20,24),solvedSentences:row.slice(28,31).filter(s=>s.trim())}, company:{label:value(19),sentences:row.slice(24,28)} },
       canContact: !!(value(18).trim() || value(19).trim()),
     }
   })

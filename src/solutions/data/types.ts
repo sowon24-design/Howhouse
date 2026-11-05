@@ -8,7 +8,7 @@ export type SolutionCase = {
   responsibility: string; reference: string; supplies: string[]
   steps: { number: number; title: string; description: string }[]
   videos: { url: string; thumbnail: string }[]
-  contacts: { landlord: { label: string; sentences: string[] }; company: { label: string; sentences: string[] } }
+  contacts: { landlord: { label: string; sentences: string[]; solvedSentences?: string[] }; company: { label: string; sentences: string[] } }
   canContact: boolean
 }
 export type SolutionView = SolutionCase & { photos: readonly CasePhoto[] }

@@ -65,22 +65,15 @@ test('copy result distinguishes navigation success from empty and failed writes'
 })
 
 
-test('solved block belongs only to landlord; company content stays identical for either outcome', async()=>{
-  const {toMessageRecipients,solvedContactSentence,initialDraft,messageBody,applySentences,selectedIndexes}=await import('./message-model.ts')
-  const data={contacts:{landlord:{label:'집주인',sentences:['상황 설명']},company:{label:'전문업체',sentences:['점검 요청']}}}
-  for(const r of toMessageRecipients(data,true)){
-    if(r.id==='company'){
-      assert.deepEqual(r,toMessageRecipients(data,false).find(r=>r.id==='company'))
-      assert.ok(!r.sentences.includes(solvedContactSentence))
-      continue
-    }
-    assert.equal(r.sentences.at(-1),solvedContactSentence)
-    const draft=initialDraft(r)
-    assert.ok(messageBody(draft).includes(solvedContactSentence))
-    const removed=applySentences(draft,selectedIndexes(draft).filter(i=>i!==r.sentences.length-1),r.sentences)
-    assert.ok(!messageBody(removed).includes(solvedContactSentence))
-    assert.ok(messageBody(removed).includes(r.sentences[0]))
-  }
-  assert.ok(toMessageRecipients(data).every(r=>!r.sentences.includes(solvedContactSentence)))
-  assert.deepEqual(data.contacts.landlord.sentences,['상황 설명'])
+test('solved landlord blocks replace unresolved blocks, company stays unchanged',async()=>{
+  const {toMessageRecipients,initialDraft,messageBody,applySentences,selectedIndexes}=await import('./message-model.ts')
+  const data={contacts:{landlord:{label:'집주인',sentences:['미해결 상황'],solvedSentences:['상황과 조치','점검 부탁']},company:{label:'전문업체',sentences:['업체 문의']}}}
+  const solved=toMessageRecipients(data,true),unsolved=toMessageRecipients(data,false)
+  assert.deepEqual(solved[0].sentences,['상황과 조치','점검 부탁'])
+  assert.deepEqual(unsolved[0].sentences,['미해결 상황'])
+  assert.deepEqual(solved[1],unsolved[1])
+  const draft=initialDraft(solved[0]);assert.ok(!messageBody(draft).includes('미해결'))
+  assert.equal(messageBody(applySentences(draft,[0],solved[0].sentences)),'상황과 조치')
+  delete data.contacts.landlord.solvedSentences
+  assert.deepEqual(toMessageRecipients(data,true)[0].sentences,['미해결 상황'])
 })
