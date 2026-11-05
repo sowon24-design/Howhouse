@@ -12,7 +12,7 @@ export function toMessageRecipients(data: Pick<SolutionCase,'contacts'>, solved 
     const contact=data.contacts[id]
     if(contact.label.trim())result.push({id,label:id==='landlord'?'집주인':'전문 업체',title:id==='landlord'?'집주인':'수리 기사',sentences:contact.sentences.filter(s=>s.trim())})
   }
-  return solved ? result.map(recipient=>({...recipient,sentences:[...recipient.sentences,solvedContactSentence]})) : result
+  return solved ? result.map(recipient=>recipient.id==='landlord'?{...recipient,sentences:[...recipient.sentences,solvedContactSentence]}:recipient) : result
 }
 export function initialDraft(recipient:Recipient):MessageDraft {
   const catalog=recipient.sentences.map((original,i)=>({id:`${recipient.id}:block:${i}`,order:i,original}))

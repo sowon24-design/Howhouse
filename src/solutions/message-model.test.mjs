@@ -65,10 +65,15 @@ test('copy result distinguishes navigation success from empty and failed writes'
 })
 
 
-test('solved contact block is available for each recipient and can be deselected', async()=>{
+test('solved block belongs only to landlord; company content stays identical for either outcome', async()=>{
   const {toMessageRecipients,solvedContactSentence,initialDraft,messageBody,applySentences,selectedIndexes}=await import('./message-model.ts')
   const data={contacts:{landlord:{label:'집주인',sentences:['상황 설명']},company:{label:'전문업체',sentences:['점검 요청']}}}
   for(const r of toMessageRecipients(data,true)){
+    if(r.id==='company'){
+      assert.deepEqual(r,toMessageRecipients(data,false).find(r=>r.id==='company'))
+      assert.ok(!r.sentences.includes(solvedContactSentence))
+      continue
+    }
     assert.equal(r.sentences.at(-1),solvedContactSentence)
     const draft=initialDraft(r)
     assert.ok(messageBody(draft).includes(solvedContactSentence))
