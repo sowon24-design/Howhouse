@@ -11,15 +11,16 @@ import '../app-screens/home/home-preview.css'
 export function AnalysisResultFlow({ data, onHome, onConnectionLost }: { data: B02ViewData; onHome: () => void; onConnectionLost?: () => void }) {
   const [contact, setContact] = useState(false)
   const [visited, setVisited] = useState(false)
+  const [contactSolved,setContactSolved]=useState(false)
   useAndroidBack(() => contact ? setContact(false) : onHome())
   return <div className="hh-home-preview">
     <div className="hh-home-preview-frame hh-solutions-frame">
       <div className="hh-solutions-layer" inert={contact} aria-hidden={contact}>
         <B02 data={data} onBack={onHome} onComplete={onHome}
-          onContact={() => { setVisited(true); setContact(true) }} onOpenVideo={() => {}} onPreviewOpinion={() => {}} />
+          onContact={solved => {setContactSolved(solved); setVisited(true); setContact(true) }} onOpenVideo={() => {}} onPreviewOpinion={() => {}} />
       </div>
       {visited && <div className="hh-solutions-layer hh-solutions-front" hidden={!contact} inert={!contact} aria-hidden={!contact}>
-        <B03 recipients={toMessageRecipients(data)} onBack={() => setContact(false)} />
+        <B03 key={String(contactSolved)} recipients={toMessageRecipients(data,contactSolved)} onBack={() => setContact(false)} />
       </div>}
     </div>
     <details className="hh-home-preview-tools hh-preview-disclosure"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">

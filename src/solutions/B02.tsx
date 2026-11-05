@@ -24,7 +24,7 @@ function FeedbackIcon({ filled, stroke, fill }: { filled: boolean; stroke: strin
 /** View data only. This is NOT the team's final analysis response / sheet schema. */
 export type B02ViewData = Omit<SolutionView, 'id' | 'field' | 'number' | 'category' | 'symptom'>
 export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPreviewOpinion }: {
-  data: B02ViewData; onBack?: () => void; onContact: () => void; onComplete?: () => void
+  data: B02ViewData; onBack?: () => void; onContact: (solved:boolean) => void; onComplete?: () => void
   onOpenVideo: (url: string) => void; onPreviewOpinion: () => void
 }) {
   // Presentation-only fallback; never ask the model to generate asset paths.

@@ -63,3 +63,19 @@ test('copy result distinguishes navigation success from empty and failed writes'
   assert.equal((await copyMessageResult('본문',async()=>{writes++})).status,'success')
   assert.equal(writes,1)
 })
+
+
+test('solved contact block is available for each recipient and can be deselected', async()=>{
+  const {toMessageRecipients,solvedContactSentence,initialDraft,messageBody,applySentences,selectedIndexes}=await import('./message-model.ts')
+  const data={contacts:{landlord:{label:'집주인',sentences:['상황 설명']},company:{label:'전문업체',sentences:['점검 요청']}}}
+  for(const r of toMessageRecipients(data,true)){
+    assert.equal(r.sentences.at(-1),solvedContactSentence)
+    const draft=initialDraft(r)
+    assert.ok(messageBody(draft).includes(solvedContactSentence))
+    const removed=applySentences(draft,selectedIndexes(draft).filter(i=>i!==r.sentences.length-1),r.sentences)
+    assert.ok(!messageBody(removed).includes(solvedContactSentence))
+    assert.ok(messageBody(removed).includes(r.sentences[0]))
+  }
+  assert.ok(toMessageRecipients(data).every(r=>!r.sentences.includes(solvedContactSentence)))
+  assert.deepEqual(data.contacts.landlord.sentences,['상황 설명'])
+})

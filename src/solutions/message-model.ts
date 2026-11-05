@@ -5,13 +5,14 @@ type SourceBlock = {id:string;order:number;original:string}
 export type MessageDraft = {catalog:SourceBlock[];sentences:MessageSentence[];nextId:number}
 export function messageBody(draft:MessageDraft){return draft.sentences.map(s=>s.text).join('\n\n')}
 export function selectedIndexes(draft:MessageDraft){return draft.catalog.flatMap((b,i)=>draft.sentences.some(s=>s.blockId===b.id)?[i]:[])}
-export function toMessageRecipients(data: Pick<SolutionCase,'contacts'>): Recipient[] {
+export const solvedContactSentence = '우선 문제가 생긴 부분을 손봐 두었습니다. 같은 문제가 다시 생기지 않도록 추가 점검이 필요한지, 사용할 때 주의할 점이 있는지 알려주시면 감사하겠습니다.'
+export function toMessageRecipients(data: Pick<SolutionCase,'contacts'>, solved = false): Recipient[] {
   const result:Recipient[]=[]
   for(const id of ['landlord','company'] as const){
     const contact=data.contacts[id]
     if(contact.label.trim())result.push({id,label:id==='landlord'?'집주인':'전문 업체',title:id==='landlord'?'집주인':'수리 기사',sentences:contact.sentences.filter(s=>s.trim())})
   }
-  return result
+  return solved ? result.map(recipient=>({...recipient,sentences:[...recipient.sentences,solvedContactSentence]})) : result
 }
 export function initialDraft(recipient:Recipient):MessageDraft {
   const catalog=recipient.sentences.map((original,i)=>({id:`${recipient.id}:block:${i}`,order:i,original}))
