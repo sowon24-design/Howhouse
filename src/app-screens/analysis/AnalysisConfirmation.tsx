@@ -23,16 +23,7 @@ export function AnalysisConfirmation({ title, description, stepCount, onConfirm,
       <div className="ui-sheet-handle" aria-hidden="true" />
       <div className="hh-confirm-sheet-content"><div>
       <h2>문제 상황을 더 자세히 들려주세요</h2>
-      <p>아래 예시를 참고해 알고 있는 내용을 더 알려주세요.</p>
-      <div className="hh-confirm-guide">
-        <ul>
-          <li><strong>위치</strong><span>싱크대 아래, 욕실 바닥</span></li>
-          <li><strong>증상</strong><span>물이 똑똑 떨어져요, 물이 천천히 내려가요</span></li>
-          <li><strong>시점·변화</strong><span>어제부터, 물을 틀 때만 생겨요</span></li>
-          <li><strong>해 본 조치</strong><span>물기를 닦아봤어요, 아직 해 보지 않았어요</span></li>
-        </ul>
-        <p>문제가 보이는 사진도 도움이 돼요.<br />내용을 보완한 뒤 분석 버튼을 눌러주세요.</p>
-      </div>
+      <p>문제가 생긴 위치나 증상을 조금 더 알려주시면<br />다시 찾아볼게요.</p>
       </div><img src={moreInformation} alt="" /></div>
       <div className="hh-confirm-actions"><Button variant="pale" onClick={onHome}>홈으로 돌아가기</Button><Button onClick={onBack}>문제 상황 더 알려주기</Button></div>
     </Dialog>
