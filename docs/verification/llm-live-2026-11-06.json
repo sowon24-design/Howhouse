@@ -1,0 +1,239 @@
+{
+  "dateKst": "2026-11-06",
+  "testedServerCommit": "6df4b36c05a216f2edd68ac91a7d2660168a90eb",
+  "paidAiCalls": 0,
+  "generatedFixture": "synthetic reference registered for test owner only",
+  "checks": [
+    {
+      "name": "two isolated anonymous test accounts",
+      "pass": true
+    },
+    {
+      "name": "identity 0",
+      "pass": true
+    },
+    {
+      "name": "identity 1",
+      "pass": true
+    },
+    {
+      "name": "no consent blocks provider session",
+      "pass": true
+    },
+    {
+      "name": "no consent blocks provider",
+      "pass": true
+    },
+    {
+      "name": "incomplete consent rejected",
+      "pass": true
+    },
+    {
+      "name": "test consent recorded",
+      "pass": true
+    },
+    {
+      "name": "accepted consent session",
+      "pass": true
+    },
+    {
+      "name": "invalid request after consent does not analyze",
+      "pass": true
+    },
+    {
+      "name": "consent withdrawn",
+      "pass": true
+    },
+    {
+      "name": "withdrawal blocks provider session",
+      "pass": true
+    },
+    {
+      "name": "withdrawal blocks provider",
+      "pass": true
+    },
+    {
+      "name": "normal account cannot review",
+      "pass": true
+    },
+    {
+      "name": "normal account cannot self grant reviewer",
+      "pass": true
+    },
+    {
+      "name": "generated result not forged",
+      "pass": true
+    },
+    {
+      "name": "unknown case not accepted",
+      "pass": true
+    },
+    {
+      "name": "extra personal fields rejected",
+      "pass": true
+    },
+    {
+      "name": "existing empty rating",
+      "pass": true
+    },
+    {
+      "name": "existing rating like",
+      "pass": true
+    },
+    {
+      "name": "existing duplicate rating",
+      "pass": true
+    },
+    {
+      "name": "existing rating dislike",
+      "pass": true
+    },
+    {
+      "name": "existing rating null",
+      "pass": true
+    },
+    {
+      "name": "existing old selection rejected",
+      "pass": true
+    },
+    {
+      "name": "existing final cleared state",
+      "pass": true
+    },
+    {
+      "name": "existing opinion saved",
+      "pass": true
+    },
+    {
+      "name": "existing opinion retry deduplicated",
+      "pass": true
+    },
+    {
+      "name": "existing conflicting retry rejected",
+      "pass": true
+    },
+    {
+      "name": "existing whitespace opinion rejected",
+      "pass": true
+    },
+    {
+      "name": "existing single reason enforced",
+      "pass": true
+    },
+    {
+      "name": "generated empty rating",
+      "pass": true
+    },
+    {
+      "name": "generated rating like",
+      "pass": true
+    },
+    {
+      "name": "generated duplicate rating",
+      "pass": true
+    },
+    {
+      "name": "generated rating dislike",
+      "pass": true
+    },
+    {
+      "name": "generated rating null",
+      "pass": true
+    },
+    {
+      "name": "generated old selection rejected",
+      "pass": true
+    },
+    {
+      "name": "generated final cleared state",
+      "pass": true
+    },
+    {
+      "name": "generated opinion saved",
+      "pass": true
+    },
+    {
+      "name": "generated opinion retry deduplicated",
+      "pass": true
+    },
+    {
+      "name": "generated conflicting retry rejected",
+      "pass": true
+    },
+    {
+      "name": "generated whitespace opinion rejected",
+      "pass": true
+    },
+    {
+      "name": "generated single reason enforced",
+      "pass": true
+    },
+    {
+      "name": "other account cannot use generated proof",
+      "pass": true
+    },
+    {
+      "name": "other account has isolated rating",
+      "pass": true
+    },
+    {
+      "name": "direct DB read blocked howhouse_feedback_opinions",
+      "pass": true
+    },
+    {
+      "name": "direct DB read blocked howhouse_feedback_ratings",
+      "pass": true
+    },
+    {
+      "name": "direct DB read blocked howhouse_release_users",
+      "pass": true
+    },
+    {
+      "name": "first user deletion completed",
+      "pass": true
+    },
+    {
+      "name": "first user private receipt repeat",
+      "pass": true
+    },
+    {
+      "name": "first user wrong receipt denied",
+      "pass": true
+    },
+    {
+      "name": "first user Auth account removed",
+      "pass": true
+    },
+    {
+      "name": "second user deletion completed",
+      "pass": true
+    },
+    {
+      "name": "second user private receipt repeat",
+      "pass": true
+    },
+    {
+      "name": "second user wrong receipt denied",
+      "pass": true
+    },
+    {
+      "name": "second user Auth account removed",
+      "pass": true
+    }
+  ],
+  "operatorReview": {
+    "generated": "reviewed",
+    "persisted": true,
+    "existing": "needs-change"
+  },
+  "cleanup": {
+    "testAccountsRemoved": 4,
+    "allTenScopesZero": true
+  },
+  "finalServer": {
+    "processingRegion": "us",
+    "live": true,
+    "privacyDocumentReady": false,
+    "releaseDataEnabled": false
+  }
+}
