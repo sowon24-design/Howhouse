@@ -1,3 +1,4 @@
+import {readProcessingRegion,providerBaseUrl} from './provider-region.mjs'
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { parseEnv } from 'node:util'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -10,15 +11,15 @@ export function validateConfig(config) {
   const apiKey = config.OPENAI_API_KEY?.trim(), model = config.OPENAI_MODEL?.trim()
   if (!apiKey || apiKey.length < 20 || /\s/.test(apiKey)) throw new Error('키 설정이 필요합니다.')
   if (!Object.hasOwn(prices, model ?? '')) throw new Error('Terra 또는 Sol 모델 이름을 확인하세요.')
-  return { apiKey, model }
+  return { apiKey, model, processingRegion:readProcessingRegion(config.OPENAI_PROCESSING_REGION) }
 }
 
 /** One fixed request. No photos, user data, tools, or automatic retries. */
-export async function runConnectionCheck({ apiKey, model, fetchImpl = fetch }) {
-  validateConfig({ OPENAI_API_KEY: apiKey, OPENAI_MODEL: model })
+export async function runConnectionCheck({ apiKey, model, processingRegion = 'global', fetchImpl = fetch }) {
+  validateConfig({ OPENAI_API_KEY: apiKey, OPENAI_MODEL: model, OPENAI_PROCESSING_REGION:processingRegion })
   let response
   try {
-    response = await fetchImpl('https://api.openai.com/v1/responses', {
+    response = await fetchImpl(providerBaseUrl(processingRegion)+'/responses', {
       method: 'POST',
       headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -51,11 +52,11 @@ export async function runConnectionCheck({ apiKey, model, fetchImpl = fetch }) {
     && Number.isSafeInteger(raw.output_tokens) && raw.output_tokens >= 0
     ? { inputTokens: raw.input_tokens, outputTokens: raw.output_tokens } : null
   return {
-    success: data.status === 'completed' && text === expected, model,
+    success: data.status === 'completed' && text === expected, model, processingRegion,
     responseStatus: data.status === 'completed' ? 'completed' : 'not-completed',
     answerMatched: text === expected, usage,
-    referenceCostUsd: usage ? (usage.inputTokens * prices[model].input + usage.outputTokens * prices[model].output) / 1_000_000 : null,
-    costNote: '2026-11-01 표준 텍스트 단가 기준 참고액. 할인·세금·정산 등 실제 청구는 Usage/Billing 기준.',
+    referenceCostUsd: usage ? (usage.inputTokens * prices[model].input + usage.outputTokens * prices[model].output) / 1_000_000 * (processingRegion==='us'?1.1:1) : null,
+    costNote: '2026-11-01 표준 텍스트 단가 및 미국 지정 시 10% 할증 기준 참고액. 할인·세금·정산 등 실제 청구는 Usage/Billing 기준.',
   }
 }
 

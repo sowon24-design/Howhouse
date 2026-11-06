@@ -1,3 +1,4 @@
+import {showDeveloperTools} from '../../analysis/release-mode'
 import { useState } from 'react'
 import { HomeScreen, homeCategories, type HomeCategoryKey } from './HomeScreen'
 import './home-preview.css'
@@ -17,12 +18,12 @@ export function HomePreview({ nickname = '자취하는 소라게', onCategory, o
       onCategory={key => onCategory ? onCategory(key) : setStatus(`${homeCategories.find(item => item.key === key)?.label} 카테고리 선택 · B01 연결 예정`)}
       onProblem={id => onProblem ? onProblem(id) : setStatus(`${problems.find(item => item.id === id)?.title} · B02 연결 예정`)}
     /></div>
-    <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="홈 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
+    {showDeveloperTools && <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="홈 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
       <a href="#components">공통 컴포넌트 보기</a>
       <p>A01 홈 · Figma 예시 데이터 · 시스템 영역 제외</p>
       <p role="status">{status}</p>
       <p role="status">{storageStatus}</p>
       {onResetSetup && <button type="button" onClick={onResetSetup}>테스트 초기화 · 처음부터 시작</button>}
-    </div></details>
+    </div></details>}
   </div>
 }

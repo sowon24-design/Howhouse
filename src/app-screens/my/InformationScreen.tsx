@@ -3,6 +3,7 @@ import { Button, GNB } from '../../components/ui'
 import draft from './information-draft.json'
 import contactCrab from './assets/contact-w10.png'
 import './information.css'
+import {PrivacyActions} from '../../analysis/PrivacyActions'
 
 export type InformationPage = 'app' | 'data' | 'terms' | 'privacy' | 'ai' | 'contact'
 export const policyLinks = {
@@ -73,6 +74,7 @@ export function InformationScreen({ page, onBack }: { page: InformationPage; onB
           </section>
         })}
       </div>}
+      {page==='data'&&<PrivacyActions/>}
       <footer className="hh-information-actions">
         {page === 'contact' ? <><div className="hh-contact-copy-action"><div role="status" aria-live="polite" aria-atomic="true" className="hh-contact-copy-status">{copyStatus && <span key={copySequence}>{copyStatus}</span>}</div><Button onClick={copyEmail}>이메일 복사하기</Button></div><p>{draft.contact.footer}</p></> : <div className="hh-information-buttons">
           {external && <a className="ui-button ui-button--pale" href={external} target="_blank" rel="noopener noreferrer">외부 링크에서 보기<span className="ui-sr-only"> (새 탭)</span></a>}

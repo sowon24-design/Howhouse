@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 export function inputFingerprint(input, context, secret) {
   const text = input.text.trim().normalize('NFC')
   const photos = input.photos.map(p => ({ type: p.type, sha256: createHash('sha256').update(p.bytes).digest('hex') }))
-  const dated = /오늘|어제|내일|방금|지금/.test(text) ? new Date(context.now ?? Date.now()).toISOString().slice(0, 10) : null
+  const dated = /오늘|어제|내일|방금|지금/.test(text) ? new Date((context.now ?? Date.now()) + 9 * 60 * 60 * 1000).toISOString().slice(0, 10) : null
   return createHmac('sha256', secret).update(JSON.stringify({ ...context, now: undefined, dated, text, photos })).digest('hex')
 }
 

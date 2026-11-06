@@ -1,0 +1,3 @@
+/* Release app shell: no preview footer or desktop padding. */
+html[data-release-build=true] .hh-home-preview {height:100dvh;padding:0;overflow:clip;}
+html[data-release-build=true] .hh-home-preview-frame {height:100dvh;--solutions-screen-height:100dvh;}

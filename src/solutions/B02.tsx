@@ -8,6 +8,7 @@ import type { SolutionView } from './data/types'
 import { displayResponsibility } from './data/presentation'
 import { OpinionSheet } from './OpinionSheet'
 import { useSolutionFeedback } from '../analysis/use-feedback'
+import { aiReportText } from '../analysis/ai-report'
 import type { ResolutionStatus } from './resolution-message'
 import clock from './assets/b02-clock.svg'
 import dollar from './assets/b02-dollar.svg'
@@ -39,6 +40,8 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
   const [sheet, setSheet] = useState<'closed' | 'edit' | 'thanks'>('closed')
   const [reason, setReason] = useState('')
   const [opinion, setOpinion] = useState('')
+  const [reporting,setReporting]=useState(false)
+  const [reportReason,setReportReason]=useState(''),[reportText,setReportText]=useState('')
   const root = useRef<HTMLElement>(null)
   const media = useRef<HTMLDivElement>(null)
   const [headerHidden, setHeaderHidden] = useState(false)
@@ -78,8 +81,9 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
     return () => target.removeEventListener('scroll', onScroll)
   }, [])
   function rate(value: 'up' | 'down') {
+    if(feedback.opinionPending)return
     void feedback.rate(value)
-    if (value === 'down' && rating !== value) setSheet('edit')
+    if (value === 'down' && rating !== value) {setReporting(false);setSheet('edit')}
   }
   return <section ref={root} className="solutions-b02 solutions-b02--case" data-generated={data.source === 'generated'} data-without-photos={photos.length === 0} aria-label="해결 방법">
     <div className="solutions-b02__header" data-hidden={headerHidden} data-scrolled={headerScrolled} onFocusCapture={() => { headerState.current.hidden = false; setHeaderHidden(false) }}>
@@ -105,7 +109,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
       </>}
       {data.source === 'existing' && data.videos.length > 0 && <>
         <section><h2 className="text-body-sb">더 자세히 알아보기</h2>
-          <a className="solutions-b02__video" href={data.videos[0].url} target="_blank" rel="noopener noreferrer" aria-label="해결 방법 유튜브 영상 열기" onClick={() => onOpenVideo(data.videos[0].url)}><img src={data.videos[0].thumbnail} alt="해결 방법 유튜브 썸네일" /><span><img src={external} alt="" /></span></a>
+          <a className="solutions-b02__video" href={data.videos[0].url} target="_blank" rel="noopener noreferrer" aria-label="해결 방법 유튜브 영상 열기" onClick={() => onOpenVideo(data.videos[0].url)}><img referrerPolicy="no-referrer" loading="lazy" src={data.videos[0].thumbnail} alt="해결 방법 유튜브 썸네일" /><span><img src={external} alt="" /></span></a>
         </section>
       </>}
       <div className="solutions-b02__feedback">
@@ -117,12 +121,13 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
         {feedback.ratingPending && <p role="status">평가를 저장하고 있어요.</p>}
         {feedback.ratingError && <p role="alert">{feedback.ratingError}</p>}
         {feedback.ratingRetry && <Button variant="pale" disabled={feedback.ratingPending} onClick={() => {void feedback.retryRating()}}>평가 다시 저장하기</Button>}
+        <Button variant="pale" disabled={feedback.opinionPending} onClick={()=>{setReporting(true);setSheet('edit')}}>AI 답변 신고</Button>
       </div>
       <div className="solutions-b02__actions"><Button variant="pale" onClick={()=>setResolution('unsolved')}>해결이 어려워요</Button><Button onClick={()=>setResolution('solved')}>해결됐어요</Button></div>
     </main>
-    <OpinionSheet mode={sheet} reason={reason} text={opinion} onReason={setReason} onText={setOpinion} onClose={() => setSheet('closed')}
+    <OpinionSheet mode={sheet} reporting={reporting} reason={reporting?reportReason:reason} text={reporting?reportText:opinion} onReason={reporting?setReportReason:setReason} onText={reporting?setReportText:setOpinion} onClose={() => setSheet('closed')}
       saving={feedback.opinionPending} error={feedback.opinionError}
-      onPreviewSubmit={() => {void feedback.submitOpinion(reason, opinion).then(saved => {if(saved){onPreviewOpinion();setSheet(current => current === 'edit' ? 'thanks' : current)}})}} />
+      onPreviewSubmit={() => {void feedback.submitOpinion(reporting?'직접 입력하기':reason, reporting?aiReportText(reportReason,reportText,[data.title,data.description,...data.steps.map(s=>`${s.title}: ${s.description}`)].join('\n')):opinion).then(saved => {if(saved){onPreviewOpinion();setSheet(current => current === 'edit' ? 'thanks' : current)}})}} />
     <ResolutionSheet mode={resolution} onClose={()=>setResolution('closed')} onHome={onComplete} onContact={onContact} canContact={data.canContact} hasLandlordMessage={!!data.contacts.landlord.label.trim() && (data.contacts.landlord.solvedSentences?.length ? data.contacts.landlord.solvedSentences : data.contacts.landlord.sentences).some(text => !!text.trim())} hasCompany={!!data.contacts.company.label.trim()}/>
   </section>
 }

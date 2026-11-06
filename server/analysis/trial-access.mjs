@@ -23,6 +23,7 @@ export function createTrialAccess({ supabaseUrl, publishableKey, fetchImpl = fet
     if (!uuid.test(user?.id ?? '') || user?.role !== 'authenticated' || !(user?.is_anonymous === true || user?.email_confirmed_at)) {
       throw new MatchError('auth-required')
     }
-    return { id: user.id }
+    // Only Auth-managed app_metadata can grant review access; user_metadata is untrusted.
+    return { id: user.id, ...(!user.is_anonymous && user.email_confirmed_at && user.app_metadata?.howhouse_reviewer === true ? { reviewer: true } : {}) }
   }
 }

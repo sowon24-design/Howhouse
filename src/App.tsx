@@ -1,3 +1,4 @@
+import {releaseBuild,ageConfirmationKey} from './analysis/release-mode'
 import { categories, getCategoryCases, solutionCases, type CategoryId } from './solutions/data'
 import { AnimatePresence } from 'motion/react'
 import { SolutionsFlow, categoryForHome } from './app-screens/solutions/SolutionsFlow'
@@ -91,6 +92,8 @@ function AppContent({ suspended, onConnectionLost }: { suspended: boolean; onCon
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult<GeneratedSolution> | null>(null)
   const [problemBackground, setProblemBackground] = useState<CategoryId>()
   const [hash, setHash] = useState(window.location.hash)
+  let ageConfirmed=!releaseBuild
+  if(releaseBuild){try{ageConfirmed=localStorage.getItem(ageConfirmationKey)==='yes'}catch{ageConfirmed=false}}
   // Keep the outer viewport horizontally locked for every app screen, including D.
   useLayoutEffect(() => {
     const enabled = !hash || hash === '#' || ['#home', '#my', '#problem', '#onboarding', '#system', '#analysis-result'].includes(hash) || hash.startsWith('#solutions/') || hash.startsWith('#case/')
@@ -99,6 +102,12 @@ function AppContent({ suspended, onConnectionLost }: { suspended: boolean; onCon
     return () => { delete document.documentElement.dataset.appHorizontalLock }
   }, [hash])
   useEffect(() => {
+    if(releaseBuild){
+      let ageConfirmed=false;try{ageConfirmed=localStorage.getItem(ageConfirmationKey)==='yes'}catch{}
+      const allowed=['#home','#my','#problem','#onboarding','#analysis-result'].includes(hash)||Boolean(solutionCases.find(item=>hash===`#case/${encodeURIComponent(item.id)}`))||Object.values(categoryForHome).some(value=>hash===`#solutions/${encodeURIComponent(value)}`)
+      if(!ageConfirmed&&hash!=='#onboarding'){window.location.replace('#onboarding');return}
+      if(hash&&hash!=='#'&&!allowed){window.location.replace(`#${profile?.setupComplete?'home':'onboarding'}`);return}
+    }
     if (!hash || hash === '#') window.location.replace(`#${profile?.setupComplete ? 'home' : 'onboarding'}`)
   }, [hash, profile?.setupComplete])
   useEffect(() => {
@@ -114,7 +123,8 @@ function AppContent({ suspended, onConnectionLost }: { suspended: boolean; onCon
   const caseCategory = selectedCase && categories.find(item => getCategoryCases([selectedCase], item.id).length)?.id
   const category = (hash === '#problem' ? problemBackground : undefined) ?? caseCategory ?? Object.values(categoryForHome).find(value => hash === `#solutions/${encodeURIComponent(value)}`)
   const frontOpen = hash === '#problem' || hash === '#my' || Boolean(category)
-  if (hash === '#system') return <SystemPreview />
+  if(releaseBuild&&!ageConfirmed&&hash!=='#onboarding')return null
+  if (!releaseBuild && hash === '#system') return <SystemPreview />
   if (hash === '#analysis-result') {
     const data = analysisResult?.source === 'existing' ? getSolutionById(analysisResult.caseId) : analysisResult?.solution
     return data ? <AnalysisResultFlow data={data} onConnectionLost={onConnectionLost} onHome={() => {window.location.hash = 'home'}} />
@@ -128,6 +138,7 @@ function AppContent({ suspended, onConnectionLost }: { suspended: boolean; onCon
     {hash === '#my' && <div className="hh-screen-stack-front"><MyPreview nickname={nickname} onNicknameChange={name => saveNickname(name)} /></div>}
     {hash === '#problem' && <div className="hh-screen-stack-front"><ProblemPreview suspended={suspended} onConnectionLost={onConnectionLost} input={draft} onChange={setDraft} onSuccess={result => {setAnalysisResult(result);window.location.hash = 'analysis-result'}} onInputBack={() => {window.location.hash = problemBackground ? `solutions/${encodeURIComponent(problemBackground)}` : 'home'}} /></div>}
   </div>
+  if(releaseBuild) return null
   return (
     <main className="foundation-preview">
       <header className="preview-header">

@@ -13,11 +13,13 @@ export function createAppSession(options: {
   const storageKey = `howhouse-analysis-session:${url.host}`
   const now = options.now ?? Date.now
   let session: Session | undefined, pending: Promise<string> | undefined
+  let generation=0
   try {
     const saved = JSON.parse(options.storage?.getItem(storageKey) ?? 'null')
     if (typeof saved?.accessToken === 'string' && typeof saved?.refreshToken === 'string' && Number.isFinite(saved?.expiresAt)) session = saved
   } catch { /* Start anonymously if local state is unavailable. */ }
   async function acquire(signal: AbortSignal) {
+    const attemptGeneration=generation
     const refresh = session?.refreshToken
     let response: Response
     try {
@@ -41,21 +43,29 @@ export function createAppSession(options: {
     if (typeof data.access_token !== 'string' || typeof data.refresh_token !== 'string' || !Number.isFinite(data.expires_in) || data.expires_in <= 0) {
       throw new AnalysisError({ code: 'auth-required', message: '앱 인증 응답을 확인하지 못했습니다.' })
     }
+    if(attemptGeneration!==generation)throw new AnalysisError({code:'auth-required',message:'인증 정보가 초기화됐습니다. 다시 시도해 주세요.'})
     session = { accessToken: data.access_token, refreshToken: data.refresh_token, expiresAt: now() + data.expires_in * 1000 }
     try { options.storage?.setItem(storageKey, JSON.stringify(session)) } catch { /* Current in-memory session remains usable. */ }
     return session.accessToken
   }
-  return async function getAccessToken(signal: AbortSignal) {
+  async function getAccessToken(signal: AbortSignal) {
     signal.throwIfAborted()
     if (session && session.expiresAt > now() + 30000) return session.accessToken
-    if (!pending) pending = acquire(signal).finally(() => { pending = undefined })
+    if (!pending) {const job=acquire(signal);pending=job;void job.finally(()=>{if(pending===job)pending=undefined}).catch(()=>{})}
     const token = await pending
     signal.throwIfAborted()
     return token
   }
+  return Object.assign(getAccessToken,{reset:()=>{generation++;session=undefined;pending=undefined;options.storage?.removeItem(storageKey)}})
 }
 
 let configured: ReturnType<typeof createAppSession> | undefined
+export function clearConfiguredAppSession(){
+ configured?.reset()
+ const url=import.meta.env?.VITE_ANALYSIS_AUTH_URL
+ if(url)globalThis.localStorage?.removeItem(`howhouse-analysis-session:${new URL(url).host}`)
+ configured=undefined
+}
 export function configuredAppSession() {
   const url = import.meta.env?.VITE_ANALYSIS_AUTH_URL
   const publishableKey = import.meta.env?.VITE_ANALYSIS_AUTH_PUBLISHABLE_KEY

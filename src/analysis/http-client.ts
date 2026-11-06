@@ -5,11 +5,11 @@ import type { GeneratedSolution } from './solution'
 import { analysisTimeoutMs, runWithDeadline } from './deadline'
 import type { DeadlineScheduler } from './deadline'
 import { resolveAnalysisBaseUrl, defaultAnalysisBaseUrl } from './endpoint'
-import { configuredAppSession } from './app-session'
+import { configuredAppSession,clearConfiguredAppSession } from './app-session'
 
 const failureCodes = new Set<AnalysisFailure['code']>([
   'invalid-input', 'insufficient-input', 'unsupported-input', 'unsafe-input', 'model-refusal', 'analysis-timeout', 'catalog-mismatch', 'budget-limit', 'server-busy', 'api-error',
-  'auth-required',
+  'auth-required', 'consent-required',
 ])
 
 function fail(code: AnalysisFailure['code']): never {
@@ -72,6 +72,7 @@ export async function checkAnalysisConnection(options: {
 /** Configurable endpoint; current server still uses a local development session contract. */
 export function createHttpAnalysisClient(options: {
   catalog: string
+  requiredProcessingRegion?: 'us'
   getSolutionById: (id: string) => unknown | undefined
   fetchImpl?: typeof fetch
   deadlineScheduler?: DeadlineScheduler
@@ -79,6 +80,7 @@ export function createHttpAnalysisClient(options: {
   /** User login token for a hosted trial, never an OpenAI or Supabase secret key. */
   getAccessToken?: (signal: AbortSignal) => Promise<string>
 }) {
+  const requiredRegion=options.requiredProcessingRegion??(!['development','trial','test'].includes(import.meta.env?.MODE??'test')?'us':undefined)
   const fetchImpl = options.fetchImpl ?? fetch
   const base = resolveAnalysisBaseUrl(options.baseUrl)
   const getAccessToken = options.getAccessToken ?? configuredAppSession()
@@ -95,11 +97,12 @@ export function createHttpAnalysisClient(options: {
     if (getAccessToken && !accessToken) fail('auth-required')
     const authHeaders = accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined
     const sessionResponse = await fetchServer(fetchImpl, `${base}/session`, { signal, cache: 'no-store', headers: authHeaders })
-    if (!sessionResponse.ok) fail(sessionResponse.status === 401 || sessionResponse.status === 403 ? 'auth-required' : 'server-error')
+    if (!sessionResponse.ok) {if(sessionResponse.status===401)clearConfiguredAppSession();fail(sessionResponse.status === 401 || sessionResponse.status === 403 ? 'auth-required' : 'server-error')}
     const session = await readJson(sessionResponse, signal)
     if (!session || typeof session !== 'object' || !('token' in session) || typeof session.token !== 'string') {
       fail('invalid-response')
     }
+    if(requiredRegion&&(!('processingRegion'in session)||session.processingRegion!==requiredRegion))fail('server-error')
     const supportsDetails = 'generatedContentVersion' in session && session.generatedContentVersion === generatedContentVersion
     const body = new FormData()
     body.set('requestId', requestId)
@@ -112,7 +115,8 @@ export function createHttpAnalysisClient(options: {
           ? { 'X-Howhouse-Content-Version': generatedContentVersion } : {}) }, body, signal,
     })
     const data = await readJson(response, signal)
-    if (!response.ok && (response.status === 401 || response.status === 403)) fail('auth-required')
+    if (!response.ok && (response.status === 401 || response.status === 403)) {if(response.status===401)clearConfiguredAppSession();fail('auth-required')}
+    if(response.status===428 && data && typeof data==='object' && 'code' in data && data.code==='consent-required')fail('consent-required')
     if (!data || typeof data !== 'object' || !('requestId' in data) || data.requestId !== requestId) {
       fail(response.ok ? 'invalid-response' : 'server-error')
     }
