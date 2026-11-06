@@ -54,7 +54,7 @@ export function SolutionsFlow({ category, onHome, onWriteProblem, initialCaseId,
           onOpenVideo={() => {}} onPreviewOpinion={() => setNotice('의견이 서버에 저장되었습니다.')} />
       </motion.div>}
       {data && contactVisited && <motion.div className="hh-solutions-layer hh-solutions-front" key={`contact-${data.id}`} initial={{x:reduced ? 0 : '100%'}} animate={{x:depth === 2 ? 0 : '100%'}} transition={transition} inert={depth !== 2} aria-hidden={depth !== 2}>
-        <B03 recipients={toMessageRecipients(data)} resolution={resolution} contextual={data.source === 'generated'} onBack={() => setDepth(1)}/>
+        <B03 key={data.source === 'existing' ? String(resolution) : undefined} recipients={toMessageRecipients(data,resolution==='solved')} resolution={resolution} contextual={data.source === 'generated'} onBack={() => setDepth(1)}/>
       </motion.div>}
     </div>
     <details className="hh-home-preview-tools hh-preview-disclosure"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel"><p role="status">{notice}</p></div></details>
