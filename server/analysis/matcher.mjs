@@ -1,3 +1,4 @@
+import {providerBaseUrl} from './provider-region.mjs'
 import { generatedContentSchema, generatedStepLimits, readGeneratedContent } from '../../src/analysis/solution.ts'
 export const analysisVersion = 'analysis-v4-safe-escalation-facts-sentences'
 export class MatchError extends Error {
@@ -82,8 +83,8 @@ export function parseMatchingResponse(data, catalog) {
   throw new MatchError(`${value.decision}-input`)
 }
 
-export async function matchCase({ apiKey, model, catalog, text, photos, signal, fetchImpl = fetch }) {
-  const response = await fetchImpl('https://api.openai.com/v1/responses', {
+export async function matchCase({ apiKey, model, processingRegion='global', catalog, text, photos, signal, fetchImpl = fetch }) {
+  const response = await fetchImpl(providerBaseUrl(processingRegion)+'/responses', {
     method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(buildMatchingRequest({ model, catalog, text, photos })), signal,
   })

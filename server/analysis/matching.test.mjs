@@ -107,7 +107,7 @@ test('health route confirms local service without calling model or reserving pai
     const response = await fetch(`${base}/health`, { headers: { Origin: headers.Origin } })
     assert.equal(response.status, 200)
     assert.equal(response.headers.get('cache-control'), 'no-store')
-    assert.deepEqual(await response.json(), { service: 'howhouse-analysis', status: 'ok', analysisVersion, generatedContentVersion: '2' })
+    assert.deepEqual(await response.json(), { service: 'howhouse-analysis', status: 'ok', analysisVersion, generatedContentVersion: '2', processingRegion:'global' })
   }
   assert.equal(calls, 0); assert.equal(ledger.remaining(), 3)
   assert.equal((await fetch(`${base}/health`, { headers: { Origin: 'https://evil.invalid' } })).status, 403)
