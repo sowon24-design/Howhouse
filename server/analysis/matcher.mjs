@@ -87,7 +87,18 @@ export async function matchCase({ apiKey, model, catalog, text, photos, signal, 
     method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(buildMatchingRequest({ model, catalog, text, photos })), signal,
   })
-  if (!response.ok) throw new MatchError('api-error', `provider-http-${response.status}`)
+  if (!response.ok) {
+    // Only allowlisted billing codes cross this boundary; never retain provider messages.
+    if (response.status === 429) {
+      let code
+      try { code = (await response.json())?.error?.code } catch { /* Unreadable errors stay generic. */ }
+      if (['organization_spend_limit_exceeded', 'project_spend_limit_exceeded', 'organization_usage_limit_exceeded', 'credit_balance_exhausted', 'insufficient_quota'].includes(code)) {
+        throw new MatchError('budget-limit')
+      }
+      if (code === 'rate_limit_exceeded') throw new MatchError('server-busy')
+    }
+    throw new MatchError('api-error', `provider-http-${response.status}`)
+  }
   const data = await response.json()
   const usage = {
     inputTokens: Number.isSafeInteger(data.usage?.input_tokens) ? data.usage.input_tokens : null,

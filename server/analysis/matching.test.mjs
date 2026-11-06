@@ -54,6 +54,20 @@ test('provider errors are not retried or exposed; cancellation signal is forward
   assert.equal(calls, 1)
 })
 
+test('provider billing limits and congestion are distinct, sanitized and never retried', async () => {
+  for (const [providerCode, expected] of [
+    ['organization_spend_limit_exceeded', 'budget-limit'], ['project_spend_limit_exceeded', 'budget-limit'],
+    ['organization_usage_limit_exceeded', 'budget-limit'], ['credit_balance_exhausted', 'budget-limit'],
+    ['insufficient_quota', 'budget-limit'], ['rate_limit_exceeded', 'server-busy'], ['unknown', 'api-error'],
+  ]) {
+    let calls = 0
+    await assert.rejects(matchCase({ ...config, catalog, text: 'x', photos: [], signal: new AbortController().signal,
+      fetchImpl: async () => { calls++; return Response.json({ error: { code: providerCode, message: 'private provider billing details' } }, { status: 429 }) },
+    }), error => { assert.equal(error.code, expected); assert.ok(!JSON.stringify(error).includes('private')); return true })
+    assert.equal(calls, 1)
+  }
+})
+
 test('ledger persists failed attempts, rejects duplicate IDs and stops at three calls', () => {
   const dir = mkdtempSync(join(tmpdir(), 'howhouse-ledger-'))
   try {
