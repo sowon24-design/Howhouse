@@ -1,3 +1,4 @@
+import {ageConfirmationKey} from '../../analysis/release-mode'
 import { useState } from 'react'
 import { Button, Checkbox, GNB } from '../../components/ui'
 import { Dialog } from '../../components/ui/Dialogs'
@@ -9,7 +10,9 @@ export function TermsScreen({ onBack, onClose, onContinue }: { onBack: () => voi
   const [privacy, setPrivacy] = useState(false)
   const [sheet, setSheet] = useState<'service' | 'privacy'>('service')
   const [open, setOpen] = useState(false)
-  const all = service && privacy
+  const [age,setAge]=useState(false)
+  const [error,setError]=useState('')
+  const all = service && privacy && age
   function show(kind: 'service' | 'privacy') { setSheet(kind); setOpen(true) }
   const title = sheet === 'service' ? '서비스 이용약관' : '개인정보 처리방침'
   return <main className="hh-terms" aria-label="약관 동의">
@@ -17,12 +20,14 @@ export function TermsScreen({ onBack, onClose, onContinue }: { onBack: () => voi
     <div className="hh-terms-content">
       <h1>약관 동의가 필요해요</h1>
       <div className="hh-terms-checks">
-        <div className="hh-terms-row hh-terms-all"><Checkbox label="모두 동의" checked={all} onChange={event => { setService(event.target.checked); setPrivacy(event.target.checked) }} /></div>
+        <div className="hh-terms-row hh-terms-all"><Checkbox label="모두 동의" checked={all} onChange={event => { setService(event.target.checked); setPrivacy(event.target.checked);setAge(event.target.checked) }} /></div>
+        <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 만 14세 이상이에요." checked={age} onChange={event=>setAge(event.target.checked)}/></div>
         <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 서비스 이용약관 동의" checked={service} onChange={event => setService(event.target.checked)} /><button type="button" className="hh-terms-view" aria-label="서비스 이용약관 보기" onClick={() => show('service')}>보기</button></div>
-        <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 개인정보 처리방침 동의" checked={privacy} onChange={event => setPrivacy(event.target.checked)} /><button type="button" className="hh-terms-view" aria-label="개인정보 처리방침 보기" onClick={() => show('privacy')}>보기</button></div>
+        <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 개인정보 수집·이용 동의" checked={privacy} onChange={event => setPrivacy(event.target.checked)} /><button type="button" className="hh-terms-view" aria-label="개인정보 처리방침 보기" onClick={() => show('privacy')}>보기</button></div>
       </div>
     </div>
-    <footer className="hh-onboarding-next"><Button disabled={!all} onClick={() => { if (all) onContinue() }}>동의하고 시작하기</Button></footer>
+    {error&&<p role="alert">{error}</p>}
+    <footer className="hh-onboarding-next"><Button disabled={!all} onClick={() => { if(all){try{localStorage.setItem(ageConfirmationKey,'yes');onContinue()}catch{setError('기기에 확인 내용을 저장하지 못했어요. 저장 설정을 확인해 주세요.')}} }}>동의하고 시작하기</Button></footer>
     <Dialog open={open} onClose={() => setOpen(false)} label={title} className="ui-action-sheet hh-terms-sheet" closeOnBackdrop swipeDismiss>
       <div className="ui-sheet-handle" aria-hidden="true" />
       <div className="hh-terms-sheet-content">

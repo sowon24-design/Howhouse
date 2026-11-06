@@ -2,13 +2,14 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import config from '../vite.config.ts'
 
-test('trial builds require public server/auth settings; ordinary builds remain available', () => {
+test('trial builds require public server/auth settings; development stays available and production cannot silently use samples', () => {
   const names = ['VITE_ANALYSIS_API_BASE_URL', 'VITE_ANALYSIS_AUTH_URL', 'VITE_ANALYSIS_AUTH_PUBLISHABLE_KEY']
   const saved = names.map(name => process.env[name])
   try {
     for (const name of names) process.env[name] = ''
-    assert.equal(config({ mode: 'production' }).server.strictPort, true)
-    assert.throws(() => config({ mode: 'trial' }), /설정 누락/)
+    assert.equal(config({ mode: 'development' }).server.strictPort, true)
+    assert.throws(() => config({mode:'production'}), /설정/)
+    assert.throws(() => config({ mode: 'trial' }), /설정/)
     process.env.VITE_ANALYSIS_API_BASE_URL = 'https://trial.example.com'
     process.env.VITE_ANALYSIS_AUTH_URL = 'https://auth.example.com'
     process.env.VITE_ANALYSIS_AUTH_PUBLISHABLE_KEY = 'sb_secret_test_fixture'

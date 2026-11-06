@@ -1,3 +1,4 @@
+import {showDeveloperTools} from '../../analysis/release-mode'
 import { screenSlidesEnabled } from '../navigation-motion'
 import { useAndroidBack } from '../android-back'
 import { useRef, useState } from 'react'
@@ -57,6 +58,6 @@ export function SolutionsFlow({ category, onHome, onWriteProblem, initialCaseId,
         <B03 key={data.source === 'existing' ? String(resolution) : undefined} recipients={toMessageRecipients(data,resolution==='solved')} resolution={resolution} contextual={data.source === 'generated'} onBack={() => setDepth(1)}/>
       </motion.div>}
     </div>
-    <details className="hh-home-preview-tools hh-preview-disclosure"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel"><p role="status">{notice}</p></div></details>
+    {showDeveloperTools && <details className="hh-home-preview-tools hh-preview-disclosure"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel"><p role="status">{notice}</p></div></details>}
   </motion.div>
 }

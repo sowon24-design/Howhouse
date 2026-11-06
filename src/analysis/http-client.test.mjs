@@ -249,3 +249,15 @@ test('cancellation while obtaining hosted login token prevents any health reques
   controller.abort(); completeToken('late-token')
   await assert.rejects(pending, { name: 'AbortError' }); assert.equal(calls, 0)
 })
+
+test('release US guard refuses unconfirmed or global servers before any problem/photo upload',async()=>{
+ for(const region of [undefined,'global','us']){
+  let uploads=0
+  const client=createHttpAnalysisClient({catalog:'[]',requiredProcessingRegion:'us',getSolutionById:()=>true,fetchImpl:async(url,options)=>{
+   if(url.endsWith('/session'))return Response.json({token:'test-session',generatedContentVersion:'2',...(region?{processingRegion:region}:{})})
+   uploads++;return Response.json({requestId:options.body.get('requestId'),result:{source:'existing',caseId:'test:1'}})
+  }})
+  const terminal=await client.startAnalysis({analysisUserText:'must not upload to global',analysisUserPhotos:[]},()=>{}).completed
+  assert.equal(uploads,region==='us'?1:0);assert.equal(terminal.status,region==='us'?'succeeded':'failed')
+ }
+})

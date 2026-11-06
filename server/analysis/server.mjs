@@ -5,13 +5,15 @@ import { parseEnv } from 'node:util'
 import { pathToFileURL } from 'node:url'
 import { loadCatalog } from './catalog.mjs'
 import { analysisVersion, MatchError, matchCase } from './matcher.mjs'
-import { validateConfig } from './verify-openai.mjs'
+import { validateConfig, runConnectionCheck } from './verify-openai.mjs'
 import { createAnalysisService } from './service.mjs'
 import { createAnswerCache } from './answer-cache.mjs'
 import { probeModelConnectivity } from './connectivity.mjs'
 import { checkLocalStorage } from './storage.mjs'
 import { generatedContentVersion, toLegacyGeneratedContent } from '../../src/analysis/solution.ts'
 import { createFeedbackService, parseFeedbackBody, FeedbackError, feedbackStatus } from './feedback.mjs'
+import { ReleaseError } from './release-store.mjs'
+import { releasePage } from './release-pages.mjs'
 
 const origins = new Set(['http://127.0.0.1:5173', 'http://localhost:5173'])
 const bodyLimit = 12 * 1024 * 1024
@@ -87,13 +89,19 @@ export async function parseInput(req) {
 }
 
 /** Loopback-only development service; not a public production API. */
-export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, cache, matchImpl = matchCase, probeImpl = probeModelConnectivity, trial, feedbackStore }) {
+export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, cache, matchImpl = matchCase, probeImpl = () => probeModelConnectivity(fetch,config.processingRegion), trial, feedbackStore, releaseStore, releasePublicConfig, providerCheckImpl = runConnectionCheck }) {
   if (trial && (!trial.host || !trial.origins?.length || typeof trial.authenticate !== 'function' || typeof trial.forUser !== 'function')) {
     throw new Error('An authenticated, explicit trial policy is required')
   }
   const token = randomBytes(32).toString('hex')
   const analyze = trial ? null : createAnalysisService({ config, catalog, ledger, cache, matchImpl })
   const services = new Map()
+  const activeUsers = new Map(), touches = new Map()
+  const cancelOwner = owner => {for(const controller of activeUsers.get(owner)??[])controller.abort();services.delete(owner);touches.delete(owner)}
+  const privacyPaths=new Set(['/api/privacy/identity','/api/privacy/consent','/api/privacy/delete','/api/privacy/delete-status','/api/privacy/delete-with-code','/api/ops/feedback','/api/ops/review','/api/ops/deletions','/api/ops/retry-deletions','/api/ops/provider-check','/api/ops/access'])
+  const deletionPaths=new Set(['/api/privacy/delete-status','/api/privacy/delete-with-code'])
+  const releaseReplyCode=error=>error instanceof ReleaseError?error.code:'storage-unavailable'
+  const releaseStatus=code=>code==='invalid-input'?422:code==='auth-required'?401:code==='not-found'?404:code==='conflict'?409:503
   const feedback = trial && feedbackStore ? createFeedbackService({ store: feedbackStore, catalog }) : undefined
   const feedbackPaths = new Map([['/api/feedback/state', 'state'], ['/api/feedback/rating', 'rating'], ['/api/feedback/opinions', 'opinions']])
   const allowedOrigins = trial ? new Set(trial.origins) : origins
@@ -101,7 +109,7 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
     const origin = req.headers.origin
     const host = req.headers.host ?? ''
     const allowedHost = trial ? host === trial.host : /^(127\.0\.0\.1|localhost):\d+$/.test(host)
-    const allowed = allowedOrigins.has(origin) && allowedHost
+    const allowed = (allowedOrigins.has(origin) || privacyPaths.has(req.url) && origin===`https://${host}`) && allowedHost
     const reply = (status, data) => {
       if (res.destroyed) return
       res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store',
@@ -110,7 +118,11 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
     }
     // Hosting readiness probe only. No key, account, model or database content is exposed.
     if (trial && allowedHost && req.method === 'GET' && req.url === '/health') {
-      reply(200, { service: 'howhouse-analysis', status: 'ok', analysisVersion, generatedContentVersion }); return
+      reply(200, { service: 'howhouse-analysis', status: 'ok', analysisVersion, generatedContentVersion, processingRegion:config.processingRegion??'global' }); return
+    }
+    if(trial && allowedHost && req.method==='GET' && ['/ops','/privacy','/terms','/data-deletion'].includes(req.url)){
+      const page=releasePage(req.url,releasePublicConfig)
+      res.writeHead(page.status,page.headers);res.end(page.body);return
     }
     if (!allowed) { reply(403, { code: 'forbidden' }); req.resume(); return }
     if (req.method === 'OPTIONS') {
@@ -118,24 +130,57 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'X-Howhouse-Session, X-Howhouse-Content-Version, Content-Type, Authorization' })
       res.end(); return
     }
-    if (!['/session', '/health', '/health?upstream=1', '/api/analysis/match'].includes(req.url) && !feedbackPaths.has(req.url)) { reply(404, { code: 'not-found' }); req.resume(); return }
+    if (!['/session', '/health', '/health?upstream=1', '/api/analysis/match'].includes(req.url) && !feedbackPaths.has(req.url) && !privacyPaths.has(req.url)) { reply(404, { code: 'not-found' }); req.resume(); return }
+    if(deletionPaths.has(req.url)){
+      if(req.method!=='POST'){reply(405,{code:'method-not-allowed'});req.resume();return}
+      if(!releaseStore){reply(503,{code:'release-not-configured'});req.resume();return}
+      try{const payload=await parseFeedbackBody(req);reply(200,req.url.endsWith('delete-status')?await releaseStore.deletionStatus(payload):await releaseStore.deleteWithCode(payload,cancelOwner))}
+      catch(error){const code=releaseReplyCode(error);reply(releaseStatus(code),{code});req.resume()}return
+    }
     let selectedAnalyze = analyze, selectedLedger = ledger
-    let selectedOwnerId
+    let selectedOwnerId,selectedUser
     if (trial) {
       try {
         const user = await trial.authenticate(req.headers.authorization)
+        selectedUser=user
         selectedOwnerId = user.id
+        if(releaseStore && Date.now()-(touches.get(user.id)??0)>3600000){await releaseStore.touch(user.id);touches.set(user.id,Date.now())}
         if (!services.has(user.id)) {
+          if(services.size>=500){const oldest=services.keys().next().value;services.delete(oldest);touches.delete(oldest)}
           const context = trial.forUser(user.id)
           services.set(user.id, { ledger: context.ledger, analyze: createAnalysisService({ config, catalog, ...context, matchImpl }) })
         }
         const service = services.get(user.id)
         selectedAnalyze = service.analyze; selectedLedger = service.ledger
       } catch (error) {
-        reply(error instanceof MatchError && error.code === 'auth-required' ? 401 : 503,
-          { code: error instanceof MatchError && error.code === 'auth-required' ? 'auth-required' : 'api-error' })
+        reply((error instanceof MatchError || error instanceof ReleaseError) && error.code === 'auth-required' ? 401 : 503,
+          { code: (error instanceof MatchError || error instanceof ReleaseError) && error.code === 'auth-required' ? 'auth-required' : 'api-error' })
         req.resume(); return
       }
+    }
+    if(privacyPaths.has(req.url)){
+      if(req.method!=='POST'){reply(405,{code:'method-not-allowed'});req.resume();return}
+      if(req.url.startsWith('/api/ops/') && selectedUser?.reviewer!==true){reply(403,{code:'forbidden'});req.resume();return}
+      if(!releaseStore&&!['/api/ops/access','/api/ops/provider-check'].includes(req.url)){reply(503,{code:'release-not-configured'});req.resume();return}
+      try{
+        const body=await parseFeedbackBody(req)
+        if(req.url==='/api/ops/access'){reply(200,{authorized:true,releaseDataEnabled:!!releaseStore,processingRegion:config.processingRegion??'global'});return}
+        if(req.url==='/api/ops/provider-check'){
+          if(body.confirm!=='check-processing-region'||!/^[0-9a-f-]{36}$/i.test(body.operationId??'')){reply(422,{code:'invalid-input'});return}
+          await selectedLedger.reserve(body.operationId)
+          const result=await providerCheckImpl(config)
+          await selectedLedger.finish(body.operationId,result.success?'completed':'failed',result.usage)
+          reply(200,{...result,operationId:body.operationId});return
+        }
+        const value=req.url.endsWith('/identity')?await releaseStore.identity(selectedOwnerId,body.code)
+          :req.url.endsWith('/consent')?await (async()=>{if(body.version===null)cancelOwner(selectedOwnerId);return releaseStore.acceptConsent(selectedOwnerId,body.version,body.ageAtLeast14,body.processingAccepted,body.overseasAccepted)})()
+          :req.url.endsWith('/delete')?await releaseStore.deleteMine(selectedOwnerId,body,cancelOwner)
+          :req.url.endsWith('/feedback')?await releaseStore.listFeedback(body.cursor)
+          :req.url.endsWith('/deletions')?await releaseStore.deletionQueue()
+          :req.url.endsWith('/retry-deletions')?await releaseStore.cleanup(cancelOwner)
+          :await releaseStore.review(selectedOwnerId,body)
+        reply(200,value)
+      }catch(error){const code=releaseReplyCode(error);reply(releaseStatus(code),{code});req.resume()}return
     }
     if (feedbackPaths.has(req.url)) {
       if (req.method !== 'POST') { reply(405, { code: 'method-not-allowed' }); req.resume(); return }
@@ -150,9 +195,9 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
       }
       return
     }
-    if (req.method === 'GET' && req.url === '/session') { reply(200, { token, remainingCalls: selectedLedger.remaining(), generatedContentVersion }); return }
+    if (req.method === 'GET' && req.url === '/session') { reply(200, { token, remainingCalls: selectedLedger.remaining(), generatedContentVersion, processingRegion:config.processingRegion??'global' }); return }
     if (req.method === 'GET' && req.url === '/health') {
-      reply(200, { service: 'howhouse-analysis', status: 'ok', analysisVersion, generatedContentVersion }); return
+      reply(200, { service: 'howhouse-analysis', status: 'ok', analysisVersion, generatedContentVersion, processingRegion:config.processingRegion??'global' }); return
     }
     if (req.method === 'GET' && req.url === '/health?upstream=1') {
       const connection = await probeImpl()
@@ -161,7 +206,10 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
     }
     if (req.method !== 'POST' || req.url !== '/api/analysis/match') { reply(404, { code: 'not-found' }); return }
     if (req.headers['x-howhouse-session'] !== token) { reply(403, { code: 'forbidden' }); req.resume(); return }
+    if(releaseStore){try{if(!await releaseStore.hasConsent(selectedOwnerId)){reply(428,{code:'consent-required'});req.resume();return}}catch{reply(503,{code:'storage-unavailable'});req.resume();return}}
     const controller = new AbortController()
+    if(selectedOwnerId){if(!activeUsers.has(selectedOwnerId))activeUsers.set(selectedOwnerId,new Set());activeUsers.get(selectedOwnerId).add(controller)}
+    res.once('close',()=>{const active=activeUsers.get(selectedOwnerId);active?.delete(controller);if(!active?.size)activeUsers.delete(selectedOwnerId)})
     const abort = () => controller.abort()
     res.once('close', abort)
     let requestId = null

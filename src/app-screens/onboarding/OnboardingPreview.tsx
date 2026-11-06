@@ -1,3 +1,4 @@
+import {showDeveloperTools} from '../../analysis/release-mode'
 import { useEffect, useState } from 'react'
 import { minimizeAndroidApp, useAndroidBack } from '../android-back'
 import { Button, GNB } from '../../components/ui'
@@ -76,12 +77,12 @@ export function OnboardingPreview({ onComplete, storageStatus, onResetSetup }: {
       : termsOpen
       ? <TermsScreen onBack={() => changeStep(3)} onClose={() => changeStep(0)} onContinue={() => { setNicknameOpen(true); setStatus('닉네임은 완료 후 홈에 표시됩니다. 완료 시 닉네임과 설정 완료 여부를 기기에 저장합니다. 실제 약관 동의 기록은 저장하지 않습니다.') }} />
       : <OnboardingScreen step={step} onStepChange={changeStep} onContinue={() => { setTermsOpen(true); setStatus('약관은 Figma의 임시 원문입니다. 개인정보 처리방침에는 ‘내용바꿔야함’이 남아 있으며 최종 정책이 아닙니다. 동의 기록은 저장하지 않습니다.') }} />}</div>
-    <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="최초 시작·소개 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
+    {showDeveloperTools && <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="최초 시작·소개 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
       <a href="#home">홈 미리보기</a> · <a href="#components">공통 컴포넌트 보기</a>
       <p role="status">{status}</p>
       <p role="status">{storageStatus}</p>
       {onResetSetup && <button type="button" onClick={onResetSetup}>테스트 초기화 · 처음부터 시작</button>}
       <button type="button" onClick={() => changeStep(0)}>환영 화면부터 다시 확인</button>
-    </div></details>
+    </div></details>}
   </div>
 }

@@ -1,3 +1,4 @@
+import {showDeveloperTools} from '../../analysis/release-mode'
 import { AnalysisLimit } from '../analysis/AnalysisLimit'
 import { AnalysisConfirmation } from '../analysis/AnalysisConfirmation'
 import { useEffect, useRef, useState } from 'react'
@@ -11,6 +12,8 @@ import { AnalysisScreen } from '../analysis/AnalysisScreen'
 import { ProblemScreen, canAnalyze } from './ProblemScreen'
 import type { AnalysisInput } from './ProblemScreen'
 import '../home/home-preview.css'
+import {AnalysisPrivacyDialog} from '../../analysis/AnalysisPrivacyDialog'
+import {configuredPrivacyClient} from '../../analysis/PrivacyActions'
 
 export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspended = false, onConnectionLost }: {
   input: AnalysisInput; onChange: (input: AnalysisInput) => void;
@@ -20,7 +23,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   const [sample] = useState(() => createSampleAnalysisClient<GeneratedSolution>({result: existingCaseSample, getSolutionById}))
   const [generatedSample] = useState(() => createSampleAnalysisClient<GeneratedSolution>({result: generatedSampleResult, getSolutionById}))
   const [api] = useState(() => createHttpAnalysisClient({catalog: serializeCatalog(solutionCases), getSolutionById}))
-  const [mode, setMode] = useState<'sample' | 'api'>(import.meta.env.MODE === 'trial' ? 'api' : 'sample')
+  const [mode, setMode] = useState<'sample' | 'api'>(!showDeveloperTools || import.meta.env.MODE === 'trial' ? 'api' : 'sample')
   const [sampleKind, setSampleKind] = useState<'existing' | 'generated'>('existing')
   const selectedSample = sampleKind === 'existing' ? sample : generatedSample
   const analysis = mode === 'api' ? api : selectedSample
@@ -31,6 +34,8 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   const [feedback, setFeedback] = useState('')
   const [failureCode, setFailureCode] = useState<AnalysisFailure['code'] | undefined>()
   const request = useRef<AnalysisHandle<GeneratedSolution> | null>(null)
+  const [privacyOpen,setPrivacyOpen]=useState(false)
+  const privacySnapshot=useRef<AnalysisInput|null>(null)
   const activeId = useRef<string | null>(null)
   const cancelledId = useRef<string | null>(null)
   const mounted = useRef(false)
@@ -74,12 +79,15 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
       else if (event.mode === 'api' && getAnalysisFailureKind(event.error.code) !== 'analysis') setPhase('input')
       else setPhase('failed')
       setFailureCode(event.error.code)
+      if(event.error.code==='consent-required'){try{configuredPrivacyClient().clearConsentLocal()}catch{};privacySnapshot.current=input;setPrivacyOpen(true)}
       setFeedback(event.error.code === 'budget-limit' ? '현재 분석 이용 한도에 도달했어요. 입력한 내용은 유지돼요.'
+        : event.error.code === 'consent-required' ? 'AI 분석 정보 전송 동의가 필요해요. 글·사진은 유지돼요.'
         : event.error.code === 'server-busy' ? '다른 분석이 진행 중이에요. 잠시 후 다시 시도해 주세요. 입력한 내용은 유지돼요.'
         : event.error.code === 'invalid-input' ? '입력한 글과 첨부 사진의 형식·크기를 확인해 주세요.'
         : '분석 결과를 불러오지 못했어요. 잠시 후 다시 시도해 주세요. 입력한 내용은 유지돼요.')
       setStatus(`${event.mode === 'sample' ? '샘플' : '실제'} 분석 중단 (${event.error.code}) · 입력을 보존합니다. 자동 재시도하지 않습니다.`)
       if (event.error.code === 'connection-error') onConnectionLost?.()
+      if(event.error.code==='consent-required'){try{configuredPrivacyClient().clearConsentLocal()}catch{/* Consent dialog remains available. */}privacySnapshot.current=input;setPrivacyOpen(true)}
     }
     // Cancellation does not choose a destination. The initiating UI owns navigation.
   }
@@ -107,6 +115,10 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
                 return
               }
               cancel()
+              if(mode==='api' && (!showDeveloperTools || import.meta.env.VITE_RELEASE_PRIVACY_READY==='1')){
+                try{if(!configuredPrivacyClient().consentRecorded()){privacySnapshot.current=snapshot;setPrivacyOpen(true);return}}
+                catch{privacySnapshot.current=snapshot;setPrivacyOpen(true);return}
+              }
               request.current = analysis.startAnalysis(snapshot, receive)
             }} />
         </div>
@@ -114,12 +126,13 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
           onCancel={target => {cancel();setClosingHome(target === 'home')}}
           onBack={() => {setFeedback('');setResult(null);setPhase('input');setClosingHome(false);setStatus('입력으로 돌아왔습니다. 글·사진은 유지되며 자동 재분석하지 않습니다.')}}
           onHome={() => {window.location.hash='home'}} />}
-        {phase === 'limit' && <AnalysisLimit lines={['오늘은 더 이상 분석할 수 없어요.', '내일 다시 시도해 주세요.']} onBack={() => {cancel();setFeedback('');setPhase('input')}} onHome={() => {cancel();window.location.hash='home'}} />}
+        {phase === 'limit' && <AnalysisLimit lines={['현재 분석 이용 한도에 도달했어요.', '입력한 내용은 그대로 유지돼요.']} onBack={() => {cancel();setFeedback('');setPhase('input')}} onHome={() => {cancel();window.location.hash='home'}} />}
         {phase === 'confirm' && result && solution && <AnalysisConfirmation title={solution.title} description={solution.description} stepCount={solution.steps.length}
           onConfirm={() => onSuccess(result)} onBack={() => {setResult(null);setPhase('input')}} onHome={() => {cancel();window.location.hash='home'}} />}
       </div>
     </div>
-    <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="문제 작성 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
+    <AnalysisPrivacyDialog open={privacyOpen} onClose={()=>{setPrivacyOpen(false);privacySnapshot.current=null}} onContinue={()=>{setPrivacyOpen(false);const snapshot=privacySnapshot.current;privacySnapshot.current=null;if(snapshot&&!suspended)request.current=analysis.startAnalysis(snapshot,receive)}}/>
+    {showDeveloperTools && <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="문제 작성 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
       <a href="#home" onClick={cancel}>홈으로 이동 · 입력 초기화</a> · <a href="#components" onClick={cancel}>공통 컴포넌트 보기</a>
       <p role="status">{status}</p>
       <p>현재 모드: {mode === 'api' ? '실제 API' : `무료 샘플 · ${sampleKind === 'existing' ? '기존 사례' : '생성 결과'}`}</p>
@@ -136,6 +149,6 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
         <button type="button" onClick={() => {if(request.current)selectedSample.completeSample(request.current.requestId,'failure')}}>샘플 분석 실패 재현</button>
       </>}
       {mode === 'sample' && cancelledId.current && <button type="button" onClick={() => {sample.completeSample(cancelledId.current!);generatedSample.completeSample(cancelledId.current!);setStatus('종료한 요청의 결과를 재전달했습니다. 화면과 현재 요청은 유지되어야 합니다.')}}>취소된 응답 재현 · 무시 확인</button>}
-    </div></details>
+    </div></details>}
   </div>
 }

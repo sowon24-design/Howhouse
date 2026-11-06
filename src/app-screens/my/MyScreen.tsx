@@ -1,3 +1,4 @@
+import {showDeveloperTools} from '../../analysis/release-mode'
 import { screenSlidesEnabled } from '../navigation-motion'
 import { useAndroidBack } from '../android-back'
 import { InformationScreen, type InformationPage } from './InformationScreen'
@@ -65,6 +66,6 @@ export function MyPreview({ nickname = '자취하는 소라게', onNicknameChang
         <NicknameScreen mode="edit" initialValue={nickname} onBack={() => { if (!screenSlidesEnabled || window.matchMedia('(prefers-reduced-motion: reduce)').matches) setEditing(false); else setClosingEdit(true) }} onComplete={name => { onNicknameChange(name); window.location.hash = 'home' }} />
       </div>}
     </div>
-    <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="마이 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel"><a href="#home">홈 미리보기</a> · <a href="#components">공통 컴포넌트 보기</a><p role="status">{status}</p></div></details>
+    {showDeveloperTools && <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="마이 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel"><a href="#home">홈 미리보기</a> · <a href="#components">공통 컴포넌트 보기</a><p role="status">{status}</p></div></details>}
   </div>
 }

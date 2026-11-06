@@ -12,7 +12,7 @@ export function validSavedResult(result, catalog) {
 /** Cache before billing; coalesce identical in-flight input; abort only after last viewer leaves. */
 export function createAnalysisService({ config, catalog, ledger, cache, matchImpl = matchCase, deadlineScheduler }) {
   const jobs = new Map(), secret = randomBytes(32)
-  const context = { model: config.model, catalogVersion: catalog.version, analysisVersion,
+  const context = { model: config.model, ...(config.processingRegion==='us'?{processingRegion:'us'}:{}), catalogVersion: catalog.version, analysisVersion,
     promptHash: createHash('sha256').update(matchingInstructions + JSON.stringify(generatedContentSchema)).digest('hex') }
   return async function analyze(input, { requestId, signal }) {
     if (signal.aborted) throw signal.reason

@@ -52,3 +52,19 @@ try {
 } catch(Exception e) {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
 }
+
+// A signed release must use an approved web release, not the last trial assets.
+tasks.matching { it.name == 'preReleaseBuild' }.configureEach {
+    doFirst {
+        def infoFile = file('src/main/assets/public/howhouse-build.json')
+        if (!infoFile.exists()) {
+            throw new GradleException('출시 웹 파일 확인표가 없습니다. 승인된 release 웹 빌드 후 Capacitor 동기화가 필요합니다.')
+        }
+        def info = new groovy.json.JsonSlurper().parse(infoFile)
+        def policyFile = rootProject.file('../src/app-screens/my/information-draft.json')
+        def policyHash = java.security.MessageDigest.getInstance('SHA-256').digest(policyFile.bytes).encodeHex().toString()
+        if (info.schema != 1 || !(info.mode in ['release', 'production']) || info.developerTools != false || info.privacyReady != true || info.requiredProcessingRegion != 'us' || info.policySha256 != policyHash) {
+            throw new GradleException('현재 웹 파일은 승인된 최신 출시 빌드가 아닙니다. release 웹 빌드와 Capacitor 동기화를 다시 확인하세요.')
+        }
+    }
+}
