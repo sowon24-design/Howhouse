@@ -7,6 +7,8 @@ import { CostReference } from './CostReference'
 import type { SolutionView } from './data/types'
 import { displayResponsibility } from './data/presentation'
 import { OpinionSheet } from './OpinionSheet'
+import { useSolutionFeedback } from '../analysis/use-feedback'
+import type { ResolutionStatus } from './resolution-message'
 import clock from './assets/b02-clock.svg'
 import dollar from './assets/b02-dollar.svg'
 import external from './assets/b02-external.svg'
@@ -22,9 +24,9 @@ function FeedbackIcon({ filled, stroke, fill }: { filled: boolean; stroke: strin
 }
 
 /** View data only. This is NOT the team's final analysis response / sheet schema. */
-export type B02ViewData = Omit<SolutionView, 'id' | 'field' | 'number' | 'category' | 'symptom'>
+export type B02ViewData = Omit<SolutionView, 'id' | 'field' | 'number' | 'category' | 'symptom'> & { id?: string }
 export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPreviewOpinion }: {
-  data: B02ViewData; onBack?: () => void; onContact: (solved:boolean) => void; onComplete?: () => void
+  data: B02ViewData; onBack?: () => void; onContact: (resolution?: ResolutionStatus) => void; onComplete?: () => void
   onOpenVideo: (url: string) => void; onPreviewOpinion: () => void
 }) {
   // Presentation-only fallback; never ask the model to generate asset paths.
@@ -32,7 +34,8 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
     ? [{ src: generatedResultDefault, alt: '돋보기로 문제를 살펴보는 어쩌집 캐릭터' }]
     : data.photos
   const [resolution,setResolution]=useState<'closed'|'solved'|'unsolved'>('closed')
-  const [rating, setRating] = useState<'up' | 'down' | null>(null)
+  const feedback = useSolutionFeedback(data.source, data.id)
+  const rating = feedback.rating === 'like' ? 'up' : feedback.rating === 'dislike' ? 'down' : null
   const [sheet, setSheet] = useState<'closed' | 'edit' | 'thanks'>('closed')
   const [reason, setReason] = useState('')
   const [opinion, setOpinion] = useState('')
@@ -75,7 +78,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
     return () => target.removeEventListener('scroll', onScroll)
   }, [])
   function rate(value: 'up' | 'down') {
-    setRating(rating === value ? null : value)
+    void feedback.rate(value)
     if (value === 'down' && rating !== value) setSheet('edit')
   }
   return <section ref={root} className="solutions-b02 solutions-b02--case" data-generated={data.source === 'generated'} data-without-photos={photos.length === 0} aria-label="해결 방법">
@@ -108,13 +111,18 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
       <div className="solutions-b02__feedback">
         <p><span className="solutions-b02__warning"><img src={warning} alt="" /></span>AI가 분석한 결과예요. 상황에 따라 다를 수 있어요.</p>
         <div><span>답변이 도움이 되었나요?</span>
-          <button aria-label="도움돼요" disabled={rating !== null} aria-pressed={rating === 'up'} onClick={() => rate('up')}><FeedbackIcon filled={rating === 'up'} stroke="489:20374" fill="489:20373" /></button>
-          <button aria-label="아쉬워요" disabled={rating !== null} aria-pressed={rating === 'down'} onClick={() => rate('down')}><FeedbackIcon filled={rating === 'down'} stroke="489:20394" fill="489:20386" /></button>
+          <button aria-label="도움돼요" disabled={feedback.loading || feedback.ratingPending} aria-pressed={rating === 'up'} onClick={() => rate('up')}><FeedbackIcon filled={rating === 'up'} stroke="489:20374" fill="489:20373" /></button>
+          <button aria-label="아쉬워요" disabled={feedback.loading || feedback.ratingPending} aria-pressed={rating === 'down'} onClick={() => rate('down')}><FeedbackIcon filled={rating === 'down'} stroke="489:20394" fill="489:20386" /></button>
         </div>
+        {feedback.ratingPending && <p role="status">평가를 저장하고 있어요.</p>}
+        {feedback.ratingError && <p role="alert">{feedback.ratingError}</p>}
+        {feedback.ratingRetry && <Button variant="pale" disabled={feedback.ratingPending} onClick={() => {void feedback.retryRating()}}>평가 다시 저장하기</Button>}
       </div>
       <div className="solutions-b02__actions"><Button variant="pale" onClick={()=>setResolution('unsolved')}>해결이 어려워요</Button><Button onClick={()=>setResolution('solved')}>해결됐어요</Button></div>
     </main>
-    <OpinionSheet mode={sheet} reason={reason} text={opinion} onReason={setReason} onText={setOpinion} onClose={() => setSheet('closed')} onPreviewSubmit={() => { onPreviewOpinion(); setSheet('thanks') }} />
+    <OpinionSheet mode={sheet} reason={reason} text={opinion} onReason={setReason} onText={setOpinion} onClose={() => setSheet('closed')}
+      saving={feedback.opinionPending} error={feedback.opinionError}
+      onPreviewSubmit={() => {void feedback.submitOpinion(reason, opinion).then(saved => {if(saved){onPreviewOpinion();setSheet(current => current === 'edit' ? 'thanks' : current)}})}} />
     <ResolutionSheet mode={resolution} onClose={()=>setResolution('closed')} onHome={onComplete} onContact={onContact} canContact={data.canContact} hasCompany={!!data.contacts.company.label.trim()}/>
   </section>
 }

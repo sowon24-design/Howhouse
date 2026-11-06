@@ -5,10 +5,11 @@ import thanks from './assets/b02-thanks-w10.png'
 
 export const opinionReasons = ['내 상황과 달라요.', '방법이 틀린 것 같아요.', '따라하기 위험해 보여요.', '어려워 보여요.', '필요한 준비물·정보가 빠졌어요.', '직접 입력하기'] as const
 
-export function OpinionSheet({ mode, reason, text, onReason, onText, onClose, onPreviewSubmit }: {
+export function OpinionSheet({ mode, reason, text, onReason, onText, onClose, onPreviewSubmit, saving=false, error='' }: {
   mode: 'closed' | 'edit' | 'thanks'; reason: string; text: string
   onReason: (value: string) => void; onText: (value: string) => void
   onClose: () => void; onPreviewSubmit: () => void
+  saving?: boolean; error?: string
 }) {
   const [visibleMode, setVisibleMode] = useState(mode)
   if (mode !== 'closed' && mode !== visibleMode) setVisibleMode(mode)
@@ -23,13 +24,14 @@ export function OpinionSheet({ mode, reason, text, onReason, onText, onClose, on
       <Button onClick={onClose}>확인했어요</Button>
     </> : <>
       <div className="solutions-opinion__copy"><h2 id={heading} className="text-heading">어떤 점이 아쉬웠나요?</h2><p>해결 방법에 대한 의견을 자유롭게 알려주세요.</p></div>
-      <fieldset className="solutions-opinion__reasons"><legend className="ui-sr-only">의견 사유</legend>
+      <fieldset className="solutions-opinion__reasons" disabled={saving}><legend className="ui-sr-only">의견 사유</legend>
         {opinionReasons.map(value => <Radio key={value} name={group} label={value} checked={reason === value} onClick={() => onReason(reason === value ? '' : value)} onChange={() => {}} />)}
         <div className="ui-accordion" data-open={custom}><div className="ui-accordion-panel" aria-hidden={!custom} inert={!custom}><div className="ui-accordion-clip">
           <textarea aria-label="직접 입력 의견" placeholder="어떤 점이 아쉬웠나요?" value={text} onChange={event => onText(event.target.value)} />
         </div></div></div>
       </fieldset>
-      <Button disabled={!reason || (custom && text.trim().length === 0)} onClick={onPreviewSubmit}>의견 보내기</Button>
+      {error && <p role="alert">{error}</p>}
+      <Button disabled={saving || !reason || (custom && (!text.replace(/[\s\p{Cf}]/gu,'') || text.length>2000))} onClick={onPreviewSubmit}>{saving?'의견을 저장하고 있어요':'의견 보내기'}</Button>
     </>}
   </SolutionSheet>
 }
