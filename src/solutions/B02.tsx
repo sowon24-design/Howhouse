@@ -123,7 +123,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
     <OpinionSheet mode={sheet} reason={reason} text={opinion} onReason={setReason} onText={setOpinion} onClose={() => setSheet('closed')}
       saving={feedback.opinionPending} error={feedback.opinionError}
       onPreviewSubmit={() => {void feedback.submitOpinion(reason, opinion).then(saved => {if(saved){onPreviewOpinion();setSheet(current => current === 'edit' ? 'thanks' : current)}})}} />
-    <ResolutionSheet mode={resolution} onClose={()=>setResolution('closed')} onHome={onComplete} onContact={onContact} canContact={data.canContact} hasCompany={!!data.contacts.company.label.trim()}/>
+    <ResolutionSheet mode={resolution} onClose={()=>setResolution('closed')} onHome={onComplete} onContact={onContact} canContact={data.canContact} hasLandlordMessage={!!data.contacts.landlord.label.trim() && (data.contacts.landlord.solvedSentences?.length ? data.contacts.landlord.solvedSentences : data.contacts.landlord.sentences).some(text => !!text.trim())} hasCompany={!!data.contacts.company.label.trim()}/>
   </section>
 }
 
