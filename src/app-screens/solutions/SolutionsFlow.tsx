@@ -7,6 +7,7 @@ import { B02 } from '../../solutions/B02'
 import { B03 } from '../../solutions/B03'
 import { getCategoryCases, getSolutionById, solutionCases, type CategoryId } from '../../solutions/data'
 import { toMessageRecipients } from '../../solutions/message-model'
+import type { ResolutionStatus } from '../../solutions/resolution-message'
 import type { HomeCategoryKey } from '../home/HomeScreen'
 import './solutions-flow.css'
 
@@ -22,7 +23,8 @@ export function SolutionsFlow({ category, onHome, onWriteProblem, initialCaseId,
   const [selectedId, setSelectedId] = useState<string | null>(initialCaseId ?? null)
   const [depth, setDepth] = useState(initialCaseId ? 1 : 0)
   const [contactVisited, setContactVisited] = useState(false)
-  const [notice, setNotice] = useState('사례 사진은 임시 공통 이미지입니다. 의견 저장·실제 분석은 연결하지 않았습니다.')
+  const [resolution,setResolution] = useState<ResolutionStatus | undefined>()
+  const [notice, setNotice] = useState('평가·의견은 서버 저장에 성공한 뒤 접수 완료로 표시합니다. 실제 분석은 문제 작성 화면에서 시작합니다.')
   const skipExit = useRef(false)
   const present = useIsPresent()
   const prefersReduced = useReducedMotion()
@@ -48,11 +50,11 @@ export function SolutionsFlow({ category, onHome, onWriteProblem, initialCaseId,
       </div>
       {data && <motion.div className="hh-solutions-layer hh-solutions-front" key={data.id} initial={{x:reduced || initialCaseId ? 0 : '100%'}} animate={{x:depth >= 1 ? 0 : '100%'}} transition={transition} inert={depth !== 1} aria-hidden={depth !== 1}>
         <B02 data={data} onBack={leaveSolution} onComplete={onHome}
-          onContact={() => {setContactVisited(true);setDepth(2)}}
-          onOpenVideo={() => {}} onPreviewOpinion={() => setNotice('의견 완료 UI만 표시하며 실제 저장·전송은 연결하지 않았습니다.')} />
+          onContact={status => {setResolution(status);setContactVisited(true);setDepth(2)}}
+          onOpenVideo={() => {}} onPreviewOpinion={() => setNotice('의견이 서버에 저장되었습니다.')} />
       </motion.div>}
       {data && contactVisited && <motion.div className="hh-solutions-layer hh-solutions-front" key={`contact-${data.id}`} initial={{x:reduced ? 0 : '100%'}} animate={{x:depth === 2 ? 0 : '100%'}} transition={transition} inert={depth !== 2} aria-hidden={depth !== 2}>
-        <B03 recipients={toMessageRecipients(data)} onBack={() => setDepth(1)}/>
+        <B03 recipients={toMessageRecipients(data)} resolution={resolution} contextual={data.source === 'generated'} onBack={() => setDepth(1)}/>
       </motion.div>}
     </div>
     <details className="hh-home-preview-tools hh-preview-disclosure"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel"><p role="status">{notice}</p></div></details>
