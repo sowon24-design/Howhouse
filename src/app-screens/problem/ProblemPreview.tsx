@@ -1,3 +1,4 @@
+import { AnalysisLimit } from '../analysis/AnalysisLimit'
 import { AnalysisConfirmation } from '../analysis/AnalysisConfirmation'
 import { useEffect, useRef, useState } from 'react'
 import { useAndroidBack } from '../android-back'
@@ -23,7 +24,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   const [sampleKind, setSampleKind] = useState<'existing' | 'generated'>('existing')
   const selectedSample = sampleKind === 'existing' ? sample : generatedSample
   const analysis = mode === 'api' ? api : selectedSample
-  const [phase, setPhase] = useState<'input' | 'pending' | 'failed' | 'confirm'>('input')
+  const [phase, setPhase] = useState<'input' | 'pending' | 'failed' | 'confirm' | 'limit'>('input')
   const [result, setResult] = useState<AnalysisResult<GeneratedSolution> | null>(null)
   const solution = result?.source === 'existing' ? getSolutionById(result.caseId) : result?.solution
   const [closingHome, setClosingHome] = useState(false)
@@ -69,7 +70,8 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
       if (event.result.source === 'generated' || getSolutionById(event.result.caseId)) {setResult(event.result);setPhase('confirm')}
       else {setPhase('failed');setStatus('지원하지 않거나 찾을 수 없는 샘플 결과입니다.')}
     } else if (event.status === 'failed') {
-      if (event.mode === 'api' && getAnalysisFailureKind(event.error.code) !== 'analysis') setPhase('input')
+      if (event.error.code === 'budget-limit') setPhase('limit')
+      else if (event.mode === 'api' && getAnalysisFailureKind(event.error.code) !== 'analysis') setPhase('input')
       else setPhase('failed')
       setFailureCode(event.error.code)
       setFeedback(event.error.code === 'budget-limit' ? '현재 분석 이용 한도에 도달했어요. 입력한 내용은 유지돼요.'
@@ -112,6 +114,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
           onCancel={target => {cancel();setClosingHome(target === 'home')}}
           onBack={() => {setFeedback('');setResult(null);setPhase('input');setClosingHome(false);setStatus('입력으로 돌아왔습니다. 글·사진은 유지되며 자동 재분석하지 않습니다.')}}
           onHome={() => {window.location.hash='home'}} />}
+        {phase === 'limit' && <AnalysisLimit lines={['오늘은 더 이상 분석할 수 없어요.', '내일 다시 시도해 주세요.']} onBack={() => {cancel();setFeedback('');setPhase('input')}} onHome={() => {cancel();window.location.hash='home'}} />}
         {phase === 'confirm' && result && solution && <AnalysisConfirmation title={solution.title} description={solution.description} stepCount={solution.steps.length}
           onConfirm={() => onSuccess(result)} onBack={() => {setResult(null);setPhase('input')}} onHome={() => {cancel();window.location.hash='home'}} />}
       </div>
@@ -120,6 +123,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
       <a href="#home" onClick={cancel}>홈으로 이동 · 입력 초기화</a> · <a href="#components" onClick={cancel}>공통 컴포넌트 보기</a>
       <p role="status">{status}</p>
       <p>현재 모드: {mode === 'api' ? '실제 API' : `무료 샘플 · ${sampleKind === 'existing' ? '기존 사례' : '생성 결과'}`}</p>
+      {mode === 'sample' && <button type="button" onClick={() => {cancel();setFeedback('');setPhase('limit');setStatus('A07 한도 안내 재현 · API 호출 없음')}}>분석 한도 안내 A07 재현</button>}
       {onConnectionLost && <button type="button" onClick={onConnectionLost}>연결 끊김 재현 · API 호출 없음</button>}
       {<button type="button" disabled={phase === 'pending'} onClick={() => {
         cancel();setResult(null);setPhase('input');setClosingHome(false);setFeedback('');setFailureCode(undefined)
