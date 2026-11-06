@@ -1,9 +1,10 @@
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto'
 import { inputFingerprint } from './answer-cache.mjs'
+import { MatchError } from './matcher.mjs'
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
-/** Server-only persistent trial storage. No daily/lifetime call limit; no raw inputs stored. */
+/** Server-only storage. Fresh model calls require an atomic DB quota reservation. */
 export function createTrialStore({ supabaseUrl, secretKey, encryptionKey, fetchImpl = fetch, now = Date.now }) {
   const url = new URL(supabaseUrl)
   const key = Buffer.from(encryptionKey ?? '', 'base64')
@@ -27,7 +28,11 @@ export function createTrialStore({ supabaseUrl, secretKey, encryptionKey, fetchI
         ledger: {
           async reserve(requestId) {
             if (!uuid.test(requestId)) throw new Error('Invalid request ID')
-            await request('howhouse_trial_calls', 'POST', { request_id: requestId, owner_id: userId, state: 'reserved' })
+            const result = await request('rpc/howhouse_reserve_analysis', 'POST', { p_owner: userId, p_request: requestId })
+            if (result?.ok !== true) {
+              if (['budget-limit', 'server-busy', 'invalid-input'].includes(result?.code)) throw new MatchError(result.code)
+              throw new Error('analysis-reservation-unavailable')
+            }
           },
           async finish(requestId, state, usage) {
             if (!uuid.test(requestId) || !['completed', 'failed', 'cancelled'].includes(state)) throw new Error('Invalid call state')
@@ -35,7 +40,7 @@ export function createTrialStore({ supabaseUrl, secretKey, encryptionKey, fetchI
               state, usage: usage ?? null,
             })
           },
-          remaining: () => null, // The owner explicitly chose no trial call-count quota.
+          remaining: () => null, // Not a stale client-side counter: the DB enforces the authoritative quota.
         },
         cache: {
           key: (input, context) => inputFingerprint(input, { ...context, owner: userId, now: now() }, key),

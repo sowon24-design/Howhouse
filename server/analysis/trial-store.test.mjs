@@ -37,15 +37,24 @@ test('hosted answer data is encrypted, identity-bound, expiring and stable acros
   assert.equal(await reopened.cache.get(key), undefined)
 })
 
-test('trial ledger records calls without applying the PC ten-call protection quota', async () => {
+test('hosted ledger uses the atomic DB reservation and propagates quota decisions without retries', async () => {
   const bodies = []
   const store = createTrialStore({ ...config, fetchImpl: async (_url, options) => {
-    bodies.push(JSON.parse(options.body)); return new Response(null, { status: 204 })
+    assert.equal(new URL(_url).pathname, '/rest/v1/rpc/howhouse_reserve_analysis')
+    bodies.push(JSON.parse(options.body)); return Response.json({ok:true})
   } })
   const ledger = store.forUser(owner).ledger
   for (let i = 0; i < 15; i++) await ledger.reserve(`11111111-1111-4111-8111-${String(i).padStart(12, '0')}`)
   assert.equal(ledger.remaining(), null); assert.equal(bodies.length, 15)
-  assert.ok(bodies.every(row => row.owner_id === owner && row.state === 'reserved'))
+  assert.ok(bodies.every(row => row.p_owner === owner && row.p_request))
+  for(const code of ['budget-limit','server-busy','invalid-input']) {
+    let calls=0
+    const denied=createTrialStore({...config,fetchImpl:async()=>{calls++;return Response.json({ok:false,code})}})
+    await assert.rejects(denied.forUser(owner).ledger.reserve('11111111-1111-4111-8111-111111111111'),{code})
+    assert.equal(calls,1)
+  }
+  const unavailable=createTrialStore({...config,fetchImpl:async()=>Response.json({ok:false,code:'policy-unavailable'})})
+  await assert.rejects(unavailable.forUser(owner).ledger.reserve('11111111-1111-4111-8111-111111111111'),{message:'analysis-reservation-unavailable'})
 })
 
 test('database errors fail closed; invalid subject and request IDs are refused', async () => {
