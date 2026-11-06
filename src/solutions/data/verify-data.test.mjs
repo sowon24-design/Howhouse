@@ -7,10 +7,24 @@ import { isActiveCase } from './deleted-cases.ts'
 
 import { categories, getCategoryCases } from './categories.ts'
 import { displayResponsibility } from './presentation.ts'
+import { toMessageRecipients } from '../message-model.ts'
 const files = {'욕실·수도':'욕실·수도 (1)', '난방·전기':'난방·전기', '가전':'가전', '해충·곰팡이':'해충·곰팡이 (1)'}
 const raw = Object.entries(files).map(([field,file]) => ({field, csv:readFileSync(new URL(`./raw/${file}.csv`,import.meta.url),'utf8')}))
 const cases = raw.flatMap(({field,csv})=>convertCsv(field,csv,videoSupplements)).filter(isActiveCase)
 const get = createCaseLookup(cases)
+
+test('each stored case replaces landlord content by outcome and preserves company drafts',()=>{
+  const twoBlocks=new Set(['3','8','9','11','14','21','34','36','44','45','47','48','49','52'])
+  for(const c of cases){
+    const unresolved=toMessageRecipients(c,false),solved=toMessageRecipients(c,true)
+    assert.deepEqual(solved.find(r=>r.id==='company'),unresolved.find(r=>r.id==='company'),c.id)
+    const draft=solved.find(r=>r.id==='landlord').sentences
+    assert.equal(draft.length,twoBlocks.has(c.number)?2:3,c.id)
+    assert.deepEqual(draft,c.contacts.landlord.solvedSentences,c.id)
+    assert.notDeepEqual(draft,unresolved[0].sentences,c.id)
+    assert.ok(draft.every(s=>!s.includes('다만')&&!s.includes('지금은 보이지 않지만')),c.id)
+  }
+})
 
 test('53 current unique IDs all resolve; raw text, all step pairs and source fields are retained',()=>{
   assert.equal(cases.length,53)
@@ -28,10 +42,17 @@ test('53 current unique IDs all resolve; raw text, all step pairs and source fie
   assert.equal(get('욕실·수도:15'),undefined)
   assert.throws(()=>createCaseLookup([cases[0],cases[0]]),/중복/)
 })
-test('case 9 parenthetical comma remains in one supply; nested parentheses supported',()=>{
-  assert.equal(get('욕실·수도:9').supplies[0],'구연산(물때를 녹이는 가루, 다이소·마트에서 살 수 있어요. 없으면 식초)')
-  assert.equal(get('욕실·수도:9').supplies.length,5)
+test('case 9 has searchable supplies; parser still preserves nested parenthetical commas',()=>{
+  assert.deepEqual(get('욕실·수도:9').supplies,['구연산','식초','키친타월','식품용 랩','칫솔','수건'])
   assert.deepEqual(splitSupplies('A(설명(안쪽, 내용), 이어서), B'),['A(설명(안쪽, 내용), 이어서)','B'])
+})
+
+test('all active cases support landlord contact; previously empty cases have complete drafts',()=>{
+  for(const c of cases){assert.ok(c.canContact,c.id);assert.equal(c.contacts.landlord.label,'집주인');assert.equal(c.contacts.landlord.sentences.filter(s=>s.trim()).length,3,c.id);assert.ok([2,3].includes(c.contacts.landlord.solvedSentences.length),c.id)}
+  for(const id of ['욕실·수도:9','가전:34','가전:36','해충·곰팡이:45','해충·곰팡이:47','해충·곰팡이:48','해충·곰팡이:52']) {
+    const c=get(id);assert.equal(c.contacts.company.label,'');assert.ok(c.contacts.company.sentences.every(s=>!s.trim()))
+  }
+  assert.ok(get('난방·전기:16').supplies.length===0)
 })
 test('case 10 stores both videos in source order; first displayed by B02',()=>{
   assert.equal(get('욕실·수도:10').videos.length,2)

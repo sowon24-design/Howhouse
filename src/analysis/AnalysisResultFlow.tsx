@@ -21,7 +21,7 @@ export function AnalysisResultFlow({ data, onHome, onConnectionLost }: { data: B
           onContact={status => { setResolution(status);setVisited(true);setContact(true) }} onOpenVideo={() => {}} onPreviewOpinion={() => {}} />
       </div>
       {visited && <div className="hh-solutions-layer hh-solutions-front" hidden={!contact} inert={!contact} aria-hidden={!contact}>
-        <B03 recipients={toMessageRecipients(data)} resolution={resolution} contextual={data.source === 'generated'} onBack={() => setContact(false)} />
+        <B03 key={data.source === 'existing' ? String(resolution) : undefined} recipients={toMessageRecipients(data,resolution==='solved')} resolution={resolution} contextual={data.source === 'generated'} onBack={() => setContact(false)} />
       </div>}
     </div>
     <details className="hh-home-preview-tools hh-preview-disclosure"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">

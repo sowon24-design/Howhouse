@@ -63,3 +63,17 @@ test('copy result distinguishes navigation success from empty and failed writes'
   assert.equal((await copyMessageResult('본문',async()=>{writes++})).status,'success')
   assert.equal(writes,1)
 })
+
+
+test('solved landlord blocks replace unresolved blocks, company stays unchanged',async()=>{
+  const {toMessageRecipients,initialDraft,messageBody,applySentences,selectedIndexes}=await import('./message-model.ts')
+  const data={contacts:{landlord:{label:'집주인',sentences:['미해결 상황'],solvedSentences:['상황과 조치','점검 부탁']},company:{label:'전문업체',sentences:['업체 문의']}}}
+  const solved=toMessageRecipients(data,true),unsolved=toMessageRecipients(data,false)
+  assert.deepEqual(solved[0].sentences,['상황과 조치','점검 부탁'])
+  assert.deepEqual(unsolved[0].sentences,['미해결 상황'])
+  assert.deepEqual(solved[1],unsolved[1])
+  const draft=initialDraft(solved[0]);assert.ok(!messageBody(draft).includes('미해결'))
+  assert.equal(messageBody(applySentences(draft,[0],solved[0].sentences)),'상황과 조치')
+  delete data.contacts.landlord.solvedSentences
+  assert.deepEqual(toMessageRecipients(data,true)[0].sentences,['미해결 상황'])
+})

@@ -63,7 +63,7 @@ export function B03({recipients,onBack,resolution,contextual=false}:{recipients:
           <h2 className="text-body-sb"><span>{r.title}</span>에게 보낼 메시지</h2>
           <ListRow variant="pale" icon={<img src={write} alt=""/>} onClick={()=>{setPending(selectedIndexes(drafts[r.id]));setPicking(true)}}>메시지에 넣을 내용을 선택해 주세요.</ListRow>
           <textarea aria-label={`${r.label} 메시지 본문`} value={messageBody(drafts[r.id])} onChange={e=>{editedRecipients.current.add(r.id);setDrafts(previous=>({...previous,[r.id]:editDraft(previous[r.id],e.target.value)}))}}/>
-          <p>* 메시지를 직접 수정할 수 있어요.</p>
+          <p>* 메시지 초안이에요. 수정·복사한 뒤 직접 보내 주세요.</p>
         </section>)}
       </div>
       <div className="solutions-b03__actions"><div className="solutions-b03__toast" role="status">{toast&&<span key={toastSequence}>{toast}</span>}</div><Button disabled={copying} onClick={copy}>메시지 복사하기</Button><p>복사한 뒤 문자에 붙여넣어 주세요.</p></div>

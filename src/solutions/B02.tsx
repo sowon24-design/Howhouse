@@ -88,7 +88,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
     {photos.length > 0 && <div ref={media} className="solutions-b02__media"><div className="solutions-b02__photos">{photos.map((photo, i) => <img key={i} src={photo.src} alt={photo.alt} />)}</div></div>}
     <main className="solutions-b02__content">
       <div className="solutions-b02__intro">
-        <div>{data.title.trim() && <h1>{data.title}</h1>}{data.description.trim() && <p>{data.description}</p>}</div>
+        <div>{data.title.trim() && <h1 title={data.title}>{data.title}</h1>}{data.description.trim() && <p>{data.description}</p>}</div>
         <div className="solutions-b02__facts">
           {data.duration.trim() && <div><img src={clock} alt="" /><span>예상 소요 시간</span><i /><strong>{data.duration}</strong></div>}
           {(data.responsibility.trim() || data.reference.trim()) && <div><img src={dollar} alt="" /><span>수리 비용 부담</span><i /><div className="solutions-b02__responsibility">
@@ -123,7 +123,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
     <OpinionSheet mode={sheet} reason={reason} text={opinion} onReason={setReason} onText={setOpinion} onClose={() => setSheet('closed')}
       saving={feedback.opinionPending} error={feedback.opinionError}
       onPreviewSubmit={() => {void feedback.submitOpinion(reason, opinion).then(saved => {if(saved){onPreviewOpinion();setSheet(current => current === 'edit' ? 'thanks' : current)}})}} />
-    <ResolutionSheet mode={resolution} onClose={()=>setResolution('closed')} onHome={onComplete} onContact={onContact} canContact={data.canContact}/>
+    <ResolutionSheet mode={resolution} onClose={()=>setResolution('closed')} onHome={onComplete} onContact={onContact} canContact={data.canContact} hasCompany={!!data.contacts.company.label.trim()}/>
   </section>
 }
 

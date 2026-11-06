@@ -2,7 +2,7 @@ import { initialDraft } from './message-model'
 import type { Recipient, MessageDraft } from './message-model'
 export type ResolutionStatus = 'solved' | 'unsolved'
 export function resolutionDraft(recipient: Recipient, status?: ResolutionStatus): MessageDraft {
-  if (!status) return initialDraft(recipient)
+  if (!status || recipient.id === 'company') return initialDraft(recipient)
   const sentences = [...recipient.sentences]
   const purpose = status === 'solved'
     ? '현재는 해결됐지만 같은 문제가 반복될 때 점검을 받을 수 있는지 문의드립니다.'
