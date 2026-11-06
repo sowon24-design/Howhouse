@@ -5,11 +5,12 @@ type SourceBlock = {id:string;order:number;original:string}
 export type MessageDraft = {catalog:SourceBlock[];sentences:MessageSentence[];nextId:number}
 export function messageBody(draft:MessageDraft){return draft.sentences.map(s=>s.text).join('\n\n')}
 export function selectedIndexes(draft:MessageDraft){return draft.catalog.flatMap((b,i)=>draft.sentences.some(s=>s.blockId===b.id)?[i]:[])}
-export function toMessageRecipients(data: Pick<SolutionCase,'contacts'>): Recipient[] {
+export function toMessageRecipients(data: Pick<SolutionCase,'contacts'>, solved = false): Recipient[] {
   const result:Recipient[]=[]
   for(const id of ['landlord','company'] as const){
     const contact=data.contacts[id]
-    if(contact.label.trim())result.push({id,label:id==='landlord'?'집주인':'전문 업체',title:id==='landlord'?'집주인':'수리 기사',sentences:contact.sentences.filter(s=>s.trim())})
+    const sentences=solved && id==='landlord' && data.contacts.landlord.solvedSentences?.length ? data.contacts.landlord.solvedSentences : contact.sentences
+    if(contact.label.trim())result.push({id,label:id==='landlord'?'집주인':'전문 업체',title:id==='landlord'?'집주인':'수리 기사',sentences:sentences.filter(s=>s.trim())})
   }
   return result
 }
