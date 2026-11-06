@@ -5,7 +5,7 @@
 - 사용자 결정: OpenAI 월 예산 $10, 임시 사용자 ID별 한국 시간 하루 신규 분석 5회.
 - OpenAI Default project에서 월 $10 및 Enforce a hard limit을 켜고 Limit enforced 표시를 확인했다. 모든 키가 같은 프로젝트를 공유하면 그 호출도 같은 한도에 포함된다. 키 값은 읽거나 변경하지 않았다.
 - OpenAI 지출 반영은 즉시가 아니어서 소액 초과 가능성이 있다. 이는 청구 금액의 절대 보증이 아니다. 공식 안내: https://developers.openai.com/api/docs/guides/spend-limits
-- 아래 DB 정책과 예약 함수는 로컬 구현·격리 SQL 검사까지 완료했고 실제 Supabase 적용 및 서버 배포는 아직 하지 않았다.
+- 아래 DB 정책과 예약 함수는 로컬 구현·격리 SQL 검사까지 완료했다. 2026-11-06 사용자가 실제 DB 적용과 서버 배포를 승인했다. 실제 운영 반영·검증 결과는 PR의 배포 기록과 함께 확인한다.
 
 ## 호출 흐름
 
