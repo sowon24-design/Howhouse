@@ -48,3 +48,8 @@
 .hh-confirm-sheet-content > div,.hh-confirm-sheet .hh-confirm-actions {flex:none;}
 .hh-confirm-sheet-content img {width:min(178px,30.5143dvh);}
 .hh-analysis-art > img {object-fit:cover;}
+
+.hh-local-results {display:flex;flex-direction:column;gap:var(--space-3);padding-block:var(--space-6);flex:1;}
+.hh-local-results > button {flex:none;}
+.hh-home-preview:has(.hh-local-results) {padding:0;}
+.hh-home-preview:has(.hh-local-results) > .hh-home-preview-frame {position:relative;height:100dvh;}

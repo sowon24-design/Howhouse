@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, GNB } from '../../components/ui'
-import draft from './information-draft.json'
+import draft from './information-local.json'
 import contactCrab from './assets/contact-w10.png'
 import './information.css'
-import {PrivacyActions} from '../../analysis/PrivacyActions'
+
 
 export type InformationPage = 'app' | 'data' | 'terms' | 'privacy' | 'ai' | 'contact'
 export const policyLinks = {
@@ -11,7 +11,7 @@ export const policyLinks = {
   terms: 'https://xamxam33.notion.site/40902821a7f38009a098dc50f64202c4',
   privacy: 'https://xamxam33.notion.site/40902821a7f3809aa417d65279f87c37',
 } as const
-const titles = { app: '앱 정보', data: '개인정보 및 데이터 관리', terms: '이용약관', privacy: '개인정보 처리방침', ai: 'AI 활용 정보', contact: '문의하기' }
+const titles = { app: '앱 정보', data: '개인정보 및 데이터 관리', terms: '이용약관', privacy: '개인정보 처리방침', ai: '사례 검색 안내', contact: '문의하기' }
 const needsReview = (text: string) => /검토 초안|\[[^\]]+\]/.test(text)
 const bulletText = /^(처리 정보:|이용 목적:|처리 방식:|보관 및 삭제:|AI 분석 입력 정보:|커뮤니티 게시글 및 댓글:|고객 문의 기록:|서비스 운영 기록:|AI 분석 서비스:|지도 및 장소 검색 서비스:|기타 외부 서비스:|서비스명:|운영자:|이메일:)/
 
@@ -45,7 +45,7 @@ export function InformationScreen({ page, onBack }: { page: InformationPage; onB
     setCopySequence(sequence => sequence + 1)
     setCopyStatus(copied ? '이메일을 복사했어요.' : `복사하지 못했어요. ${draft.contact.email}을 직접 복사해 주세요.`)
   }
-  const external = page === 'data' || page === 'terms' || page === 'privacy' ? policyLinks[page] : undefined
+  const external: string | undefined = undefined
   return <main className={`hh-information hh-information--${page}`} aria-label={titles[page]}>
     <div className="hh-information-header" data-hidden={headerHidden} onFocusCapture={() => setHeaderHidden(false)}><GNB title={titles[page]} onBack={onBack} /></div>
     <div className="hh-information-scroll" onScroll={event => {
@@ -74,7 +74,7 @@ export function InformationScreen({ page, onBack }: { page: InformationPage; onB
           </section>
         })}
       </div>}
-      {page==='data'&&<PrivacyActions/>}
+
       <footer className="hh-information-actions">
         {page === 'contact' ? <><div className="hh-contact-copy-action"><div role="status" aria-live="polite" aria-atomic="true" className="hh-contact-copy-status">{copyStatus && <span key={copySequence}>{copyStatus}</span>}</div><Button onClick={copyEmail}>이메일 복사하기</Button></div><p>{draft.contact.footer}</p></> : <div className="hh-information-buttons">
           {external && <a className="ui-button ui-button--pale" href={external} target="_blank" rel="noopener noreferrer">외부 링크에서 보기<span className="ui-sr-only"> (새 탭)</span></a>}

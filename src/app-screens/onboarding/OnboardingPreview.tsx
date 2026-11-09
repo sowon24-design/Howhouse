@@ -15,7 +15,7 @@ import './onboarding.css'
 import { introductionKey as progressKey } from '../profile-storage'
 const pages = [
   { image: intro1, title: '혼자 고민하지 마세요', lines: ['갑자기 생긴 문제도, 사소한 불편도.', '어쩌집에서 함께 방법을 찾아봐요.'] },
-  { image: intro2, title: '말해주면, 방법을 찾아드려요', lines: ['사진·글로 상황을 알려주세요.', 'AI가 문제에 맞는 해결 방법을 제안해요.'] },
+  { image: intro2, title: '말해주면, 방법을 찾아드려요', lines: ['글로 문제 상황을 알려주세요.', '비슷한 사례의 해결 방법을 찾아봐요.'] },
   { image: intro3, title: '혼자 사는 마음까지 든든하게', lines: ['어디에 물어보고 무엇부터 할지.', '어쩌집과 하나씩 알아가요.'] },
 ] as const
 function readStep() {

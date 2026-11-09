@@ -17,7 +17,7 @@ import { useAndroidBackBridge } from './app-screens/android-back'
 import { getSolutionById } from './solutions/data'
 import { AnalysisResultFlow } from './analysis/AnalysisResultFlow'
 import type { AnalysisResult, GeneratedSolution } from './analysis'
-import { ConnectivityBoundary } from './analysis/ConnectivityBoundary'
+
 
 const colors = [
   ['neutral', '화면 배경', '#EDF2FA'], ['surface', '기본 표면·시트', '#F8FAFF'],
@@ -60,7 +60,7 @@ const iconNotes: Record<string, string> = {
 }
 
 export default function App() {
-  return <ConnectivityBoundary>{(suspended, onConnectionLost) => <AppContent suspended={suspended} onConnectionLost={onConnectionLost} />}</ConnectivityBoundary>
+  return <AppContent suspended={false} onConnectionLost={() => {}} />
 }
 function AppContent({ suspended, onConnectionLost }: { suspended: boolean; onConnectionLost: () => void }) {
   useAndroidBackBridge()
@@ -128,7 +128,7 @@ function AppContent({ suspended, onConnectionLost }: { suspended: boolean; onCon
   if (hash === '#analysis-result') {
     const data = analysisResult?.source === 'existing' ? getSolutionById(analysisResult.caseId) : analysisResult?.solution
     return data ? <AnalysisResultFlow data={data} onConnectionLost={onConnectionLost} onHome={() => {window.location.hash = 'home'}} />
-      : <HomePreview nickname={nickname} storageStatus="분석 결과는 메모리에만 보관되어 새로고침하면 사라집니다." onResetSetup={resetSetup} onProblem={id => {window.location.hash = `case/${encodeURIComponent(id)}`}} onCategory={key => {window.location.hash = `solutions/${encodeURIComponent(categoryForHome[key])}`}} />
+      : <HomePreview nickname={nickname} storageStatus="검색 결과는 실행 중에만 유지됩니다." onResetSetup={resetSetup} onProblem={id => {window.location.hash = `case/${encodeURIComponent(id)}`}} onCategory={key => {window.location.hash = `solutions/${encodeURIComponent(categoryForHome[key])}`}} />
   }
   if (!hash || hash === '#') return null
   if (hash === '#onboarding') return <OnboardingPreview key={onboardingKey} storageStatus={storageStatus} onResetSetup={resetSetup} onComplete={name => { saveNickname(name, true); window.location.hash = 'home' }} />

@@ -55,7 +55,7 @@ export function HomeScreen({ nickname, month, popularProblems, onProfile, onStar
         </div>
         <HomePressButton type="button" className="hh-home-banner" onClick={onStartProblem}>
           <span className="hh-home-book"><img src={book} alt="" /></span>
-          <span className="hh-home-banner-copy"><span>우리집 문제에 대한</span><strong>해결 방법을 찾아볼까요?</strong></span>
+          <span className="hh-home-banner-copy"><span>문제 상황을 글로 적고</span><strong>해결 방법을 찾아볼까요?</strong></span>
           <img src={arrow} alt="" />
         </HomePressButton>
       </section>

@@ -14,7 +14,7 @@ export const myMenus = [
   { id: 'data', label: '개인정보 및 데이터 관리' },
   { id: 'terms', label: '이용약관' },
   { id: 'privacy', label: '개인정보 처리방침' },
-  { id: 'ai', label: 'AI 활용 정보' },
+  { id: 'ai', label: '사례 검색 안내' },
   { id: 'contact', label: '문의하기' },
 ] as const
 export type MyMenu = typeof myMenus[number]['id']
@@ -56,7 +56,7 @@ export function MyPreview({ nickname = '자취하는 소라게', onNicknameChang
     else if (information) closeInformation()
     else window.location.hash = 'home'
   })
-  const status = '정보·약관은 2026-11-06 Figma 검토안입니다. 보관 기간·국외 처리 조건은 확정 전이며 공개 Notion 동기화는 아직 완료되지 않았습니다. 닉네임은 기기에 저장하며 문의 이메일은 happytanglee@gmail.com입니다.'
+  const status = '기기 내 글 검색 버전입니다. 로그인·서버 인증·사진 분석·AI 생성을 사용하지 않습니다.'
   return <div className="hh-home-preview">
     <div className="hh-home-preview-frame hh-my-frame hh-my-stack"><div className="hh-my-base" inert={editing || information !== null} aria-hidden={editing || information !== null}><MyScreen nickname={nickname} version="v 1.0.1" onBack={() => { window.location.hash = 'home' }} onEdit={() => { setClosingEdit(false); setEditing(true) }} onMenu={id => { setClosingInformation(false); setInformation(id) }} /></div>
       {information && <div className={`hh-my-editor${closingInformation ? ' hh-my-editor--leaving' : ''}`} inert={closingInformation} onAnimationEnd={event => { if (event.target === event.currentTarget && event.animationName === 'hh-my-out') { setInformation(null); setClosingInformation(false) } }}>

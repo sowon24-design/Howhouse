@@ -26,7 +26,7 @@ export function AnalysisResultFlow({ data, onHome, onConnectionLost }: { data: B
       </div>}
     </div>
     {showDeveloperTools && <details className="hh-home-preview-tools hh-preview-disclosure"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
-      <p>분석 결과를 메모리에서 표시합니다. 문의 문장 선택·수정·복사에는 추가 AI 호출이 없습니다.</p>
+      <p>선택한 기존 사례를 표시합니다. 문의 문장은 기기 안에서 수정·복사합니다.</p>
       {import.meta.env.DEV && onConnectionLost && <button type="button" onClick={onConnectionLost}>연결 끊김 재현 · API 호출 없음</button>}
     </div></details>}
   </div>

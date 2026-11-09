@@ -2,7 +2,7 @@ import {ageConfirmationKey} from '../../analysis/release-mode'
 import { useState } from 'react'
 import { Button, Checkbox, GNB } from '../../components/ui'
 import { Dialog } from '../../components/ui/Dialogs'
-import information from '../my/information-draft.json'
+import information from '../my/information-local.json'
 import './terms.css'
 
 export function TermsScreen({ onBack, onClose, onContinue }: { onBack: () => void; onClose: () => void; onContinue: () => void }) {
@@ -23,7 +23,7 @@ export function TermsScreen({ onBack, onClose, onContinue }: { onBack: () => voi
         <div className="hh-terms-row hh-terms-all"><Checkbox label="모두 동의" checked={all} onChange={event => { setService(event.target.checked); setPrivacy(event.target.checked);setAge(event.target.checked) }} /></div>
         <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 만 14세 이상이에요." checked={age} onChange={event=>setAge(event.target.checked)}/></div>
         <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 서비스 이용약관 동의" checked={service} onChange={event => setService(event.target.checked)} /><button type="button" className="hh-terms-view" aria-label="서비스 이용약관 보기" onClick={() => show('service')}>보기</button></div>
-        <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 개인정보 수집·이용 동의" checked={privacy} onChange={event => setPrivacy(event.target.checked)} /><button type="button" className="hh-terms-view" aria-label="개인정보 처리방침 보기" onClick={() => show('privacy')}>보기</button></div>
+        <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 개인정보 처리 안내 확인" checked={privacy} onChange={event => setPrivacy(event.target.checked)} /><button type="button" className="hh-terms-view" aria-label="개인정보 처리방침 보기" onClick={() => show('privacy')}>보기</button></div>
       </div>
     </div>
     {error&&<p role="alert">{error}</p>}
