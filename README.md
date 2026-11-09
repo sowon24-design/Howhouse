@@ -55,11 +55,21 @@ Android 담당자는 `npm run android:sync` → `npm run android:open` → Andro
 | --- | --- |
 | `usability-test/` | 사용성 테스트(UT) 영상, 녹음본, 기록 문서. 각자의 개인 분석물은 개인 브랜치에서 관리합니다. |
 | `design/` | 프로토타입 디자인 작업물 |
-| `docs/` | PRD, 의사결정 기록 등 프로젝트 문서 |
+| `docs/` | 팀 공통 기획·기능정의·UX 라이팅·의사결정·QA 및 출시/운영 안내 문서와 문서용 이미지 |
 | `members/` | 팀원별 contribution 기록. 작업 파일은 개인 브랜치에서, 협업 기록은 `main/members`에서 관리합니다. |
 | `wireframes/` | 팀 공통 와이어프레임. 각자의 와이어프레임은 개인 브랜치에 있습니다. |
 
 ---
+
+### docs 폴더 관리
+
+- `docs/`는 팀이 함께 참고하는 문서의 기준 위치입니다. PRD·화면별 기능정의, UX 라이팅·브랜드 보이스, 의사결정·팀 합의, QA 기준·검증 기록, 설치·출시·운영 안내를 둡니다.
+- UX 라이팅의 브랜드 소개·코어 밸류·톤맵·문구 작성 원칙과 변경 사례는 [UX_WRITING.md](docs/UX_WRITING.md) 한 파일에서 관리합니다. 같은 내용을 별도 최상위 폴더에 중복 보관하지 않습니다.
+- 문서에 삽입하는 그래프·이미지는 `docs/assets/`에 두고 상대 경로로 연결합니다. 자료가 많아지면 `docs/주제명/` 하위 폴더로 묶습니다. 앱이 직접 사용하는 이미지와 코드는 `src/` 또는 `public/`에서 관리합니다.
+- 개인 과제·개인 기여 기록은 `members/`, 디자인 작업물은 `design/`, 사용성 테스트의 원본 영상·녹음은 사용성 테스트 폴더에 둡니다. 팀 공통 분석 결과와 검증 문서는 `docs/`에서 연결해 참고할 수 있게 합니다.
+- 시각 규칙은 루트 `DESIGN.md`, 공통 컴포넌트 동작은 `src/components/CONTRACT.md`, 담당 영역의 실행·인계 안내는 해당 폴더의 README에서 관리합니다. 같은 규칙을 복사하기보다 원본 문서로 링크합니다.
+- 문서에는 작성·수정일과 적용 범위를 표시하고, 확정 기준·초안·검증 결과를 구분합니다. 기존 주차 기록은 이력으로 보존하되 최신 기준이 무엇인지 명시합니다.
+- 문서를 이동하거나 이름을 바꾸면 README와 문서 내부 링크·이미지 경로도 함께 수정합니다. API 키·개인 인증 정보 등 민감정보는 문서에 기록하지 않습니다.
 
 ## 📌 규칙
 
@@ -77,6 +87,7 @@ Android 담당자는 `npm run android:sync` → `npm run android:open` → Andro
 
 ## 개발 기준 문서
 
+- [UX_WRITING.md](docs/UX_WRITING.md): 브랜드 보이스·톤맵·상황별 문구 작성 기준
 - [DESIGN.md](DESIGN.md): 시각 규칙·디자인 토큰·대표 화면
 - [CONTRACT.md](src/components/CONTRACT.md): 공통 컴포넌트 Props·상태·동작 계약
 - [실행 안내](src/README.md) · [컴포넌트 예제](src/components/ui/README.md)

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620" role="img" aria-labelledby="title desc">
+  <title id="title">어쩌집 브랜드 톤맵</title>
+  <desc id="desc">가로축 왼쪽은 Casual, 오른쪽은 Formal. 세로축 위는 Calm, 아래는 Playful. 어쩌집은 중심보다 조금 왼쪽 위의 차분하고 친근한 영역에 위치한다. 위치는 정성적 표현이며 수치가 아니다.</desc>
+  <rect width="900" height="620" rx="24" fill="#F8FAFF"/>
+  <g stroke="#B6C0D0" stroke-width="2">
+    <path d="M150 310H750M450 100V520"/>
+    <path d="m740 304 10 6-10 6M444 110l6-10 6 10" fill="none"/>
+  </g>
+  <g font-family="Pretendard, Noto Sans KR, sans-serif" fill="#19212E" text-anchor="middle">
+    <text x="450" y="65" font-size="28" font-weight="600">Calm</text>
+    <text x="450" y="570" font-size="28" font-weight="600">Playful</text>
+    <text x="85" y="318" font-size="24" font-weight="600">Casual</text>
+    <text x="815" y="318" font-size="24" font-weight="600">Formal</text>
+    <circle cx="365" cy="225" r="53" fill="#1157CE" fill-opacity=".12"/>
+    <circle cx="365" cy="225" r="9" fill="#1157CE"/>
+    <text x="365" y="160" font-size="23" font-weight="600" fill="#1157CE">어쩌집</text>
+    <text x="365" y="185" font-size="15" fill="#5F6979">차분하고 친근한 안내자</text>
+    <text x="450" y="606" font-size="13" fill="#5F6979">브랜드의 상대적인 톤을 나타내며, 수치나 점수를 의미하지 않습니다.</text>
+  </g>
+</svg>
