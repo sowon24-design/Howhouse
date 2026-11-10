@@ -6,8 +6,8 @@ test('release fails closed without public settings or finalized disclosure',()=>
  assert.throws(()=>validateReleaseConfig('release',{},{}))
  assert.throws(()=>validateReleaseConfig('production',{...env,VITE_RELEASE_PRIVACY_READY:''},{}))
  assert.throws(()=>validateReleaseConfig('release',env,{privacy:'검토 초안'}))
- assert.doesNotThrow(()=>validateReleaseConfig('release',env,{privacy:'공개된 확정 안내'}))
- assert.doesNotThrow(()=>validateReleaseConfig('release',env,{privacy:[{title:'안내',paragraphs:['공개된 확정 안내','[선택] 안내 항목']}]}))
+ assert.doesNotThrow(()=>validateReleaseConfig('release',env,{privacy:'공개된 확정 안내'},true))
+ assert.doesNotThrow(()=>validateReleaseConfig('release',env,{privacy:[{title:'안내',paragraphs:['공개된 확정 안내','[선택] 안내 항목']}]},true))
  assert.throws(()=>validateReleaseConfig('release',env,{privacy:[{title:'안내',paragraphs:['[제공업체 설정 확인 필요]']}]}))
 })
 test('release rejects private keys, unsafe addresses and capture bypass',()=>{

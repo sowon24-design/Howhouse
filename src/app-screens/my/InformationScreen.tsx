@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, GNB } from '../../components/ui'
 import draft from './information-draft.json'
+import publication from '../../analysis/policy-publication.json'
 import contactCrab from './assets/contact-w10.png'
 import './information.css'
 import {PrivacyActions} from '../../analysis/PrivacyActions'
 
 export type InformationPage = 'app' | 'data' | 'terms' | 'privacy' | 'ai' | 'contact'
 export const policyLinks = {
-  data: 'https://xamxam33.notion.site/40902821a7f380beb305dd0f095f5d79',
-  terms: 'https://xamxam33.notion.site/40902821a7f38009a098dc50f64202c4',
-  privacy: 'https://xamxam33.notion.site/40902821a7f3809aa417d65279f87c37',
-  ai: 'https://xamxam33.notion.site/AI-41002821a7f38017a9bef636b4c68d8c',
+  data: publication.pages.find(page=>page.key==='data')!.url,
+  terms: publication.pages.find(page=>page.key==='terms')!.url,
+  privacy: publication.pages.find(page=>page.key==='privacy')!.url,
+  ai: publication.pages.find(page=>page.key==='ai')!.url,
 } as const
 const titles = { app: '앱 정보', data: '개인정보 및 데이터 관리', terms: '이용약관', privacy: '개인정보 처리방침', ai: 'AI 활용 정보', contact: '문의하기' }
 const needsReview = (text: string) => /검토 초안|\[[^\]]+\]/.test(text)

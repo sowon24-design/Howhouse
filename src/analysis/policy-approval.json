@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "analysisConsentApproved": false,
+  "outstanding": [
+    "공개 자료가 특정하지 않는 부수 로그·지원 처리의 국가·보유기간 및 적용 근거 검토",
+    "동의 전 자동 인증·평가 조회 경로와 최종 네트워크 범위 확인",
+    "최종 증빙 SQL·서버·호환 앱 적용 및 실기기 검증",
+    "공개 Notion 6개 페이지의 동일 본문 반영 확인"
+  ],
+  "notionSyncMethod": "manual-handoff",
+  "notionSyncVerified": false
+}

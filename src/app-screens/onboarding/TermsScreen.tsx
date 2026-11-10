@@ -2,7 +2,7 @@ import { ageConfirmationKey } from '../../analysis/release-mode'
 import { useEffect, useState } from 'react'
 import { Button, Checkbox, GNB } from '../../components/ui'
 import { Dialog } from '../../components/ui/Dialogs'
-import { ConsentDocument, consentTitles, consentDocuments } from './ConsentDocument'
+import { ConsentDocument, consentTitles, consentDocuments, consentCheckboxLabels } from './ConsentDocument'
 import type { ConsentDocumentKind } from './ConsentDocument'
 import { readConsentChoices, setConsentChoices } from './consent-preview'
 import information from '../my/information-draft.json'
@@ -21,7 +21,7 @@ export function TermsScreen({ onBack, onClose, onContinue }: { onBack: () => voi
   const ready = analysisConsentReady(import.meta.env.VITE_RELEASE_PRIVACY_READY, { information, consentDocuments })
   const [flow] = useState(() => createAnalysisConsentFlow({
     isReady: () => analysisConsentReady(import.meta.env.VITE_RELEASE_PRIVACY_READY, { information, consentDocuments }),
-    save: acceptance => configuredPrivacyClient().consent(acceptance),
+    save: acceptance => configuredPrivacyClient().consent({...acceptance,documentSurface:'onboarding'}),
   }))
   useEffect(() => () => flow.cancel(), [flow])
   function leave(action: () => void) { flow.cancel(); action() }
@@ -47,7 +47,7 @@ export function TermsScreen({ onBack, onClose, onContinue }: { onBack: () => voi
         <div className="hh-terms-row hh-terms-all"><Checkbox disabled={busy} label="모두 동의" checked={all} onChange={event => { const checked = event.target.checked; setService(checked); setAge(checked); setChoices({ processing: checked, overseas: checked }) }} /></div>
         <div className="hh-terms-row"><Checkbox disabled={busy} variant="stroke" label="[필수] 만 14세 이상입니다." checked={age} onChange={event => setAge(event.target.checked)} /></div>
         <div className="hh-terms-row"><Checkbox disabled={busy} variant="stroke" label="[필수] 서비스 이용약관 동의" checked={service} onChange={event => setService(event.target.checked)} /><button type="button" className="hh-terms-view" aria-label="서비스 이용약관 보기" onClick={() => show('service')}>보기</button></div>
-        {(['processing', 'overseas'] as const).map(kind => <div className="hh-terms-row" key={kind}><Checkbox disabled={busy} variant="stroke" label={`[선택] ${consentTitles[kind]}`} checked={choices[kind]} onChange={event => setChoices({ ...choices, [kind]: event.target.checked })} /><button type="button" className="hh-terms-view" aria-label={`${consentTitles[kind]} 보기`} onClick={() => show(kind)}>보기</button></div>)}
+        {(['processing', 'overseas'] as const).map(kind => <div className="hh-terms-row" key={kind}><Checkbox disabled={busy} variant="stroke" label={consentCheckboxLabels('onboarding')[kind]} checked={choices[kind]} onChange={event => setChoices({ ...choices, [kind]: event.target.checked })} /><button type="button" className="hh-terms-view" aria-label={`${consentTitles[kind]} 보기`} onClick={() => show(kind)}>보기</button></div>)}
       </div>
       {error && <p role="alert">{error}</p>}
       {!ready && <p role="status">AI 분석은 최종 안내 준비 후 이용할 수 있어요. 지금은 기존 사례를 볼 수 있어요.</p>}
