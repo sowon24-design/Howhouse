@@ -28,7 +28,7 @@ test('negative context does not reward drainage or a smell that is denied',()=>{
   assert.equal(searchCases(entries,'배수구 냄새는 안 나고 물이 안 빠져요')[0].id,'욕실·수도:2')
 })
 test('unknown topics do not fabricate a repair and repeated synonyms do not boost score',()=>{
-  assert.deepEqual(searchCases(entries,'도어락 배터리'),[])
+  assert.equal(searchCases(entries,'도어락 배터리')[0].id,'난방·전기:G61')
   assert.deepEqual(searchCases(entries,'인터넷 연결'),[])
   assert.deepEqual(searchCases(entries,'세탁기').map(x=>x.id),searchCases(entries,'세탁기 세탁기').map(x=>x.id))
 })

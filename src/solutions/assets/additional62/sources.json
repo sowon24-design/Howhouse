@@ -1,0 +1,319 @@
+{
+  "source": "2026-11-11 reviewed preview",
+  "images": [
+    {
+      "file": "ac.png",
+      "sha256": "7ad21269df508b49b795a32094e521b4cc139834af3af05c5771a9cc8b699150",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G02",
+        "G43",
+        "G66",
+        "G67",
+        "G71"
+      ]
+    },
+    {
+      "file": "air-purifier.png",
+      "sha256": "c445374858bc13f9fa844e7da1961ae6e2781bb7c25f06ab9ed8da14fb8f7f26",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G73"
+      ]
+    },
+    {
+      "file": "bed.png",
+      "sha256": "b4798ff56ac5aa3a5565010d4c887c819206944629d70d89fe868a32528befb7",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G51"
+      ]
+    },
+    {
+      "file": "bread-avocado.png",
+      "sha256": "c40859f7485c1becd0e177f7a6d9b3fe61d320292630163f4cab3ce003c9039e",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G24",
+        "G37"
+      ]
+    },
+    {
+      "file": "cleaning-tools.png",
+      "sha256": "7da47d9111d63baf4adc31725daf6ddf75130cf89708ea3453d0ed57942fe8a1",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G28",
+        "G49"
+      ]
+    },
+    {
+      "file": "dehumidifier.png",
+      "sha256": "dafb93fb5402d1336765183c14aa80a30f03c59134cf552195081b726c3fbcca",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G21"
+      ]
+    },
+    {
+      "file": "detectors.png",
+      "sha256": "7b7f37d66971eafc5890decf1ed4cbb1e7a11c6dbefbe23d8011995db1e920f0",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G63",
+        "G64"
+      ]
+    },
+    {
+      "file": "dishwasher.png",
+      "sha256": "1d88d91100d074094756d3f925a2322dec2e78e71eb5dee518b1b2f46d5d045d",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G53"
+      ]
+    },
+    {
+      "file": "disposal-items.png",
+      "sha256": "7189497dc14d51f8f6626d29d28c6b3121289c81dcfc9d509be3d4bc596b6a86",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G31",
+        "G32"
+      ]
+    },
+    {
+      "file": "door-lock.png",
+      "sha256": "7e1366eb23f307df1d51cec3fb756c32a5abc3becb45cd2d0c15d9187b59d6c0",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G61"
+      ]
+    },
+    {
+      "file": "electric-mat.png",
+      "sha256": "81b52364d2c9eb514315086287dc2796933646c2b36fffdb3fee689cfdcfc048",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G09"
+      ]
+    },
+    {
+      "file": "gas-range.png",
+      "sha256": "179977b61f123ab8a10a15ab023fa7f90b8c17060a24856d68a72dbca0c3c702",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G01",
+        "G65",
+        "G79"
+      ]
+    },
+    {
+      "file": "humidifier.png",
+      "sha256": "b9e341f52beb58832ba12e1e12af62f61f67ad0c6d4ce588c2e408ce052572a5",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G47"
+      ]
+    },
+    {
+      "file": "induction.png",
+      "sha256": "ee75deca34a05caf7ebe9899ed1d8d497100422229ece28c5e15b48043cec3de",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G54"
+      ]
+    },
+    {
+      "file": "kettle.png",
+      "sha256": "b283085bbc862a3e191b0586aa947c196dda98e5bcdeb45eff6ba1a33a416ad5",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G52"
+      ]
+    },
+    {
+      "file": "laundry-dryer.png",
+      "sha256": "64995348b572eedbd7a31b061b9d21cf5a1e58017dc41a34040249e87fc2c908",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G17",
+        "G20",
+        "G22",
+        "G78"
+      ]
+    },
+    {
+      "file": "microwave.png",
+      "sha256": "99d0a2206808331656797732f9cae77eb6cf3b978da163e911588560c1b9244b",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G46"
+      ]
+    },
+    {
+      "file": "p03-generated.jpg",
+      "sha256": "f44b147c590aa6cb9ab2645f489948bbeeee5492f9b5dfd605b0d6c5f1ed3c9d",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G76"
+      ]
+    },
+    {
+      "file": "p04-generated.jpg",
+      "sha256": "24fd5d88dcee2cccc2c4e67cd48e0b88df47a87ea49c50975dd8f596539d1b85",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G12",
+        "G42"
+      ]
+    },
+    {
+      "file": "p06-generated.jpg",
+      "sha256": "6aefe44f05eca8edf9dd51b351325db25791e1f46620f89f905a8c03db5a0261",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G25"
+      ]
+    },
+    {
+      "file": "p09-v3.jpg",
+      "sha256": "d3cef5a0b127621574cba380dd3aa8cf21b948ca552b0b312818bceb2e166934",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G27"
+      ]
+    },
+    {
+      "file": "p11-generated.jpg",
+      "sha256": "0aff778e9d2e3b08628a775b0b6509cd523b24bed02340cb84cb0f9c98fdd64f",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G68"
+      ]
+    },
+    {
+      "file": "p12-generated.jpg",
+      "sha256": "6d55a63e03a14881abf46167ba57535eac2ac655a368f99264641a98c6114983",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G14",
+        "G15",
+        "G16"
+      ]
+    },
+    {
+      "file": "p15-generated.jpg",
+      "sha256": "1d5ac195ee338101d4d96b628a3b31ff4505020b4b7593b296b4e2f604b8049c",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G77",
+        "G80",
+        "G05"
+      ]
+    },
+    {
+      "file": "p16-generated.jpg",
+      "sha256": "ce4519681128cc11e22c301b97d5f3e3db7da243ded4248284e7f548fe7c326d",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G55"
+      ]
+    },
+    {
+      "file": "p17-generated.jpg",
+      "sha256": "6cb0be4e3aacf139ebb1317fcb8513dc19d88880cef608ef166f28b7063e8df0",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G13"
+      ]
+    },
+    {
+      "file": "p18-generated.jpg",
+      "sha256": "b1d47082a0a299eaea430747386b1e7acd271f425aee0186a801d9361cffcb0c",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G11",
+        "G40",
+        "G58"
+      ]
+    },
+    {
+      "file": "p19-generated.jpg",
+      "sha256": "99d8c09769fac8039dd89b234775afff10c58d432b375f0612812f1ad3593629",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G23"
+      ]
+    },
+    {
+      "file": "p20-generated.jpg",
+      "sha256": "3c39fac48618feb96a2d089b66e2daaa99cd871f92f15bc4cf8bad89bdb19380",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G29"
+      ]
+    },
+    {
+      "file": "p24-generated.jpg",
+      "sha256": "d0c50647a20f22869afb700ba01883badf7f878867b4114bd627e20dd2580459",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G07",
+        "G08"
+      ]
+    },
+    {
+      "file": "p28-generated.jpg",
+      "sha256": "efd85595b2c371f8df56301460d5a7f00673bd6ab9ff53e5bd6dac9a315d27c7",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G60"
+      ]
+    },
+    {
+      "file": "p29-generated.jpg",
+      "sha256": "803cb4e30c9594f4c1357863668a2a2fb941a6af3363274b2959898731e2991b",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G34",
+        "G35",
+        "G36"
+      ]
+    },
+    {
+      "file": "power-strip.png",
+      "sha256": "9c1993c1c5e54ed62f2eec31a6232ed49dcedd506d0684df833187c46f4c1df1",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G26"
+      ]
+    },
+    {
+      "file": "renovation-room.png",
+      "sha256": "785bd2f7d997b461e16e478d1a7067188cfa4764de323960dc01486ab51e2d29",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G81"
+      ]
+    },
+    {
+      "file": "vacuum-cleaners.png",
+      "sha256": "37a2aae970be2b1a4cc512c387297c5621fd1b2957906f6c5dea8831cc9d2271",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G41",
+        "G72"
+      ]
+    },
+    {
+      "file": "window.png",
+      "sha256": "cabb70a1b85ddb5576a2e25e990d7a05bbad5026b53b69e91c1a3d7158f61027",
+      "source": "User-approved local B02 preview assets; GPT-generated explanatory illustrations/photos, not actual incident evidence",
+      "cases": [
+        "G38",
+        "G06",
+        "G33"
+      ]
+    }
+  ]
+}
