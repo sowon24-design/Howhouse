@@ -39,6 +39,7 @@ test('hosted trial authenticates before analysis, separates users and has no cal
       },
     }
   const server = createAnalysisServer({ config, catalog,
+    releaseStore:{touch:async()=>{},hasConsent:async()=>true},
     matchImpl: async () => { calls++; return { result: { source: 'existing', caseId: 'case:1' } } }, trial,
   })
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))

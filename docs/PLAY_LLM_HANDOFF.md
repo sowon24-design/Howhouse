@@ -4,7 +4,8 @@
 
 ## 2026-11-10 진행 상태
 
-- 개인정보·자동 인증 보완은 PR #57(https://github.com/sowon24-design/Howhouse/pull/57)로 게시했다. 현재 승인 리뷰 1개가 필요하며 규칙을 우회해 main에 병합하지 않았다.
+- 개인정보·자동 인증 보완은 PR #57(https://github.com/sowon24-design/Howhouse/pull/57)로 게시했다. 팀원 승인 2개를 확인한 뒤 동시에 갱신된 main `3b9ed36`을 통합했다. 보호 규칙을 우회하지 않는다.
+- 최신 main의 D01 관리 진입·동의 증빙·본문 단일 원본·정책 승인 분리를 보존했다. 본문 보완 후 동의 버전은 `2026-11-10-v5`이며 6개 정책 내보내기 파일과 manifest를 재생성·검사했다. 실제 Notion 반영과 운영 DB 적용은 별도다. 전체 자동 검사 225개를 통과했다.
 - 사용자가 별도 사용자 DB 수동 백업·내보내기가 없다고 확인했다. 소스 코드 백업과 사례 CSV는 사용자 DB 백업으로 계산하지 않았다.
 - 실서버 `/health`는 HTTP 200, 미국 분석 지역 설정을 반환한다. `/privacy`, `/terms`, `/data-deletion`은 HTTP 503이므로 아직 제출 URL로 사용할 수 없다. HTTPS/HTTP localhost 출처의 CORS 사전 요청은 204, 임의 출처는 403이다. 유료 분석·가입·DB 변경 없이 검사했다.
 - Supabase의 새 답장도 DPA의 약관 포함 안내이며 로그 국가·보관기간에 대한 개별 답변은 아니다. 주요 DB·Auth·Storage의 서울 리전과 별도 운영 로그·지원의 국외 처리를 구분한다. 서울 저장만으로 모든 처리를 국내라고 고치지 않는다. [지역 문서](https://supabase.com/docs/guides/platform/regions), [이전 FAQ](https://supabase.com/legal/privacy-resources/data-residency-and-transfers-faq).

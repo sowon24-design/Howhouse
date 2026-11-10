@@ -1,13 +1,9 @@
 import { Button } from '../../components/ui'
 import { useEffect, useRef } from 'react'
-import information from '../my/information-draft.json'
-export type ConsentDocumentKind = 'service' | 'processing' | 'overseas'
-export const consentTitles = { service: '서비스 이용약관', processing: '개인정보 수집·이용 동의', overseas: '개인정보 국외 이전 동의' }
-export const consentDocuments = {
-  service: information.terms,
-  processing: information.processingConsent,
-  overseas: information.overseasConsent,
-}
+import {consentDocuments,consentTitles} from '../../analysis/consent-document'
+import type {ConsentDocumentKind} from '../../analysis/consent-document'
+export {consentDocuments,consentTitles,consentCheckboxLabels} from '../../analysis/consent-document'
+export type {ConsentDocumentKind} from '../../analysis/consent-document'
 export function ConsentDocument({ kind, onBack }: { kind: ConsentDocumentKind; onBack: () => void }) {
   const scroll = useRef<HTMLDivElement>(null)
   const content = useRef<HTMLDivElement>(null)

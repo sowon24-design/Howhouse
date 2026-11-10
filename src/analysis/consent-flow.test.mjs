@@ -10,14 +10,14 @@ test('current shared policy still blocks transmission even if a ready flag is ac
  const flow=createAnalysisConsentFlow({isReady:()=>analysisConsentReady('1',policy),save:async()=>{saves++}})
  assert.equal(await flow.submit(acceptance,()=>assert.fail('unresolved disclosures must block analysis')),false)
  assert.equal(saves,0)
- // The actual consent sheet source is included in the same readiness check.
+ // Main's separate approval gate remains closed even after public copy cleanup.
  assert.equal(analysisConsentReady('1',{overseas:policy.overseasConsent}),false)
 })
 test('draft policy and unapproved flags cannot send consent',async()=>{
  assert.equal(analysisConsentReady(undefined,{paragraphs:['완료']}),false)
  assert.equal(analysisConsentReady('1',{paragraphs:['[출시 전 제공업체별 확정]']}),false)
  assert.equal(analysisConsentReady('1',{paragraphs:['검토 중']}),false)
- assert.equal(analysisConsentReady('1',{paragraphs:['[선택] 개인정보 수집·이용 동의']}),true)
+ assert.equal(analysisConsentReady('1',{paragraphs:['[선택] 개인정보 수집·이용 동의']},true),true)
  let saves=0
  const flow=createAnalysisConsentFlow({isReady:()=>false,save:async()=>{saves++}})
  assert.equal(await flow.submit(acceptance,()=>assert.fail('must not analyze')),false);assert.equal(saves,0)

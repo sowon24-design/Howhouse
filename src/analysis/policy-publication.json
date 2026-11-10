@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "consentVersion": "2026-11-10-v5",
+  "revisedAt": "2026-11-10",
+  "pages": [
+    {
+      "key": "data",
+      "title": "개인정보 및 데이터 관리",
+      "id": "40902821a7f380beb305dd0f095f5d79",
+      "url": "https://xamxam33.notion.site/40902821a7f380beb305dd0f095f5d79"
+    },
+    {
+      "key": "terms",
+      "title": "이용약관",
+      "id": "40902821a7f38009a098dc50f64202c4",
+      "url": "https://xamxam33.notion.site/40902821a7f38009a098dc50f64202c4"
+    },
+    {
+      "key": "privacy",
+      "title": "개인정보 처리방침",
+      "id": "40902821a7f3809aa417d65279f87c37",
+      "url": "https://xamxam33.notion.site/40902821a7f3809aa417d65279f87c37"
+    },
+    {
+      "key": "processingConsent",
+      "title": "개인정보 수집·이용 동의",
+      "id": "41002821a7f38029bde2c6991015ac60",
+      "url": "https://xamxam33.notion.site/41002821a7f38029bde2c6991015ac60"
+    },
+    {
+      "key": "overseasConsent",
+      "title": "개인정보 국외 이전 동의",
+      "id": "41002821a7f3802c9e4ac923b78fe556",
+      "url": "https://xamxam33.notion.site/41002821a7f3802c9e4ac923b78fe556"
+    },
+    {
+      "key": "ai",
+      "title": "AI 활용 정보",
+      "id": "41002821a7f38017a9bef636b4c68d8c",
+      "url": "https://xamxam33.notion.site/41002821a7f38017a9bef636b4c68d8c"
+    }
+  ]
+}

@@ -1,9 +1,14 @@
-import {createHmac,createDecipheriv} from 'node:crypto'
+import {createHmac,createDecipheriv,createHash} from 'node:crypto'
+import approval from '../../src/analysis/policy-approval.json' with {type:'json'}
+import {privacyVersion,consentEvidenceJson} from '../../src/analysis/consent-document.ts'
+export {privacyVersion} from '../../src/analysis/consent-document.ts'
+export const consentEvidenceSnapshots=Object.fromEntries(['onboarding','analysis'].map(surface=>{const text=consentEvidenceJson(surface);return [surface,{text,hash:createHash('sha256').update(text).digest('hex')}]}))
+const currentConsentHashes=Object.values(consentEvidenceSnapshots).map(document=>document.hash)
 export class ReleaseError extends Error {constructor(code){super(code);this.code=code}}
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const secret=/^[0-9a-f]{64}$/
-export const privacyVersion='2026-11-10-v2'
-export function createReleaseStore({supabaseUrl,secretKey,encryptionKey,fetchImpl=fetch,now=Date.now}){
+
+export function createReleaseStore({supabaseUrl,secretKey,encryptionKey,fetchImpl=fetch,now=Date.now,consentApproved=approval.analysisConsentApproved}){
  const origin=new URL(supabaseUrl).origin,key=Buffer.from(encryptionKey??'','base64')
  if(!origin.startsWith('https:')||!secretKey?.startsWith('sb_secret_')||key.length!==32)throw new Error('Invalid release settings')
  async function call(path,method='GET',body,extraHeaders={}){
@@ -34,11 +39,18 @@ export function createReleaseStore({supabaseUrl,secretKey,encryptionKey,fetchImp
   return {operationId,deleted:job.state==='completed'}
  }
  return {
-  async check(){await call('/rest/v1/howhouse_release_users?select=owner_id&limit=0');try{await rpc(null,'consent-state',{})}catch(error){if(error.code!=='auth-required')throw error}},
+  async check(){await call('/rest/v1/howhouse_consent_events?select=event_id&limit=0');await call('/rest/v1/rpc/howhouse_consent_evidence_state','POST',{p_owner:null,p_version:privacyVersion,p_document_hashes:currentConsentHashes});await call('/rest/v1/howhouse_release_users?select=owner_id&limit=0');try{await rpc(null,'consent-state',{})}catch(error){if(error.code!=='auth-required')throw error}},
   async identity(owner,token){checkId(owner);checkToken(token);return rpc(owner,'identity',{deleteHash:hash(token)})},
   touch:owner=>rpc(owner,'touch'),
-  async acceptConsent(owner,version,ageAtLeast14,processingAccepted,overseasAccepted){if((version!==privacyVersion&&version!==null)||(version!==null&&(ageAtLeast14!==true||processingAccepted!==true||overseasAccepted!==true)))throw new ReleaseError('invalid-input');return rpc(owner,'consent',{version,ageAtLeast14,processingAccepted:version!==null&&processingAccepted===true,overseasAccepted:version!==null&&overseasAccepted===true})},
-  async hasConsent(owner){return (await rpc(owner,'consent-state',{version:privacyVersion})).accepted===true},
+  async acceptConsent(owner,version,ageAtLeast14,processingAccepted,overseasAccepted,documentHash,documentSurface){
+   const document=Object.hasOwn(consentEvidenceSnapshots,documentSurface??'')?consentEvidenceSnapshots[documentSurface]:undefined
+   if((version!==privacyVersion&&version!==null)||(version!==null&&(ageAtLeast14!==true||processingAccepted!==true||overseasAccepted!==true||!document||documentHash!==document.hash)))throw new ReleaseError('invalid-input')
+   if(version!==null&&!consentApproved)throw new ReleaseError('policy-not-approved')
+   const result=await call('/rest/v1/rpc/howhouse_record_consent','POST',{p_owner:owner,p_version:version,p_age:ageAtLeast14??false,p_processing:processingAccepted??false,p_overseas:overseasAccepted??false,p_document_hash:version===null?null:document.hash,p_document_text:version===null?null:document.text,p_surface:version===null?null:documentSurface})
+   if(result?.ok!==true)throw new ReleaseError(['invalid-input','auth-required','not-registered','consent-required'].includes(result?.code)?result.code:'storage-unavailable')
+   return result.data
+  },
+  async hasConsent(owner){if(!consentApproved)return false;return (await call('/rest/v1/rpc/howhouse_consent_evidence_state','POST',{p_owner:owner,p_version:privacyVersion,p_document_hashes:currentConsentHashes}))?.accepted===true},
   async deleteMine(owner,payload,beforeDelete=()=>{}){
    checkId(owner);checkId(payload.operationId);checkToken(payload.proof)
    if(payload.confirm!=='delete-my-data')throw new ReleaseError('invalid-input')

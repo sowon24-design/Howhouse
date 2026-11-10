@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import {randomUUID} from 'node:crypto'
 import {readFile} from 'node:fs/promises'
 import {pathToFileURL} from 'node:url'
-import {createReleaseStore,privacyVersion} from './release-store.mjs'
+import {createReleaseStore,privacyVersion,consentEvidenceSnapshots} from './release-store.mjs'
 const modulePath=process.env.FEEDBACK_PGLITE_MODULE
 test('release privacy SQL: ownership, deletion retry, retention, idle queues and permissions',{skip:!modulePath},async t=>{
  const {PGlite}=await import(pathToFileURL(modulePath).href),db=await PGlite.create();t.after(()=>db.close())
@@ -56,21 +56,21 @@ test('release privacy SQL: ownership, deletion retry, retention, idle queues and
 })
 test('store forwards both separately checked choices to the database, including withdrawal',async()=>{
  const owner=randomUUID(),payloads=[]
- const store=createReleaseStore({supabaseUrl:'https://project.supabase.co',secretKey:'sb_secret_mock',encryptionKey:Buffer.alloc(32,7).toString('base64'),fetchImpl:async(_url,options)=>{
-  payloads.push(JSON.parse(options.body).p_payload)
+ const store=createReleaseStore({consentApproved:true,supabaseUrl:'https://project.supabase.co',secretKey:'sb_secret_mock',encryptionKey:Buffer.alloc(32,7).toString('base64'),fetchImpl:async(_url,options)=>{
+  payloads.push(JSON.parse(options.body))
   return Response.json({ok:true,data:{accepted:true}})
  }})
  await assert.rejects(store.acceptConsent(owner,privacyVersion,true,true,false),{code:'invalid-input'})
  assert.equal(payloads.length,0)
- await store.acceptConsent(owner,privacyVersion,true,true,true)
- assert.deepEqual(payloads[0],{version:privacyVersion,ageAtLeast14:true,processingAccepted:true,overseasAccepted:true})
+ await store.acceptConsent(owner,privacyVersion,true,true,true,consentEvidenceSnapshots.analysis.hash,'analysis')
+ assert.equal(payloads[0].p_version,privacyVersion);assert.equal(payloads[0].p_age,true);assert.equal(payloads[0].p_processing,true);assert.equal(payloads[0].p_overseas,true);assert.equal(payloads[0].p_document_hash,consentEvidenceSnapshots.analysis.hash)
  await store.acceptConsent(owner,null,undefined,undefined,undefined)
- assert.equal(payloads[1].processingAccepted,false);assert.equal(payloads[1].overseasAccepted,false)
+ assert.equal(payloads[1].p_processing,false);assert.equal(payloads[1].p_overseas,false)
 })
 
 test('Auth deletion failure never reports success; private receipt retry completes without a live user token',async()=>{
  let fail=true,state='data-deleted',deletes=0;const owner=randomUUID(),op=randomUUID(),proof='a'.repeat(64)
- const store=createReleaseStore({supabaseUrl:'https://project.supabase.co',secretKey:'sb_secret_mock',encryptionKey:Buffer.alloc(32,7).toString('base64'),fetchImpl:async(url,options)=>{
+ const store=createReleaseStore({consentApproved:true,supabaseUrl:'https://project.supabase.co',secretKey:'sb_secret_mock',encryptionKey:Buffer.alloc(32,7).toString('base64'),fetchImpl:async(url,options)=>{
   assert.equal(options.headers.Authorization,undefined)
   if(url.includes('/auth/v1/admin/users/')){deletes++;if(fail){fail=false;return Response.json({}, {status:503})}return Response.json({})}
   const body=JSON.parse(options.body);if(body.p_kind==='finish-delete')state='completed'

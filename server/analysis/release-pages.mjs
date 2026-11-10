@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs'
 import {randomBytes} from 'node:crypto'
+import approval from '../../src/analysis/policy-approval.json' with {type:'json'}
 const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))
 const style='body{font-family:system-ui,sans-serif;max-width:760px;margin:32px auto;padding:0 20px;line-height:1.7;color:#19212e}input,textarea,button{font:inherit;box-sizing:border-box;padding:10px;margin:6px 0;width:100%}button{cursor:pointer}article{border:1px solid #dee5f0;border-radius:12px;padding:16px;margin:16px 0}pre,p{white-space:pre-wrap;overflow-wrap:anywhere}.error{color:#b00020}'
 function layout(title,body,script='',authOrigin=''){
@@ -20,7 +21,7 @@ let checkId;const provider=document.createElement('button');provider.textContent
 const queue=document.createElement('button');queue.textContent='삭제 처리 대기 확인';queue.onclick=async()=>{try{const data=await api('/api/ops/deletions',{});$('status').textContent='처리 대기 '+data.items.length+'건(최대 20건 표시)';$('items').replaceChildren();for(const item of data.items){const p=document.createElement('p');p.textContent=item.requested_at+' · '+item.state;$('items').append(p)}}catch(e){$('status').textContent=e.message}};document.querySelector('main').append(queue);
 const retry=document.createElement('button');retry.textContent='실패한 삭제 처리 다시 확인';retry.onclick=async()=>{if(!confirm('이미 접수된 삭제 요청을 다시 처리할까요?'))return;retry.disabled=true;try{const data=await api('/api/ops/retry-deletions',{});$('status').textContent=data.checked+'건을 재확인했습니다. 처리 대기 목록에서 결과를 확인해 주세요.'}catch(e){$('status').textContent=e.message}finally{retry.disabled=false}};document.querySelector('main').append(retry);`,new URL(config.authUrl).origin)
  }
- if(!config.documentsReady)return {...layout('출시 안내 준비 중','<p>출시용 개인정보 안내를 검토하고 있습니다. 현재 이 주소를 스토어 공개 정책 URL로 제출하지 마세요.</p>'),status:503}
+ if(!config.documentsReady||(['/privacy','/terms'].includes(path)&&!approval.analysisConsentApproved))return {...layout('출시 안내 준비 중','<p>출시용 개인정보 안내를 검토하고 있습니다. 현재 이 주소를 스토어 공개 정책 URL로 제출하지 마세요.</p>'),status:503}
  const info=JSON.parse(readFileSync(new URL('../../src/app-screens/my/information-draft.json',import.meta.url),'utf8'))
  if(path==='/privacy'||path==='/terms'){
   const sections=path==='/privacy'?info.privacy:info.terms

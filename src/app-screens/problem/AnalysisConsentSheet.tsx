@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, Checkbox } from '../../components/ui'
 import { Dialog } from '../../components/ui/Dialogs'
-import { ConsentDocument, consentTitles, consentDocuments } from '../onboarding/ConsentDocument'
+import { ConsentDocument, consentTitles, consentDocuments, consentCheckboxLabels } from '../onboarding/ConsentDocument'
 import type { ConsentDocumentKind } from '../onboarding/ConsentDocument'
 import { readConsentChoices, setConsentChoices } from '../onboarding/consent-preview'
 import { configuredPrivacyClient } from '../../analysis/PrivacyActions'
@@ -52,7 +52,7 @@ export function AnalysisConsentSheet({ open, onClose, onContinue }: { open: bool
       <p className="hh-consent-description">글·사진 분석을 이용하려면 아래 두 항목에 동의해 주세요.</p>
       <div className="hh-terms-checks">
         <div className="hh-terms-row hh-terms-all"><Checkbox label="모두 동의" disabled={busy} checked={choices.processing && choices.overseas} onChange={e => setChoices({ processing: e.target.checked, overseas: e.target.checked })} /></div>
-        {(['processing', 'overseas'] as const).map(kind => <div className="hh-terms-row" key={kind}><Checkbox variant="stroke" disabled={busy} label={consentTitles[kind]} checked={choices[kind]} onChange={e => setChoices({ ...choices, [kind]: e.target.checked })} /><button className="hh-terms-view" type="button" aria-label={`${consentTitles[kind]} 보기`} onClick={() => { setDetail(kind); setDetailOpen(true) }}>보기</button></div>)}
+        {(['processing', 'overseas'] as const).map(kind => <div className="hh-terms-row" key={kind}><Checkbox variant="stroke" disabled={busy} label={consentCheckboxLabels('analysis')[kind]} checked={choices[kind]} onChange={e => setChoices({ ...choices, [kind]: e.target.checked })} /><button className="hh-terms-view" type="button" aria-label={`${consentTitles[kind]} 보기`} onClick={() => { setDetail(kind); setDetailOpen(true) }}>보기</button></div>)}
       </div>
       {message && <p role="status" className="hh-consent-notice">{message}</p>}
       {!ready && <p role="status" className="hh-consent-notice">개인정보 안내의 최종 검토 전이라 실제 분석을 시작할 수 없어요. 글과 사진은 유지돼요.</p>}
