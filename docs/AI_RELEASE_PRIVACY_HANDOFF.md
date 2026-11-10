@@ -55,6 +55,8 @@ AI 없는 버전과 병행 검토한다. 이 PR은 Draft이며 자동 병합·�
 
 v7은 업체별 전송 시기·방법, 인증·접속 정보, 지원 문의 최소화와 철회/삭제 구분을 추가한 후속 본문이다. 위 실제 외부서비스·Android 표의 증거는v6이며 v7 외부서비스 검증 완료로 바꾸지 않는다. v7은 새 해시·양쪽 동의 화면·이전v6 증빙 보존 및 차단을 로컬 SQL/HTTP로 확인한다.
 
+후속 실제 Android 비운영 검증도 완료했다. v7 APK 본문/해시와 동의 전 외부 요청0·미승인 버튼 차단을 확인하고, 같은 WebView의 전용 로컬 HTTP/SQL 하네스로 사진 정리·양쪽 동의·철회·삭제를 검증했다. 자세한 범위·한계는 `ANDROID_V7_OFFLINE_VALIDATION.md`를 따른다. 공개 자료의 국가·수령자·보관 조건 추가 구체화는 `OVERSEAS_NOTICE_EVIDENCE.md`에 정리했다. 동의 본문을 변경하지 않아 v7과 해시는 유지한다.
+
 ## 재현 가능한 로컬 확인
 
 `node node_modules/typescript/bin/tsc --noEmit`
