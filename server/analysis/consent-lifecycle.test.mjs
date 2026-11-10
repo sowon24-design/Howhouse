@@ -57,7 +57,20 @@ test('current-version client receipt → HTTP consent → SQL history → photo 
   await assert.rejects(client.consent({ageAtLeast14:true,processingAccepted:true,overseasAccepted:false}),{code:'consent-required'})
   assert.equal((await analyze()).status,428);assert.equal(modelCalls,0);assert.equal(client.consentRecorded(),false)
  })
- await t.test('onboarding and analysis persist exact v5 bodies and allow the synthetic photo path',async()=>{
+ await t.test('previous v6 evidence is preserved but cannot authorize the current document',async()=>{
+  const oldText=JSON.stringify({version:'2026-11-10-v6',surface:'analysis',documents:{historical:'synthetic previous disclosure'}})
+  const oldHash=createHash('sha256').update(oldText).digest('hex')
+  const inserted=await db.query('select public.howhouse_record_consent($1,$2,$3,$4,$5,$6,$7,$8) as r',[owner,'2026-11-10-v6',true,true,true,oldHash,oldText,'analysis'])
+  assert.equal(inserted.rows[0].r.ok,true)
+  storage.setItem('howhouse:ai-consent:'+base,'2026-11-10-v6')
+  assert.equal(client.consentRecorded(),false)
+  assert.equal(await store.hasConsent(owner),false)
+  assert.equal((await analyze()).status,428);assert.equal(modelCalls,0)
+  await assert.rejects(store.acceptConsent(owner,'2026-11-10-v6',true,true,true,oldHash,'analysis'),{code:'invalid-input'})
+  const row=(await db.query('select document_version,document_hash from public.howhouse_consent_events where owner_id=$1',[owner])).rows[0]
+  assert.equal(row.document_version,'2026-11-10-v6');assert.equal(row.document_hash,oldHash)
+ })
+ await t.test('onboarding and analysis persist exact current bodies and allow the synthetic photo path',async()=>{
   for(const surface of ['onboarding','analysis']){
    await client.consent({ageAtLeast14:true,processingAccepted:true,overseasAccepted:true,documentSurface:surface})
    assert.equal(client.consentRecorded(),true)
@@ -79,7 +92,7 @@ test('current-version client receipt → HTTP consent → SQL history → photo 
   assert.equal((await db.query('select count(*)::int n from public.howhouse_consent_events where owner_id=$1',[owner])).rows[0].n,0)
   assert.equal((await db.query('select count(*)::int n from auth.users where id=$1',[owner])).rows[0].n,0)
   assert.equal((await db.query('select count(*)::int n from auth.users where id=$1',[other])).rows[0].n,1)
-  assert.equal((await db.query('select count(*)::int n from public.howhouse_consent_documents')).rows[0].n,2)
+  assert.equal((await db.query('select count(*)::int n from public.howhouse_consent_documents')).rows[0].n,3)
   assert.equal(modelCalls,2)
  })
  assert.equal(dbDeleted,true);assert.equal(approval.analysisConsentApproved,false)
