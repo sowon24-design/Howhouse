@@ -1,4 +1,6 @@
 import type { Field, SolutionCase } from './types'
+import additionalRouting from './additional62/home-routing.json' with {type:'json'}
+const homeRouting: Readonly<Record<string, string | null>> = additionalRouting
 
 /** Product categories follow supplied Figma frames. CSV field names remain ID namespaces. */
 export const categories = [
@@ -14,5 +16,7 @@ export const categories = [
 export type CategoryId = typeof categories[number]['id']
 export function getCategoryCases(cases: readonly SolutionCase[], categoryId: CategoryId) {
   const category = categories.find(c => c.id === categoryId)!
-  return cases.filter(c => c.field === category.field && c.category.trim() === category.csvCategory)
+  return cases.filter(c => /^G\d+$/.test(c.number)
+    ? homeRouting[c.number] === categoryId
+    : c.field === category.field && c.category.trim() === category.csvCategory)
 }

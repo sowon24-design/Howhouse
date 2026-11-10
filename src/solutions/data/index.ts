@@ -8,6 +8,8 @@ import { convertCsv, createCaseLookup } from './convert'
 import { videoSupplements } from './video-supplements'
 import { casePhotos } from './photos'
 import { isActiveCase } from './deleted-cases'
+import { additionalCases } from './additional-cases'
+import { additionalCasePhotos } from './additional-photos'
 import type { SolutionView } from './types'
 export { categories, getCategoryCases } from './categories'
 export type { CategoryId } from './categories'
@@ -18,11 +20,12 @@ export const solutionCases = [
   ...convertCsv('난방·전기', heating, videoSupplements),
   ...convertCsv('가전', appliances, videoSupplements),
   ...convertCsv('해충·곰팡이', pests, videoSupplements),
+  ...additionalCases,
 ].filter(isActiveCase)
 const lookup = createCaseLookup(solutionCases)
 export function getSolutionById(id: string): SolutionView | undefined {
   const item = lookup(id)
-  return item ? {...item, photos: casePhotos[item.id] ?? temporaryCasePhotos} : undefined
+  return item ? {...item, photos: additionalCasePhotos[item.id] ?? casePhotos[item.id] ?? temporaryCasePhotos} : undefined
 }
 // 책임 판단 기준.csv is deliberately not imported or merged into case reference text.
 

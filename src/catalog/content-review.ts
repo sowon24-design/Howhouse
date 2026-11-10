@@ -9,6 +9,9 @@ const electricalSteps = [
 ]
 const electricalIds = new Set(['난방·전기:26', '난방·전기:27', '난방·전기:28'])
 export function reviewedCatalogCase(item: SolutionView): SolutionView {
+  // The additional guides already contain the reviewed concise cost conditions.
+  // Keep their preview-approved copy instead of appending a second qualification.
+  if (/^G\d+$/.test(item.number)) return item
   const cost = '수리 비용 부담은 계약·원인·현장 상태에 따라 확인해야 해요. 표시된 주체는 참고이며 확정 판정이 아니에요.'
   const safety = electricalIds.has(item.id)
   return {
