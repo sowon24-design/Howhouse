@@ -62,3 +62,8 @@ test('sample IDs never masquerade as a real generated result or existing case',(
  assert.equal(feedbackTarget('generated','욕실·수도:1'),undefined)
  assert.equal(feedbackTarget('existing','generated:'+randomUUID()),undefined)
 })
+
+test('passive state read uses supplied existing token without creating or refreshing auth',async()=>{
+ let authCalls=0;const client=createFeedbackClient({baseUrl:'https://server.example',target:{source:'existing',caseId:'욕실·수도:1'},getAccessToken:async()=>{authCalls++;throw Error('No passive signup')},fetchImpl:async(url,options)=>{assert.equal(options.headers.Authorization,'Bearer cached-token');return Response.json({rating:'like',revision:2,updatedAt:null})}});
+ assert.equal((await client.getState('cached-token')).rating,'like');assert.equal(authCalls,0);
+});

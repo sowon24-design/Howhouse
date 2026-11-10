@@ -12,7 +12,7 @@ export function useSolutionFeedback(source: string, id?: string) {
   const client = useRef<ReturnType<typeof createFeedbackClient> | null>(null), alive = useRef(false)
   const ratingLock = useRef(false), opinionLock = useRef(false), desired = useRef<FeedbackRating>(null)
   useEffect(() => {
-    let active = true; alive.current = true; setLoading(true); setRating(null); setRatingError(''); setOpinionError(''); setRatingRetry(false)
+    let active = true; alive.current = true; setLoading(true); desired.current = null; setRating(null); setRatingError(''); setOpinionError(''); setRatingRetry(false)
     let current: ReturnType<typeof createFeedbackClient> | undefined
     try {
       const target = feedbackTarget(source, id)
@@ -20,7 +20,9 @@ export function useSolutionFeedback(source: string, id?: string) {
       const auth = configuredAppSession()
       if (!auth) throw new FeedbackClientError('feedback-not-configured')
       current = createFeedbackClient({ target, getAccessToken: auth, baseUrl: resolveAnalysisBaseUrl() }); client.current = current
-      current.getState().then(state => { if (active) { desired.current = state.rating; setRating(state.rating) } })
+      const existingToken = auth.peekAccessToken()
+      if (!existingToken) { setLoading(false); return () => { active = false; alive.current = false; current?.cancel(); client.current = null } }
+      current.getState(existingToken).then(state => { if (active) { desired.current = state.rating; setRating(state.rating) } })
         .catch(error => { if (active) setRatingError(feedbackErrorMessage(error)) }).finally(() => { if (active) setLoading(false) })
     } catch (error) { client.current = null; setRatingError(feedbackErrorMessage(error)); setLoading(false) }
     return () => { active = false; alive.current = false; current?.cancel(); client.current = null }

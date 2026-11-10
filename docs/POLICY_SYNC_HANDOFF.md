@@ -2,7 +2,7 @@
 
 본문 개정일: 2026-11-10. 동의 문서 버전: `2026-11-10-v4`.
 
-현재 전달 경로: [PR #56](https://github.com/sowon24-design/Howhouse/pull/56), 브랜치 `codex/consent-evidence-d01`. main은 보호 조건으로 병합 대기다. 아래 main 받기 절차는 PR 병합 후에 실행한다.
+현재 전달 경로: [PR #56](https://github.com/sowon24-design/Howhouse/pull/56), 브랜치 `codex/consent-evidence-d01`. PR #56은 main에 병합 완료됐다(main 확인 커밋 `3b9ed36`). 아래 절차로 최신 main을 받는다. 운영 적용과 Notion 게시 완료를 뜻하지 않는다.
 
 ## 이번 반영 범위
 

@@ -56,7 +56,7 @@ export function createAppSession(options: {
     signal.throwIfAborted()
     return token
   }
-  return Object.assign(getAccessToken,{reset:()=>{generation++;session=undefined;pending=undefined;options.storage?.removeItem(storageKey)}})
+  return Object.assign(getAccessToken,{peekAccessToken:()=>session && session.expiresAt > now() + 30000 ? session.accessToken : undefined,reset:()=>{generation++;session=undefined;pending=undefined;options.storage?.removeItem(storageKey)}})
 }
 
 let configured: ReturnType<typeof createAppSession> | undefined

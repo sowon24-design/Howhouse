@@ -54,3 +54,11 @@ test('secret keys and cancelled starts are rejected before transmission', async 
   const controller = new AbortController(); controller.abort()
   await assert.rejects(auth(controller.signal), { name: 'AbortError' }); assert.equal(calls, 0)
 })
+
+test('passive session inspection never signs up or refreshes',async()=>{
+ let calls=0,time=0; const auth=createAppSession({...settings,now:()=>time,fetchImpl:async()=>{calls++;return Response.json(tokens)}});
+ assert.equal(auth.peekAccessToken(),undefined);assert.equal(calls,0);
+ await auth(signal());assert.equal(auth.peekAccessToken(),tokens.access_token);
+ time=3600000;assert.equal(auth.peekAccessToken(),undefined);assert.equal(calls,1);
+ auth.reset();assert.equal(auth.peekAccessToken(),undefined);assert.equal(calls,1);
+});

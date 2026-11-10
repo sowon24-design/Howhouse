@@ -45,11 +45,11 @@ export function createFeedbackClient(options: {
   let ratingIntent: { operationId: string; revision: number; rating: FeedbackRating } | undefined
   let opinionIntent: { operationId: string; reason: FeedbackReason; text?: string } | undefined
   let ratingJob: Promise<Receipt> | undefined, opinionJob: Promise<Receipt> | undefined, inFlightRating: FeedbackRating = null
-  async function request(kind: string, body: unknown): Promise<Record<string, unknown>> {
+  async function request(kind: string, body: unknown, existingToken?: string): Promise<Record<string, unknown>> {
     const controller = new AbortController(); controllers.add(controller)
     const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(10000)])
     try {
-      const token = await options.getAccessToken(signal)
+      const token = existingToken ?? await options.getAccessToken(signal)
       const response = await fetchImpl(`${base.href.replace(/\/$/, '')}/api/feedback/${kind}`, {
         method: 'POST', signal, redirect: 'error', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify(body),
       })
@@ -65,15 +65,15 @@ export function createFeedbackClient(options: {
       throw new FeedbackClientError(code)
     } finally { controllers.delete(controller) }
   }
-  async function loadState(): Promise<FeedbackState> {
-    const data = await request('state', { result: options.target })
+  async function loadState(existingToken?: string): Promise<FeedbackState> {
+    const data = await request('state', { result: options.target }, existingToken)
     if (![null, 'like', 'dislike'].includes(data.rating as FeedbackRating) || !Number.isSafeInteger(data.revision) || Number(data.revision) < 0
       || data.updatedAt !== null && typeof data.updatedAt !== 'string') throw new FeedbackClientError('invalid-response')
     revision = Math.max(revision, Number(data.revision)); loaded = true
     return data as FeedbackState
   }
-  function getState() {
-    if (!stateJob) stateJob = loadState().finally(() => { stateJob = undefined })
+  function getState(existingToken?: string) {
+    if (!stateJob) stateJob = loadState(existingToken).finally(() => { stateJob = undefined })
     return stateJob
   }
   async function persist(kind: string, intent: { operationId: string; revision?: number }): Promise<Receipt> {
