@@ -1,7 +1,7 @@
 import {showDeveloperTools} from '../../analysis/release-mode'
 import { screenSlidesEnabled } from '../navigation-motion'
 import { useAndroidBack } from '../android-back'
-import { InformationScreen, type InformationPage } from './InformationScreen'
+import { InformationScreen, policyLinks, type InformationPage } from './InformationScreen'
 import { NicknameScreen } from '../onboarding/NicknameScreen'
 import { useState } from 'react'
 import { GNB } from '../../components/ui'
@@ -37,7 +37,9 @@ export function MyScreen({ nickname, version, onBack, onEdit, onMenu }: {
       </section>
       <section className="hh-my-data" aria-labelledby="my-data-title">
         <h2 id="my-data-title">데이터</h2>
-        <div className="hh-my-menu">{myMenus.map(menu => <button type="button" key={menu.id} onClick={() => onMenu(menu.id)}><span>{menu.label}</span>{menu.id === 'app' && <span className="hh-my-version">{version}</span>}</button>)}</div>
+        <div className="hh-my-menu">{myMenus.map(menu => menu.id in policyLinks
+          ? <a key={menu.id} href={policyLinks[menu.id as keyof typeof policyLinks]} target="_blank" rel="noopener noreferrer"><span>{menu.label}</span><span className="ui-sr-only"> (외부 링크, 새 창)</span></a>
+          : <button type="button" key={menu.id} onClick={() => onMenu(menu.id)}><span>{menu.label}</span>{menu.id === 'app' && <span className="hh-my-version">{version}</span>}</button>)}</div>
       </section>
     </div>
   </main>

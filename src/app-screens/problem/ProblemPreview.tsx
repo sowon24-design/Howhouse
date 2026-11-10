@@ -12,7 +12,7 @@ import { AnalysisScreen } from '../analysis/AnalysisScreen'
 import { ProblemScreen, canAnalyze } from './ProblemScreen'
 import type { AnalysisInput } from './ProblemScreen'
 import '../home/home-preview.css'
-import {AnalysisPrivacyDialog} from '../../analysis/AnalysisPrivacyDialog'
+import {AnalysisConsentSheet} from './AnalysisConsentSheet'
 import {configuredPrivacyClient} from '../../analysis/PrivacyActions'
 
 export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspended = false, onConnectionLost }: {
@@ -131,11 +131,12 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
           onConfirm={() => onSuccess(result)} onBack={() => {setResult(null);setPhase('input')}} onHome={() => {cancel();window.location.hash='home'}} />}
       </div>
     </div>
-    <AnalysisPrivacyDialog open={privacyOpen} onClose={()=>{setPrivacyOpen(false);privacySnapshot.current=null}} onContinue={()=>{setPrivacyOpen(false);const snapshot=privacySnapshot.current;privacySnapshot.current=null;if(snapshot&&!suspended)request.current=analysis.startAnalysis(snapshot,receive)}}/>
+    <AnalysisConsentSheet open={privacyOpen} onClose={()=>{setPrivacyOpen(false);privacySnapshot.current=null}}/>
     {showDeveloperTools && <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="문제 작성 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
       <a href="#home" onClick={cancel}>홈으로 이동 · 입력 초기화</a> · <a href="#components" onClick={cancel}>공통 컴포넌트 보기</a>
       <p role="status">{status}</p>
       <p>현재 모드: {mode === 'api' ? '실제 API' : `무료 샘플 · ${sampleKind === 'existing' ? '기존 사례' : '생성 결과'}`}</p>
+      {phase === 'input' && <button type="button" onClick={() => setPrivacyOpen(true)}>분석 동의 시트 미리보기 · 서버 전송 없음</button>}
       {mode === 'sample' && <button type="button" onClick={() => {cancel();setFeedback('');setPhase('limit');setStatus('A07 한도 안내 재현 · API 호출 없음')}}>분석 한도 안내 A07 재현</button>}
       {onConnectionLost && <button type="button" onClick={onConnectionLost}>연결 끊김 재현 · API 호출 없음</button>}
       {<button type="button" disabled={phase === 'pending'} onClick={() => {
