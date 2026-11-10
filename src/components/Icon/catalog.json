@@ -1,0 +1,1622 @@
+[
+  {
+    "id": "355:7093",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "355:7094",
+    "name": "Icon/Home",
+    "src": "/icons/figma/355-7093.svg"
+  },
+  {
+    "id": "355:8771",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "355:7094",
+    "name": "Icon/Home",
+    "src": "/icons/figma/355-8771.svg"
+  },
+  {
+    "id": "355:7433",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "355:7094",
+    "name": "Icon/Home",
+    "src": "/icons/figma/355-7433.svg"
+  },
+  {
+    "id": "355:8769",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "355:7094",
+    "name": "Icon/Home",
+    "src": "/icons/figma/355-8769.svg"
+  },
+  {
+    "id": "355:7092",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "355:7094",
+    "name": "Icon/Home",
+    "src": "/icons/figma/355-7092.svg"
+  },
+  {
+    "id": "355:8773",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "355:7094",
+    "name": "Icon/Home",
+    "src": "/icons/figma/355-8773.svg"
+  },
+  {
+    "id": "355:7091",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "355:7094",
+    "name": "Icon/Home",
+    "src": "/icons/figma/355-7091.svg"
+  },
+  {
+    "id": "355:8775",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "355:7094",
+    "name": "Icon/Home",
+    "src": "/icons/figma/355-8775.svg"
+  },
+  {
+    "id": "411:4290",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "411:4291",
+    "name": "Icon/Book",
+    "src": "/icons/figma/411-4290.svg"
+  },
+  {
+    "id": "411:4288",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "411:4291",
+    "name": "Icon/Book",
+    "src": "/icons/figma/411-4288.svg"
+  },
+  {
+    "id": "411:4286",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "411:4291",
+    "name": "Icon/Book",
+    "src": "/icons/figma/411-4286.svg"
+  },
+  {
+    "id": "411:4287",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "411:4291",
+    "name": "Icon/Book",
+    "src": "/icons/figma/411-4287.svg"
+  },
+  {
+    "id": "411:4289",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "411:4291",
+    "name": "Icon/Book",
+    "src": "/icons/figma/411-4289.svg"
+  },
+  {
+    "id": "411:4285",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "411:4291",
+    "name": "Icon/Book",
+    "src": "/icons/figma/411-4285.svg"
+  },
+  {
+    "id": "411:4284",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "411:4291",
+    "name": "Icon/Book",
+    "src": "/icons/figma/411-4284.svg"
+  },
+  {
+    "id": "411:4283",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "411:4291",
+    "name": "Icon/Book",
+    "src": "/icons/figma/411-4283.svg"
+  },
+  {
+    "id": "355:7403",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "355:7404",
+    "name": "Icon/Community",
+    "src": "/icons/figma/355-7403.svg"
+  },
+  {
+    "id": "355:8641",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "355:7404",
+    "name": "Icon/Community",
+    "src": "/icons/figma/355-8641.svg"
+  },
+  {
+    "id": "355:7480",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "355:7404",
+    "name": "Icon/Community",
+    "src": "/icons/figma/355-7480.svg"
+  },
+  {
+    "id": "355:8637",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "355:7404",
+    "name": "Icon/Community",
+    "src": "/icons/figma/355-8637.svg"
+  },
+  {
+    "id": "355:7402",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "355:7404",
+    "name": "Icon/Community",
+    "src": "/icons/figma/355-7402.svg"
+  },
+  {
+    "id": "355:8645",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "355:7404",
+    "name": "Icon/Community",
+    "src": "/icons/figma/355-8645.svg"
+  },
+  {
+    "id": "355:7401",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "355:7404",
+    "name": "Icon/Community",
+    "src": "/icons/figma/355-7401.svg"
+  },
+  {
+    "id": "355:8653",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "355:7404",
+    "name": "Icon/Community",
+    "src": "/icons/figma/355-8653.svg"
+  },
+  {
+    "id": "355:7174",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "355:7173",
+    "name": "Icon/Profile",
+    "src": "/icons/figma/355-7174.svg"
+  },
+  {
+    "id": "355:8782",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "355:7173",
+    "name": "Icon/Profile",
+    "src": "/icons/figma/355-8782.svg"
+  },
+  {
+    "id": "355:7177",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "355:7173",
+    "name": "Icon/Profile",
+    "src": "/icons/figma/355-7177.svg"
+  },
+  {
+    "id": "355:8785",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "355:7173",
+    "name": "Icon/Profile",
+    "src": "/icons/figma/355-8785.svg"
+  },
+  {
+    "id": "355:7472",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "355:7173",
+    "name": "Icon/Profile",
+    "src": "/icons/figma/355-7472.svg"
+  },
+  {
+    "id": "355:8779",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "355:7173",
+    "name": "Icon/Profile",
+    "src": "/icons/figma/355-8779.svg"
+  },
+  {
+    "id": "355:7180",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "355:7173",
+    "name": "Icon/Profile",
+    "src": "/icons/figma/355-7180.svg"
+  },
+  {
+    "id": "355:8788",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "355:7173",
+    "name": "Icon/Profile",
+    "src": "/icons/figma/355-8788.svg"
+  },
+  {
+    "id": "355:7994",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "355:7993",
+    "name": "Icon/Write",
+    "src": "/icons/figma/355-7994.svg"
+  },
+  {
+    "id": "355:8857",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "355:7993",
+    "name": "Icon/Write",
+    "src": "/icons/figma/355-8857.svg"
+  },
+  {
+    "id": "355:7996",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "355:7993",
+    "name": "Icon/Write",
+    "src": "/icons/figma/355-7996.svg"
+  },
+  {
+    "id": "355:8859",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "355:7993",
+    "name": "Icon/Write",
+    "src": "/icons/figma/355-8859.svg"
+  },
+  {
+    "id": "355:7998",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "355:7993",
+    "name": "Icon/Write",
+    "src": "/icons/figma/355-7998.svg"
+  },
+  {
+    "id": "355:8861",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "355:7993",
+    "name": "Icon/Write",
+    "src": "/icons/figma/355-8861.svg"
+  },
+  {
+    "id": "355:8000",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "355:7993",
+    "name": "Icon/Write",
+    "src": "/icons/figma/355-8000.svg"
+  },
+  {
+    "id": "355:8863",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "355:7993",
+    "name": "Icon/Write",
+    "src": "/icons/figma/355-8863.svg"
+  },
+  {
+    "id": "355:9049",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "355:9050",
+    "name": "Icon/Heart",
+    "src": "/icons/figma/355-9049.svg"
+  },
+  {
+    "id": "355:9048",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "355:9050",
+    "name": "Icon/Heart",
+    "src": "/icons/figma/355-9048.svg"
+  },
+  {
+    "id": "355:9046",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "355:9050",
+    "name": "Icon/Heart",
+    "src": "/icons/figma/355-9046.svg"
+  },
+  {
+    "id": "355:9047",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "355:9050",
+    "name": "Icon/Heart",
+    "src": "/icons/figma/355-9047.svg"
+  },
+  {
+    "id": "355:9045",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "355:9050",
+    "name": "Icon/Heart",
+    "src": "/icons/figma/355-9045.svg"
+  },
+  {
+    "id": "355:9043",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "355:9050",
+    "name": "Icon/Heart",
+    "src": "/icons/figma/355-9043.svg"
+  },
+  {
+    "id": "355:9042",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "355:9050",
+    "name": "Icon/Heart",
+    "src": "/icons/figma/355-9042.svg"
+  },
+  {
+    "id": "355:9044",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "355:9050",
+    "name": "Icon/Heart",
+    "src": "/icons/figma/355-9044.svg"
+  },
+  {
+    "id": "369:9168",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "369:9169",
+    "name": "Icon/Plus",
+    "src": "/icons/figma/369-9168.svg"
+  },
+  {
+    "id": "369:9166",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "369:9169",
+    "name": "Icon/Plus",
+    "src": "/icons/figma/369-9166.svg"
+  },
+  {
+    "id": "369:9165",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "369:9169",
+    "name": "Icon/Plus",
+    "src": "/icons/figma/369-9165.svg"
+  },
+  {
+    "id": "369:9167",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "369:9169",
+    "name": "Icon/Plus",
+    "src": "/icons/figma/369-9167.svg"
+  },
+  {
+    "id": "369:9225",
+    "variant": "Property 1=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "369:9226",
+    "name": "Icon/X-mark",
+    "src": "/icons/figma/369-9225.svg"
+  },
+  {
+    "id": "369:9224",
+    "variant": "Property 1=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "369:9226",
+    "name": "Icon/X-mark",
+    "src": "/icons/figma/369-9224.svg"
+  },
+  {
+    "id": "369:9223",
+    "variant": "Property 1=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "369:9226",
+    "name": "Icon/X-mark",
+    "src": "/icons/figma/369-9223.svg"
+  },
+  {
+    "id": "369:9222",
+    "variant": "Property 1=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "369:9226",
+    "name": "Icon/X-mark",
+    "src": "/icons/figma/369-9222.svg"
+  },
+  {
+    "id": "377:4742",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "377:4743",
+    "name": "Icon/Check",
+    "src": "/icons/figma/377-4742.svg"
+  },
+  {
+    "id": "377:4741",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "377:4743",
+    "name": "Icon/Check",
+    "src": "/icons/figma/377-4741.svg"
+  },
+  {
+    "id": "377:4740",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "377:4743",
+    "name": "Icon/Check",
+    "src": "/icons/figma/377-4740.svg"
+  },
+  {
+    "id": "377:4739",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "377:4743",
+    "name": "Icon/Check",
+    "src": "/icons/figma/377-4739.svg"
+  },
+  {
+    "id": "408:3503",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3504",
+    "name": "Icon/Arrow_Left",
+    "src": "/icons/figma/408-3503.svg"
+  },
+  {
+    "id": "408:3502",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3504",
+    "name": "Icon/Arrow_Left",
+    "src": "/icons/figma/408-3502.svg"
+  },
+  {
+    "id": "408:3500",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3504",
+    "name": "Icon/Arrow_Left",
+    "src": "/icons/figma/408-3500.svg"
+  },
+  {
+    "id": "408:3501",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3504",
+    "name": "Icon/Arrow_Left",
+    "src": "/icons/figma/408-3501.svg"
+  },
+  {
+    "id": "408:3507",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3506",
+    "name": "Icon/Arrow_Right",
+    "src": "/icons/figma/408-3507.svg"
+  },
+  {
+    "id": "408:3509",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3506",
+    "name": "Icon/Arrow_Right",
+    "src": "/icons/figma/408-3509.svg"
+  },
+  {
+    "id": "408:3511",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3506",
+    "name": "Icon/Arrow_Right",
+    "src": "/icons/figma/408-3511.svg"
+  },
+  {
+    "id": "408:3513",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3506",
+    "name": "Icon/Arrow_Right",
+    "src": "/icons/figma/408-3513.svg"
+  },
+  {
+    "id": "408:3519",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3518",
+    "name": "Icon/Arrow_Bottom",
+    "src": "/icons/figma/408-3519.svg"
+  },
+  {
+    "id": "408:3521",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3518",
+    "name": "Icon/Arrow_Bottom",
+    "src": "/icons/figma/408-3521.svg"
+  },
+  {
+    "id": "408:3523",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3518",
+    "name": "Icon/Arrow_Bottom",
+    "src": "/icons/figma/408-3523.svg"
+  },
+  {
+    "id": "408:3525",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3518",
+    "name": "Icon/Arrow_Bottom",
+    "src": "/icons/figma/408-3525.svg"
+  },
+  {
+    "id": "408:3531",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3530",
+    "name": "Icon/Arrow_Top",
+    "src": "/icons/figma/408-3531.svg"
+  },
+  {
+    "id": "408:3533",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3530",
+    "name": "Icon/Arrow_Top",
+    "src": "/icons/figma/408-3533.svg"
+  },
+  {
+    "id": "408:3535",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3530",
+    "name": "Icon/Arrow_Top",
+    "src": "/icons/figma/408-3535.svg"
+  },
+  {
+    "id": "408:3537",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3530",
+    "name": "Icon/Arrow_Top",
+    "src": "/icons/figma/408-3537.svg"
+  },
+  {
+    "id": "408:3662",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3668",
+    "name": "Icon/Clock",
+    "src": "/icons/figma/408-3662.svg"
+  },
+  {
+    "id": "408:3667",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3668",
+    "name": "Icon/Clock",
+    "src": "/icons/figma/408-3667.svg"
+  },
+  {
+    "id": "408:3665",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3668",
+    "name": "Icon/Clock",
+    "src": "/icons/figma/408-3665.svg"
+  },
+  {
+    "id": "408:3663",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3668",
+    "name": "Icon/Clock",
+    "src": "/icons/figma/408-3663.svg"
+  },
+  {
+    "id": "408:3666",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3668",
+    "name": "Icon/Clock",
+    "src": "/icons/figma/408-3666.svg"
+  },
+  {
+    "id": "408:3660",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3668",
+    "name": "Icon/Clock",
+    "src": "/icons/figma/408-3660.svg"
+  },
+  {
+    "id": "408:3664",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3668",
+    "name": "Icon/Clock",
+    "src": "/icons/figma/408-3664.svg"
+  },
+  {
+    "id": "408:3661",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3668",
+    "name": "Icon/Clock",
+    "src": "/icons/figma/408-3661.svg"
+  },
+  {
+    "id": "408:3710",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3711",
+    "name": "Icon/Magnifier",
+    "src": "/icons/figma/408-3710.svg"
+  },
+  {
+    "id": "408:3708",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3711",
+    "name": "Icon/Magnifier",
+    "src": "/icons/figma/408-3708.svg"
+  },
+  {
+    "id": "408:3709",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3711",
+    "name": "Icon/Magnifier",
+    "src": "/icons/figma/408-3709.svg"
+  },
+  {
+    "id": "408:3707",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3711",
+    "name": "Icon/Magnifier",
+    "src": "/icons/figma/408-3707.svg"
+  },
+  {
+    "id": "408:3832",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3833",
+    "name": "Icon/Warning",
+    "src": "/icons/figma/408-3832.svg"
+  },
+  {
+    "id": "408:3830",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3833",
+    "name": "Icon/Warning",
+    "src": "/icons/figma/408-3830.svg"
+  },
+  {
+    "id": "408:3828",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3833",
+    "name": "Icon/Warning",
+    "src": "/icons/figma/408-3828.svg"
+  },
+  {
+    "id": "408:3827",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3833",
+    "name": "Icon/Warning",
+    "src": "/icons/figma/408-3827.svg"
+  },
+  {
+    "id": "408:3831",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3833",
+    "name": "Icon/Warning",
+    "src": "/icons/figma/408-3831.svg"
+  },
+  {
+    "id": "408:3826",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3833",
+    "name": "Icon/Warning",
+    "src": "/icons/figma/408-3826.svg"
+  },
+  {
+    "id": "408:3825",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3833",
+    "name": "Icon/Warning",
+    "src": "/icons/figma/408-3825.svg"
+  },
+  {
+    "id": "408:3829",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3833",
+    "name": "Icon/Warning",
+    "src": "/icons/figma/408-3829.svg"
+  },
+  {
+    "id": "431:14739",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "431:14740",
+    "name": "Icon/Info",
+    "src": "/icons/figma/431-14739.svg"
+  },
+  {
+    "id": "431:14738",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "431:14740",
+    "name": "Icon/Info",
+    "src": "/icons/figma/431-14738.svg"
+  },
+  {
+    "id": "431:14737",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "431:14740",
+    "name": "Icon/Info",
+    "src": "/icons/figma/431-14737.svg"
+  },
+  {
+    "id": "431:14734",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "431:14740",
+    "name": "Icon/Info",
+    "src": "/icons/figma/431-14734.svg"
+  },
+  {
+    "id": "431:14736",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "431:14740",
+    "name": "Icon/Info",
+    "src": "/icons/figma/431-14736.svg"
+  },
+  {
+    "id": "431:14733",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "431:14740",
+    "name": "Icon/Info",
+    "src": "/icons/figma/431-14733.svg"
+  },
+  {
+    "id": "431:14732",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "431:14740",
+    "name": "Icon/Info",
+    "src": "/icons/figma/431-14732.svg"
+  },
+  {
+    "id": "431:14735",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "431:14740",
+    "name": "Icon/Info",
+    "src": "/icons/figma/431-14735.svg"
+  },
+  {
+    "id": "408:3929",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3930",
+    "name": "Icon/Kebab",
+    "src": "/icons/figma/408-3929.svg"
+  },
+  {
+    "id": "408:3927",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3930",
+    "name": "Icon/Kebab",
+    "src": "/icons/figma/408-3927.svg"
+  },
+  {
+    "id": "408:3926",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3930",
+    "name": "Icon/Kebab",
+    "src": "/icons/figma/408-3926.svg"
+  },
+  {
+    "id": "408:3928",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3930",
+    "name": "Icon/Kebab",
+    "src": "/icons/figma/408-3928.svg"
+  },
+  {
+    "id": "408:4100",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:4101",
+    "name": "Icon/Send",
+    "src": "/icons/figma/408-4100.svg"
+  },
+  {
+    "id": "408:4099",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:4101",
+    "name": "Icon/Send",
+    "src": "/icons/figma/408-4099.svg"
+  },
+  {
+    "id": "408:4096",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:4101",
+    "name": "Icon/Send",
+    "src": "/icons/figma/408-4096.svg"
+  },
+  {
+    "id": "408:4097",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:4101",
+    "name": "Icon/Send",
+    "src": "/icons/figma/408-4097.svg"
+  },
+  {
+    "id": "408:4095",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:4101",
+    "name": "Icon/Send",
+    "src": "/icons/figma/408-4095.svg"
+  },
+  {
+    "id": "408:4098",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:4101",
+    "name": "Icon/Send",
+    "src": "/icons/figma/408-4098.svg"
+  },
+  {
+    "id": "408:4093",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:4101",
+    "name": "Icon/Send",
+    "src": "/icons/figma/408-4093.svg"
+  },
+  {
+    "id": "408:4094",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:4101",
+    "name": "Icon/Send",
+    "src": "/icons/figma/408-4094.svg"
+  },
+  {
+    "id": "408:4381",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:4382",
+    "name": "Icon/External Link",
+    "src": "/icons/figma/408-4381.svg"
+  },
+  {
+    "id": "408:4380",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:4382",
+    "name": "Icon/External Link",
+    "src": "/icons/figma/408-4380.svg"
+  },
+  {
+    "id": "408:4379",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:4382",
+    "name": "Icon/External Link",
+    "src": "/icons/figma/408-4379.svg"
+  },
+  {
+    "id": "408:4378",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:4382",
+    "name": "Icon/External Link",
+    "src": "/icons/figma/408-4378.svg"
+  },
+  {
+    "id": "411:4461",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "411:4462",
+    "name": "Icon/Dollar",
+    "src": "/icons/figma/411-4461.svg"
+  },
+  {
+    "id": "411:4459",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "411:4462",
+    "name": "Icon/Dollar",
+    "src": "/icons/figma/411-4459.svg"
+  },
+  {
+    "id": "411:4460",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "411:4462",
+    "name": "Icon/Dollar",
+    "src": "/icons/figma/411-4460.svg"
+  },
+  {
+    "id": "411:4458",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "411:4462",
+    "name": "Icon/Dollar",
+    "src": "/icons/figma/411-4458.svg"
+  },
+  {
+    "id": "472:13723",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "472:13724",
+    "name": "Icon/Question Mark",
+    "src": "/icons/figma/472-13723.svg"
+  },
+  {
+    "id": "472:13722",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "472:13724",
+    "name": "Icon/Question Mark",
+    "src": "/icons/figma/472-13722.svg"
+  },
+  {
+    "id": "472:13721",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "472:13724",
+    "name": "Icon/Question Mark",
+    "src": "/icons/figma/472-13721.svg"
+  },
+  {
+    "id": "472:13720",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "472:13724",
+    "name": "Icon/Question Mark",
+    "src": "/icons/figma/472-13720.svg"
+  },
+  {
+    "id": "408:4578",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:4579",
+    "name": "Icon/Setting",
+    "src": "/icons/figma/408-4578.svg"
+  },
+  {
+    "id": "408:4577",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:4579",
+    "name": "Icon/Setting",
+    "src": "/icons/figma/408-4577.svg"
+  },
+  {
+    "id": "408:4576",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:4579",
+    "name": "Icon/Setting",
+    "src": "/icons/figma/408-4576.svg"
+  },
+  {
+    "id": "408:4575",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:4579",
+    "name": "Icon/Setting",
+    "src": "/icons/figma/408-4575.svg"
+  },
+  {
+    "id": "408:4574",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:4579",
+    "name": "Icon/Setting",
+    "src": "/icons/figma/408-4574.svg"
+  },
+  {
+    "id": "408:4572",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:4579",
+    "name": "Icon/Setting",
+    "src": "/icons/figma/408-4572.svg"
+  },
+  {
+    "id": "408:4573",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:4579",
+    "name": "Icon/Setting",
+    "src": "/icons/figma/408-4573.svg"
+  },
+  {
+    "id": "408:4571",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:4579",
+    "name": "Icon/Setting",
+    "src": "/icons/figma/408-4571.svg"
+  },
+  {
+    "id": "411:3597",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "411:3598",
+    "name": "Icon/Locate",
+    "src": "/icons/figma/411-3597.svg"
+  },
+  {
+    "id": "411:3596",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "411:3598",
+    "name": "Icon/Locate",
+    "src": "/icons/figma/411-3596.svg"
+  },
+  {
+    "id": "411:3593",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "411:3598",
+    "name": "Icon/Locate",
+    "src": "/icons/figma/411-3593.svg"
+  },
+  {
+    "id": "411:3592",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "411:3598",
+    "name": "Icon/Locate",
+    "src": "/icons/figma/411-3592.svg"
+  },
+  {
+    "id": "411:3595",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "411:3598",
+    "name": "Icon/Locate",
+    "src": "/icons/figma/411-3595.svg"
+  },
+  {
+    "id": "411:3591",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "411:3598",
+    "name": "Icon/Locate",
+    "src": "/icons/figma/411-3591.svg"
+  },
+  {
+    "id": "411:3590",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "411:3598",
+    "name": "Icon/Locate",
+    "src": "/icons/figma/411-3590.svg"
+  },
+  {
+    "id": "411:3594",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "411:3598",
+    "name": "Icon/Locate",
+    "src": "/icons/figma/411-3594.svg"
+  },
+  {
+    "id": "411:3663",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "411:3664",
+    "name": "Icon/Logout",
+    "src": "/icons/figma/411-3663.svg"
+  },
+  {
+    "id": "411:3661",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "411:3664",
+    "name": "Icon/Logout",
+    "src": "/icons/figma/411-3661.svg"
+  },
+  {
+    "id": "411:3658",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "411:3664",
+    "name": "Icon/Logout",
+    "src": "/icons/figma/411-3658.svg"
+  },
+  {
+    "id": "411:3660",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "411:3664",
+    "name": "Icon/Logout",
+    "src": "/icons/figma/411-3660.svg"
+  },
+  {
+    "id": "411:3659",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "411:3664",
+    "name": "Icon/Logout",
+    "src": "/icons/figma/411-3659.svg"
+  },
+  {
+    "id": "411:3657",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "411:3664",
+    "name": "Icon/Logout",
+    "src": "/icons/figma/411-3657.svg"
+  },
+  {
+    "id": "411:3656",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "411:3664",
+    "name": "Icon/Logout",
+    "src": "/icons/figma/411-3656.svg"
+  },
+  {
+    "id": "411:3662",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "411:3664",
+    "name": "Icon/Logout",
+    "src": "/icons/figma/411-3662.svg"
+  },
+  {
+    "id": "411:4667",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "411:4668",
+    "name": "Icon/Scrab",
+    "src": "/icons/figma/411-4667.svg"
+  },
+  {
+    "id": "411:4662",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "411:4668",
+    "name": "Icon/Scrab",
+    "src": "/icons/figma/411-4662.svg"
+  },
+  {
+    "id": "411:4666",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "411:4668",
+    "name": "Icon/Scrab",
+    "src": "/icons/figma/411-4666.svg"
+  },
+  {
+    "id": "411:4661",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "411:4668",
+    "name": "Icon/Scrab",
+    "src": "/icons/figma/411-4661.svg"
+  },
+  {
+    "id": "411:4663",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "411:4668",
+    "name": "Icon/Scrab",
+    "src": "/icons/figma/411-4663.svg"
+  },
+  {
+    "id": "411:4665",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "411:4668",
+    "name": "Icon/Scrab",
+    "src": "/icons/figma/411-4665.svg"
+  },
+  {
+    "id": "411:4664",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "411:4668",
+    "name": "Icon/Scrab",
+    "src": "/icons/figma/411-4664.svg"
+  },
+  {
+    "id": "411:4660",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "411:4668",
+    "name": "Icon/Scrab",
+    "src": "/icons/figma/411-4660.svg"
+  },
+  {
+    "id": "489:20376",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "489:20377",
+    "name": "Icon/Thums up",
+    "src": "/icons/figma/489-20376.svg"
+  },
+  {
+    "id": "489:20372",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "489:20377",
+    "name": "Icon/Thums up",
+    "src": "/icons/figma/489-20372.svg"
+  },
+  {
+    "id": "489:20375",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "489:20377",
+    "name": "Icon/Thums up",
+    "src": "/icons/figma/489-20375.svg"
+  },
+  {
+    "id": "489:20373",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "489:20377",
+    "name": "Icon/Thums up",
+    "src": "/icons/figma/489-20373.svg"
+  },
+  {
+    "id": "489:20371",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "489:20377",
+    "name": "Icon/Thums up",
+    "src": "/icons/figma/489-20371.svg"
+  },
+  {
+    "id": "489:20370",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "489:20377",
+    "name": "Icon/Thums up",
+    "src": "/icons/figma/489-20370.svg"
+  },
+  {
+    "id": "489:20369",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "489:20377",
+    "name": "Icon/Thums up",
+    "src": "/icons/figma/489-20369.svg"
+  },
+  {
+    "id": "489:20374",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "489:20377",
+    "name": "Icon/Thums up",
+    "src": "/icons/figma/489-20374.svg"
+  },
+  {
+    "id": "489:20380",
+    "variant": "Size=28, Style=Fill",
+    "width": 28,
+    "height": 28,
+    "groupId": "489:20379",
+    "name": "Icon/Thums down",
+    "src": "/icons/figma/489-20380.svg"
+  },
+  {
+    "id": "489:20382",
+    "variant": "Size=24, Style=Fill",
+    "width": 24,
+    "height": 24,
+    "groupId": "489:20379",
+    "name": "Icon/Thums down",
+    "src": "/icons/figma/489-20382.svg"
+  },
+  {
+    "id": "489:20384",
+    "variant": "Size=20, Style=Fill",
+    "width": 20,
+    "height": 20,
+    "groupId": "489:20379",
+    "name": "Icon/Thums down",
+    "src": "/icons/figma/489-20384.svg"
+  },
+  {
+    "id": "489:20386",
+    "variant": "Size=16, Style=Fill",
+    "width": 16,
+    "height": 16,
+    "groupId": "489:20379",
+    "name": "Icon/Thums down",
+    "src": "/icons/figma/489-20386.svg"
+  },
+  {
+    "id": "489:20388",
+    "variant": "Size=28, Style=Stroke",
+    "width": 28,
+    "height": 28,
+    "groupId": "489:20379",
+    "name": "Icon/Thums down",
+    "src": "/icons/figma/489-20388.svg"
+  },
+  {
+    "id": "489:20390",
+    "variant": "Size=24, Style=Stroke",
+    "width": 24,
+    "height": 24,
+    "groupId": "489:20379",
+    "name": "Icon/Thums down",
+    "src": "/icons/figma/489-20390.svg"
+  },
+  {
+    "id": "489:20392",
+    "variant": "Size=20, Style=Stroke",
+    "width": 20,
+    "height": 20,
+    "groupId": "489:20379",
+    "name": "Icon/Thums down",
+    "src": "/icons/figma/489-20392.svg"
+  },
+  {
+    "id": "489:20394",
+    "variant": "Size=16, Style=Stroke",
+    "width": 16,
+    "height": 16,
+    "groupId": "489:20379",
+    "name": "Icon/Thums down",
+    "src": "/icons/figma/489-20394.svg"
+  },
+  {
+    "id": "408:3836",
+    "variant": "Size=28",
+    "width": 28,
+    "height": 28,
+    "groupId": "408:3835",
+    "name": "Icon/Blank",
+    "src": null
+  },
+  {
+    "id": "408:3838",
+    "variant": "Size=24",
+    "width": 24,
+    "height": 24,
+    "groupId": "408:3835",
+    "name": "Icon/Blank",
+    "src": null
+  },
+  {
+    "id": "408:3840",
+    "variant": "Size=20",
+    "width": 20,
+    "height": 20,
+    "groupId": "408:3835",
+    "name": "Icon/Blank",
+    "src": null
+  },
+  {
+    "id": "408:3842",
+    "variant": "Size=16",
+    "width": 16,
+    "height": 16,
+    "groupId": "408:3835",
+    "name": "Icon/Blank",
+    "src": null
+  }
+]

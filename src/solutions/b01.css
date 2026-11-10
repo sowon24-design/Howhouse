@@ -1,0 +1,8 @@
+/* Figma 463:10597: 412px reference width; OS status bar is excluded. */
+.solutions-b01 { width: 100%; min-height: 100dvh; overflow-x: clip; background: var(--color-surface); padding-bottom: var(--space-64); }
+.solutions-b01__art { height:200px; display:flex; align-items:center; justify-content:center; }
+.solutions-b01__art > div { position:relative; overflow:hidden; max-width:100%; flex:none; }
+.solutions-b01__art img { position:absolute; height:auto; max-width:none; display:block; }
+.solutions-b01__content { padding: var(--space-3) var(--space-6) var(--space-6); }
+.solutions-b01__content h1 { margin: 0 0 var(--space-5); }
+.solutions-b01__list { display: flex; flex-direction: column; gap: var(--space-3); margin: 0 0 var(--space-32); padding: 0; list-style: none; }

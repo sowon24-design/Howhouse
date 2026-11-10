@@ -1,0 +1,122 @@
+[
+  {
+    "name": "arrow-button-right",
+    "node": "549:9825",
+    "path": "/components/figma/arrow-button-right.svg"
+  },
+  {
+    "name": "checkbox-fill-on",
+    "node": "336:27434",
+    "path": "/components/figma/checkbox-fill-on.svg"
+  },
+  {
+    "name": "checkbox-fill-off",
+    "node": "336:27434",
+    "path": "/components/figma/checkbox-fill-off.svg"
+  },
+  {
+    "name": "checkbox-stroke-off",
+    "node": "336:27434",
+    "path": "/components/figma/checkbox-stroke-off.svg"
+  },
+  {
+    "name": "checkbox-stroke-on",
+    "node": "336:27434",
+    "path": "/components/figma/checkbox-stroke-on.svg"
+  },
+  {
+    "name": "radio-on",
+    "node": "336:27438",
+    "path": "/components/figma/radio-on.svg"
+  },
+  {
+    "name": "home-pale",
+    "node": "355:7938",
+    "path": "/components/figma/home-pale.svg"
+  },
+  {
+    "name": "arrow-right",
+    "node": "355:7938",
+    "path": "/components/figma/arrow-right.svg"
+  },
+  {
+    "name": "message-plus",
+    "node": "472:16850",
+    "path": "/components/figma/message-plus.svg"
+  },
+  {
+    "name": "message-check",
+    "node": "472:16851",
+    "path": "/components/figma/message-check.svg"
+  },
+  {
+    "name": "back-light",
+    "node": "411:4570",
+    "path": "/components/figma/back-light.svg"
+  },
+  {
+    "name": "close-light",
+    "node": "411:4570",
+    "path": "/components/figma/close-light.svg"
+  },
+  {
+    "name": "back-dark",
+    "node": "411:4570",
+    "path": "/components/figma/back-dark.svg"
+  },
+  {
+    "name": "close-dark",
+    "node": "411:4570",
+    "path": "/components/figma/close-dark.svg"
+  },
+  {
+    "name": "photo",
+    "node": "369:9358",
+    "path": "/components/figma/photo.png"
+  },
+  {
+    "name": "photo-close",
+    "node": "369:9358",
+    "path": "/components/figma/photo-close.svg"
+  },
+  {
+    "name": "overlay-warning",
+    "node": "436:15888",
+    "path": "/components/figma/overlay-warning.svg"
+  },
+  {
+    "name": "accordion-warning",
+    "node": "336:27390",
+    "path": "/components/figma/accordion-warning.svg"
+  },
+  {
+    "name": "arrow-top",
+    "node": "336:27390",
+    "path": "/components/figma/arrow-top.svg"
+  },
+  {
+    "name": "arrow-bottom",
+    "node": "336:27406",
+    "path": "/components/figma/arrow-bottom.svg"
+  },
+  {
+    "name": "dot-white-small",
+    "node": "441:17233",
+    "path": "/components/figma/dot-white-small.svg"
+  },
+  {
+    "name": "dot-white-large",
+    "node": "441:17232",
+    "path": "/components/figma/dot-white-large.svg"
+  },
+  {
+    "name": "dot-dark-small",
+    "node": "441:17265",
+    "path": "/components/figma/dot-dark-small.svg"
+  },
+  {
+    "name": "dot-dark-large",
+    "node": "441:17266",
+    "path": "/components/figma/dot-dark-large.svg"
+  }
+]

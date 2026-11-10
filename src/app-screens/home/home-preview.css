@@ -1,0 +1,58 @@
+.hh-home-preview { padding: 24px 0; }
+.hh-screen-stack { position: relative; }
+.hh-screen-stack-front { position: absolute; inset: 0; z-index: 1; }
+.hh-screen-stack[data-problem-open=true] > div:first-child .hh-home-preview-tools { visibility: hidden; }
+.hh-home-preview-tools { max-width: 580px; margin: 20px auto 0; padding: 0 16px; font-size: 14px; color: var(--color-secondary); }
+.hh-home-preview-tools a { color: var(--color-primary); }
+.hh-home-preview-tools p { margin: 8px 0; }
+.hh-home-preview-tools [role=status] { min-height: 42px; }
+.hh-home-preview-frame { width: 100%; max-width: 412px; height: 910px; margin: 0 auto; overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: none; background: var(--color-surface); }
+.hh-home-preview-frame::-webkit-scrollbar { display: none; }
+@media (max-width: 412px) { .hh-home-preview-frame { height: 100dvh; } }
+
+/* Shared app-screen preview shell. The standalone B preview remains independent. */
+.hh-home-preview:has(> .hh-preview-disclosure) {
+  height:100dvh; padding:0; display:flex; flex-direction:column; align-items:center;
+  overflow:clip; position:relative;
+}
+.hh-home-preview:has(> .hh-preview-disclosure) > .hh-home-preview-frame {
+  height:min(910px, calc(100dvh - 32px)); flex:none; margin:0 auto;
+}
+.hh-preview-disclosure.hh-home-preview-tools {
+  position:relative; width:min(412px, 100%); max-width:412px;
+  height:32px; flex:none; margin:0; padding:0;
+}
+.hh-preview-disclosure > summary {
+  height:32px; padding:6px 12px; font-size:12px; line-height:20px;
+  cursor:pointer; background:var(--color-neutral);
+}
+.hh-preview-disclosure-panel {
+  position:absolute; bottom:32px; left:0; right:0; z-index:10;
+  max-height:40dvh; overflow:auto; padding:12px 16px;
+  background:var(--color-neutral); border:1px solid var(--color-border);
+}
+
+/* Screen slides temporarily disabled; keep in sync with navigation-motion.ts. */
+.hh-home-preview :is(.hh-problem, .hh-analysis, .hh-my, .hh-my-editor) { animation:none; }
+
+/* Lock the outer page as well as each vertical scroller. Includes #my (D).
+   Do not set touch-action on ancestors: B02 cards/photos still need horizontal input. */
+html[data-app-horizontal-lock=true],
+html[data-app-horizontal-lock=true] body {
+  max-width:100%; overflow-x:clip; overscroll-behavior-x:none;
+}
+html[data-app-horizontal-lock=true] :is(#root,.hh-screen-stack,.hh-screen-stack-front,.hh-home-preview) {
+  min-width:0; max-width:100%; overflow-x:clip; overscroll-behavior-x:none;
+}
+html[data-app-horizontal-lock=true] :is(.hh-home-preview-frame,.hh-my-content,.hh-information-scroll,.hh-solutions-layer,.hh-home,.hh-problem-fields,.hh-intro-content,.hh-welcome-content,.hh-terms-content,.hh-nickname-content,.hh-offline,.hh-preview-disclosure-panel,.solutions-sheet) {
+  min-width:0; max-width:100%; overflow-x:hidden; overscroll-behavior-x:none;
+}
+html[data-app-horizontal-lock=true] :is(.solutions-b02__track,.solutions-b02__photos) {
+  overscroll-behavior-x:contain;
+}
+
+/* Temporary screenshot build: hide controls and reclaim their 32px footer. */
+html[data-capture-mode=true] .hh-preview-disclosure { display:none; }
+html[data-capture-mode=true] .hh-home-preview:has(> .hh-preview-disclosure) > .hh-home-preview-frame {
+  height:100dvh; --solutions-screen-height:100dvh;
+}

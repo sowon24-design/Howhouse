@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon/Send" clip-path="url(#clip0_0_19)">
+<path id="Polygon 1" d="M10.7725 2.613C11.3775 2.18836 12.203 2.66493 12.1377 3.4012L11.2406 13.4991C11.173 14.2583 10.2303 14.5689 9.72457 13.9985L7.23322 11.1887L8.99323 8.14029C9.11323 7.93245 9.04202 7.66668 8.83417 7.54668C8.62633 7.42668 8.36056 7.49789 8.24056 7.70574L6.48054 10.7542L2.80151 10.0015C2.05469 9.84867 1.85229 8.87704 2.47601 8.43889L10.7725 2.613Z" fill-rule="evenodd" clip-rule="evenodd" fill="#19212E"/>
+<path id="Polygon 1 (Stroke)" d="M9.63051 13.4838L9.63396 13.4875C9.94148 13.7858 10.3258 13.9159 10.7016 13.9061C10.3243 13.9159 9.9386 13.7847 9.63051 13.4838Z" fill-rule="evenodd" clip-rule="evenodd" fill="#19212E"/>
+</g>
+<defs>
+<clipPath id="clip0_0_19">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>

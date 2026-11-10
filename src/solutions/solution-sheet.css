@@ -1,0 +1,4 @@
+.solutions-sheet.ui-dialog { position:fixed; top:auto; margin:0 auto; max-width:100%; overflow-y:auto; overscroll-behavior-y:contain; }
+.solutions-sheet.ui-action-sheet[open] { align-items:stretch; }
+.solutions-sheet .ui-dialog-inner { display:flex; flex-direction:column; gap:36px; width:100%; }
+.solutions-sheet[data-motion=exit] { pointer-events:none; }
