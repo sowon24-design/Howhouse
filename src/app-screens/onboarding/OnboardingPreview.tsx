@@ -1,11 +1,10 @@
 import {showDeveloperTools} from '../../analysis/release-mode'
 import { useEffect, useState } from 'react'
 import { minimizeAndroidApp, useAndroidBack } from '../android-back'
-import { Button, GNB } from '../../components/ui'
+import { OnboardingScreen } from './OnboardingScreen'
+export { OnboardingScreen } from './OnboardingScreen'
 import { TermsScreen } from './TermsScreen'
 import { NicknameScreen } from './NicknameScreen'
-import welcome from './assets/welcome.png'
-import welcomeOverlay from './assets/welcome-overlay.png'
 import intro1 from './assets/intro-1.svg'
 import intro2 from './assets/intro-2.svg'
 import intro3 from './assets/intro-3.svg'
@@ -23,28 +22,6 @@ function readStep() {
     const saved = localStorage.getItem(progressKey)
     return saved && /^[0-3]$/.test(saved) ? Number(saved) : 0
   } catch { return 0 }
-}
-
-export function OnboardingScreen({ step, onStepChange, onContinue }: {
-  step: number; onStepChange: (step: number) => void; onContinue: () => void
-}) {
-  const page = pages[step - 1]
-  return <main className={`hh-onboarding${step === 0 ? ' hh-onboarding--welcome' : ''}`} aria-label={step === 0 ? '환영' : `서비스 소개 ${step}`}>
-    <GNB onBack={step > 0 ? () => onStepChange(step - 1) : undefined} onClose={step > 0 ? () => onStepChange(0) : undefined} />
-    {step === 0 ? <div className="hh-welcome-content">
-      <div className="hh-welcome-copy"><h1>우리 집 문제,<br />혼자 고민하지 마세요</h1><p>상황에 맞는 해결 방법을 찾아드릴게요.</p></div>
-      <div className="hh-welcome-art-space"><div className="hh-welcome-art"><img src={welcome} alt="" /><div className="hh-welcome-art-crop"><img src={welcomeOverlay} alt="" /></div></div></div>
-    </div> : <div className="hh-intro-content">
-      <div className="hh-intro-story" key={step}>
-        <div className={`hh-intro-art hh-intro-art--${step}`}><img src={page.image} alt="" /></div>
-        <div className="hh-intro-copy"><h1>{page.title}</h1><p>{page.lines[0]}<br />{page.lines[1]}</p></div>
-      </div>
-      <div className="hh-intro-progress" role="img" aria-label={`소개 3개 중 ${step}번째`}>
-        {[1, 2, 3].map(value => <span key={value} data-active={step === value} />)}
-      </div>
-    </div>}
-    <footer className="hh-onboarding-next"><Button onClick={() => step < 3 ? onStepChange(step + 1) : onContinue()}>{step === 0 ? '시작하기' : '다음으로'}</Button></footer>
-  </main>
 }
 
 export function OnboardingPreview({ onComplete, storageStatus, onResetSetup }: { onComplete: (nickname: string) => void; storageStatus?: string; onResetSetup?: () => void }) {
