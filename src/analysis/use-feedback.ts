@@ -1,3 +1,4 @@
+import { hasCurrentConsentReceipt } from './privacy-client'
 import { useEffect, useRef, useState } from 'react'
 import { configuredAppSession } from './app-session'
 import { resolveAnalysisBaseUrl } from './endpoint'
@@ -20,7 +21,8 @@ export function useSolutionFeedback(source: string, id?: string) {
       const auth = configuredAppSession()
       if (!auth) throw new FeedbackClientError('feedback-not-configured')
       current = createFeedbackClient({ target, getAccessToken: auth, baseUrl: resolveAnalysisBaseUrl() }); client.current = current
-      const existingToken = auth.peekAccessToken()
+      let existingToken: string | undefined
+      try { if (hasCurrentConsentReceipt(window.localStorage, resolveAnalysisBaseUrl())) existingToken = auth.peekAccessToken() } catch { /* Unavailable local storage must not trigger passive requests. */ }
       if (!existingToken) { setLoading(false); return () => { active = false; alive.current = false; current?.cancel(); client.current = null } }
       current.getState(existingToken).then(state => { if (active) { desired.current = state.rating; setRating(state.rating) } })
         .catch(error => { if (active) setRatingError(feedbackErrorMessage(error)) }).finally(() => { if (active) setLoading(false) })

@@ -1,3 +1,4 @@
+import { VideoPreview } from './VideoPreview'
 import { useEffect, useRef, useState } from 'react'
 import { Button, GNB } from '../components/ui'
 import { iconCatalog } from '../components/Icon/Icon'
@@ -112,7 +113,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
       </>}
       {data.source === 'existing' && data.videos.length > 0 && <>
         <section><h2 className="text-body-sb">더 자세히 알아보기</h2>
-          <a className="solutions-b02__video" href={data.videos[0].url} target="_blank" rel="noopener noreferrer" aria-label="해결 방법 유튜브 영상 열기" onClick={() => onOpenVideo(data.videos[0].url)}><img referrerPolicy="no-referrer" loading="lazy" src={data.videos[0].thumbnail} alt="해결 방법 유튜브 썸네일" /><span><img src={external} alt="" /></span></a>
+          <VideoPreview key={data.id} url={data.videos[0].url} thumbnail={data.videos[0].thumbnail} externalIcon={external} onOpen={onOpenVideo} />
         </section>
       </>}
       <div className="solutions-b02__feedback">

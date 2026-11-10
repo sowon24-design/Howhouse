@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import {createPrivacyClient,privacyVersion} from './privacy-client.ts'
+import {createPrivacyClient,privacyVersion,hasCurrentConsentReceipt} from './privacy-client.ts'
 import {privacyVersion as serverPrivacyVersion} from '../../server/analysis/release-store.mjs'
 
 test('legacy combined consent never skips the separate choices in the new client',()=>{
@@ -38,3 +38,12 @@ test('incomplete or mismatched evidence receipt never marks consent as saved',as
 })
 
 test('E03 sends its own disclosure fingerprint rather than the A02 wording',async()=>{const {consentEvidenceHash}=await import('./consent-document.ts');const f=fixture();await f.client.consent({ageAtLeast14:true,processingAccepted:true,overseasAccepted:true,documentSurface:'onboarding'});const body=f.calls.find(c=>c.url.endsWith('/consent')).body;assert.equal(body.documentSurface,'onboarding');assert.equal(body.documentHash,await consentEvidenceHash('onboarding'));assert.notEqual(body.documentHash,await consentEvidenceHash('analysis'))})
+
+test('passive consent guard requires the current receipt for the same service and fails closed',()=>{
+ const values=new Map();const store={getItem:k=>values.get(k)??null};const key='howhouse:ai-consent:https://service.example';
+ assert.equal(hasCurrentConsentReceipt(store,'https://service.example'),false);
+ values.set(key,'old-version');assert.equal(hasCurrentConsentReceipt(store,'https://service.example'),false);
+ values.set(key,privacyVersion);assert.equal(hasCurrentConsentReceipt(store,'https://service.example'),true);
+ assert.equal(hasCurrentConsentReceipt(store,'https://other.example'),false);
+ assert.equal(hasCurrentConsentReceipt({getItem(){throw Error('unavailable')}},'https://service.example'),false);
+});

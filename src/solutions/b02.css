@@ -138,3 +138,8 @@
 .solutions-b02[data-generated=true] .solutions-b02__header { margin-bottom:0; background:var(--color-surface); }
 .solutions-opinion__thanks { width:186px; height:auto; overflow:visible; }
 .solutions-opinion__thanks img { position:static; display:block; width:100%; height:auto; object-fit:contain; }
+
+.solutions-b02__video-container { position:relative; }
+.solutions-b02__video-placeholder { display:flex; height:100%; align-items:center; justify-content:center; padding-bottom:var(--space-64); background:var(--color-neutral); }
+.solutions-b02__video-preview-action { position:absolute; z-index:1; inset:auto var(--space-4) var(--space-4); display:flex; flex-direction:column; align-items:center; gap:var(--space-2); }
+.solutions-b02__video-preview-action p { margin:0; }

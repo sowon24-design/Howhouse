@@ -4,6 +4,10 @@ export {privacyVersion} from './consent-document.ts'
 export class PrivacyError extends Error { readonly code:string;constructor(code: string) {super(code);this.code=code} }
 function evidenceReceipt(value:Record<string,unknown>){return typeof value.eventId==='string'&&/^\d+$/.test(value.eventId)&&Number.isFinite(Date.parse(String(value.recordedAt)))}
 type Store = Pick<Storage,'getItem'|'setItem'|'removeItem'>
+/** Local receipt is only a guard for passive requests, never server authorization. */
+export function hasCurrentConsentReceipt(storage: Pick<Storage,'getItem'>, baseUrl: string) {
+ try { return storage.getItem('howhouse:ai-consent:'+new URL(baseUrl).origin) === privacyVersion } catch { return false }
+}
 export function createPrivacyClient(options:{baseUrl:string;getAccessToken:(signal:AbortSignal)=>Promise<string>;storage:Store;fetchImpl?:typeof fetch;makeId?:()=>string;makeSecret?:()=>string}){
  const origin=new URL(options.baseUrl)
  if(origin.protocol!=='https:' && !(origin.protocol==='http:'&&['localhost','127.0.0.1'].includes(origin.hostname)))throw new PrivacyError('not-configured')
@@ -31,7 +35,7 @@ export function createPrivacyClient(options:{baseUrl:string;getAccessToken:(sign
  }
  return {
   identity,
-  consentRecorded:()=>options.storage.getItem(consentKey)===privacyVersion,
+  consentRecorded:()=>hasCurrentConsentReceipt(options.storage,base),
   clearConsentLocal:()=>options.storage.removeItem(consentKey),
   async consent(acceptance:{ageAtLeast14:boolean;processingAccepted:boolean;overseasAccepted:boolean;documentSurface?:ConsentSurface}){
    if(acceptance.ageAtLeast14!==true)throw new PrivacyError('age-required')
