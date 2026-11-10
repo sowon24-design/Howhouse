@@ -6,17 +6,17 @@
 .solutions-b02[data-without-photos=true] .solutions-b02__header { margin-bottom:0; }
 .solutions-b02__header .ui-icon-button:active { filter:brightness(.94); }
 .solutions-b02__reference p { color:var(--color-secondary); }
-.solutions-b02__responsibility button,.solutions-b02__feedback button { border:0; padding:0; background:transparent; color:inherit; display:flex; align-items:center; justify-content:center; }
+.solutions-b02__responsibility button,.solutions-b02__feedback button:not(.ui-button) { border:0; padding:0; background:transparent; color:inherit; display:flex; align-items:center; justify-content:center; }
 .solutions-b02__responsibility button { -webkit-tap-highlight-color:transparent; }
 .solutions-b02__previous,.solutions-b02__video { transition:filter 160ms var(--ui-ease); }
-.solutions-b02__previous:active:not(:disabled),.solutions-b02__feedback button:active,.solutions-b02__video:active { filter:brightness(.94); }
+.solutions-b02__previous:active:not(:disabled),.solutions-b02__feedback button:not(.ui-button):active,.solutions-b02__video:active { filter:brightness(.94); }
 .solutions-b02__rating-icon { position:relative; display:block; width:16px; height:16px; flex:none; }
 .solutions-b02__rating-icon>span { position:absolute; inset:0; background:var(--color-secondary); mask-repeat:no-repeat; mask-position:center; transition:opacity 100ms ease-out; }
 .solutions-b02__rating-icon>span:last-child { opacity:0; }
 .solutions-b02__rating-icon[data-filled=true]>span:first-child { opacity:0; }
 .solutions-b02__rating-icon[data-filled=true]>span:last-child { opacity:1; }
-.solutions-b02__feedback button { position:relative; width:16px; height:16px; flex:none; -webkit-tap-highlight-color:transparent; }
-.solutions-b02__feedback button::before { content:''; position:absolute; inset:-6px -4px; }
+.solutions-b02__feedback button:not(.ui-button) { position:relative; width:16px; height:16px; flex:none; -webkit-tap-highlight-color:transparent; }
+.solutions-b02__feedback button:not(.ui-button)::before { content:''; position:absolute; inset:-6px -4px; }
 .solutions-b02__track { touch-action:pan-y; }
 .solutions-b02__track[data-dragging=true] { user-select:none; cursor:grabbing; }
 @media(prefers-reduced-motion:reduce) { .solutions-b02__header,.solutions-b02__rating-icon>span { transition:none; } }
@@ -94,7 +94,7 @@
 /* Local native controls: shared UI components keep their own pressed states. */
 .solutions-b02__photos { height:254px; border-radius:0 0 var(--rounded-lg) var(--rounded-lg); }
 .solutions-b02__photos img { height:254px; object-fit:contain; }
-@media(prefers-reduced-motion:reduce){.solutions-b02__header>button,.solutions-b02__previous,.solutions-b02__feedback button,.solutions-b02__video{transition:none;}}
+@media(prefers-reduced-motion:reduce){.solutions-b02__header>button,.solutions-b02__previous,.solutions-b02__feedback button:not(.ui-button),.solutions-b02__video{transition:none;}}
 
 /* Preserve main generated-result layout when there is no hero photo. */
 
