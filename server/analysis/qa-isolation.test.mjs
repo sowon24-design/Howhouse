@@ -1,0 +1,9 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import {createQaIsolation} from './qa-isolation.mjs'
+const owner='11111111-1111-4111-8111-111111111111'
+function fixture(options={}){let calls=0,time=1000;const guard=createQaIsolation({owner,expiresAt:2000,now:()=>time,authenticate:async()=>({id:owner}),hasCalls:async()=>false,reserve:async()=>{calls++},...options});return {guard,calls:()=>calls,expire:()=>{time=2001}}}
+test('QA accepts only the fixed authenticated owner',async()=>{assert.equal((await fixture().guard.authenticate('token')).id,owner);await assert.rejects(fixture({authenticate:async()=>({id:'22222222-2222-4222-8222-222222222222'})}).guard.authenticate('token'),{code:'auth-required'})})
+test('QA reserves at most once including concurrent requests',async()=>{const f=fixture();const results=await Promise.allSettled([f.guard.reserve('a'),f.guard.reserve('b')]);assert.equal(results.filter(r=>r.status==='fulfilled').length,1);assert.equal(f.calls(),1);await assert.rejects(f.guard.reserve('c'),{code:'budget-limit'})})
+test('persistent existing call blocks fresh process; uncertain DB failure fails closed',async()=>{const f=fixture({hasCalls:async()=>true});await assert.rejects(f.guard.reserve('a'),{code:'budget-limit'});assert.equal(f.calls(),0);const broken=fixture({hasCalls:async()=>{throw Error('network')}});await assert.rejects(broken.guard.reserve('a'));await assert.rejects(broken.guard.reserve('b'),{code:'budget-limit'})})
+test('expiry blocks analysis while allowing owner authentication for deletion',async()=>{const f=fixture();f.expire();await assert.rejects(f.guard.reserve('a'),{code:'budget-limit'});assert.throws(()=>f.guard.assertFresh(),{code:'budget-limit'});assert.equal((await f.guard.authenticate('token')).id,owner);assert.throws(()=>fixture({expiresAt:10000000}));assert.throws(()=>fixture({owner:'bad'}))})
