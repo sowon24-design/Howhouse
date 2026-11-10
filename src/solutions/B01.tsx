@@ -50,7 +50,7 @@ export function B01({ categoryLabel, items, onSelect, onWriteProblem, onBack }: 
       </ul>
       <ListRow variant="pale" onClick={onWriteProblem}
         icon={<img src={questionUrl} alt="" width="24" height="24" />}>
-        내 문제를 찾을 수 없나요?
+        다른 사례 찾아보기
       </ListRow>
     </main>
   </section>

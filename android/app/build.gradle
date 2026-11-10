@@ -1,14 +1,20 @@
 apply plugin: 'com.android.application'
 
+// Values are supplied to this process only; never commit passwords or key files.
+def signingValues = ['HOWHOUSE_KEYSTORE_PATH','HOWHOUSE_KEYSTORE_PASSWORD','HOWHOUSE_KEY_ALIAS','HOWHOUSE_KEY_PASSWORD'].collectEntries { [(it): System.getenv(it)] }
+def signingReady = signingValues.values().every { it != null && !it.isEmpty() }
+def appRelease = new groovy.json.JsonSlurper().parse(rootProject.file('../src/catalog/app-release.json'))
+if (!(appRelease.versionCode instanceof Number) || appRelease.versionCode < 1 || appRelease.versionCode > 2100000000 || appRelease.versionCode != appRelease.versionCode.intValue()) throw new GradleException('앱 출시 설정의 versionCode가 올바르지 않습니다.')
+
 android {
     namespace = "com.howhouse.app"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.howhouse.app"
+        applicationId appRelease.applicationId
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode appRelease.versionCode.intValue()
+        versionName appRelease.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,8 +22,19 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (signingReady) {
+            upload {
+                storeFile file(signingValues.HOWHOUSE_KEYSTORE_PATH)
+                storePassword signingValues.HOWHOUSE_KEYSTORE_PASSWORD
+                keyAlias signingValues.HOWHOUSE_KEY_ALIAS
+                keyPassword signingValues.HOWHOUSE_KEY_PASSWORD
+            }
+        }
+    }
     buildTypes {
         release {
+            if (signingReady) signingConfig signingConfigs.upload
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -44,6 +61,14 @@ dependencies {
 
 apply from: 'capacitor.build.gradle'
 
+tasks.register('catalogReleaseInfo') {
+    group = 'verification'
+    description = 'Print public release identity only; never reads or prints signing secrets.'
+    doLast {
+        println groovy.json.JsonOutput.toJson([applicationId: android.defaultConfig.applicationId, versionCode: android.defaultConfig.versionCode, versionName: android.defaultConfig.versionName])
+    }
+}
+
 try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {
@@ -56,14 +81,16 @@ try {
 // A signed release must use an approved web release, not the last trial assets.
 tasks.matching { it.name == 'preReleaseBuild' }.configureEach {
     doFirst {
+        if (!signingReady) throw new GradleException('출시 서명 환경변수 4개가 필요합니다. 비밀번호를 로그나 Git에 기록하지 마세요.')
         def infoFile = file('src/main/assets/public/howhouse-build.json')
         if (!infoFile.exists()) {
             throw new GradleException('출시 웹 파일 확인표가 없습니다. 승인된 release 웹 빌드 후 Capacitor 동기화가 필요합니다.')
         }
         def info = new groovy.json.JsonSlurper().parse(infoFile)
-        def policyFile = rootProject.file('../src/app-screens/my/information-draft.json')
+        def policyFile = rootProject.file('../src/catalog/policy.ts')
         def policyHash = java.security.MessageDigest.getInstance('SHA-256').digest(policyFile.bytes).encodeHex().toString()
-        if (info.schema != 1 || !(info.mode in ['release', 'production']) || info.developerTools != false || info.privacyReady != true || info.requiredProcessingRegion != 'us' || info.policySha256 != policyHash) {
+        def approval = new groovy.json.JsonSlurper().parse(rootProject.file('../src/catalog/release-approval.json'))
+        if (info.schema != 2 || info.variant != 'catalog' || !(info.mode in ['release', 'production']) || info.aiEnabled != false || info.serverStorage != false || info.releaseApproved != true || info.policyStatus != 'published' || info.policySha256 != policyHash || info.policyVersion != approval.policyVersion || !approval.publicPolicyVerified || !approval.androidVerified || !approval.externalContentRightsVerified || !approval.legacyDataTransitionReviewed) {
             throw new GradleException('현재 웹 파일은 승인된 최신 출시 빌드가 아닙니다. release 웹 빌드와 Capacitor 동기화를 다시 확인하세요.')
         }
     }
