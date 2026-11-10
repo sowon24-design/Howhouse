@@ -1,6 +1,15 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import {createPrivacyClient,privacyVersion} from './privacy-client.ts'
+import {privacyVersion as serverPrivacyVersion} from '../../server/analysis/release-store.mjs'
+
+test('legacy combined consent never skips the separate choices in the new client',()=>{
+ const saved=new Map([['howhouse:ai-consent:https://service.example','2026-11-06-v1']])
+ const client=createPrivacyClient({baseUrl:'https://service.example',getAccessToken:async()=>{throw Error('No network needed')},storage:{getItem:k=>saved.get(k)??null,setItem:(k,v)=>saved.set(k,v),removeItem:k=>saved.delete(k)}})
+ assert.equal(privacyVersion,serverPrivacyVersion)
+ assert.equal(client.consentRecorded(),false)
+ assert.equal(saved.size,1)
+})
 import {aiReportText} from './ai-report.ts'
 const id='11111111-1111-4111-8111-111111111111'
 const userToken='e30.'+Buffer.from(JSON.stringify({sub:id})).toString('base64url')+'.signature'

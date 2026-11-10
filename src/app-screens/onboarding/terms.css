@@ -19,3 +19,14 @@
 .hh-terms-sheet-content > .ui-button { flex:none; }
 
 .hh-terms, .hh-terms-sheet { -webkit-tap-highlight-color:transparent; }
+.hh-consent-notice { margin:0; font-size:12px; line-height:1.5; color:var(--color-secondary); overflow-wrap:anywhere; }
+.hh-consent-description { margin:0; font-size:14px; line-height:1.5; color:var(--color-secondary); }
+.hh-analysis-consent-sheet .hh-terms-row { padding:8px 0; }
+.hh-analysis-consent-sheet .hh-terms-sheet-content { gap:16px; }
+.hh-terms-sheet { max-height:calc(100dvh - 24px); }
+.hh-analysis-consent-sheet.ui-action-sheet { padding-bottom:64px; }
+.hh-consent-actions { display:flex; gap:12px; margin-top:auto; flex:none; width:100%; }
+.hh-consent-actions > .ui-button { flex:1; min-width:0; padding-inline:8px; }
+.hh-terms-document { overscroll-behavior:none; overflow-x:hidden; }
+.hh-terms-document-body { display:flow-root; }
+.hh-consent-detail-sheet.ui-action-sheet { height:660px; box-shadow:0 -8px 24px #0000001a; }

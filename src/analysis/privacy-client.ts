@@ -1,4 +1,4 @@
-export const privacyVersion = '2026-11-06-v1'
+export const privacyVersion = '2026-11-10-v2'
 export class PrivacyError extends Error { readonly code:string;constructor(code: string) {super(code);this.code=code} }
 type Store = Pick<Storage,'getItem'|'setItem'|'removeItem'>
 export function createPrivacyClient(options:{baseUrl:string;getAccessToken:(signal:AbortSignal)=>Promise<string>;storage:Store;fetchImpl?:typeof fetch;makeId?:()=>string;makeSecret?:()=>string}){

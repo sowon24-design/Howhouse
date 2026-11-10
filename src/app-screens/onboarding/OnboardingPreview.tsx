@@ -76,7 +76,7 @@ export function OnboardingPreview({ onComplete, storageStatus, onResetSetup }: {
       ? <NicknameScreen onBack={() => { setNicknameOpen(false); setStatus('약관 동의 화면으로 돌아왔습니다. 실제 동의 기록은 저장하지 않습니다.') }} onClose={() => changeStep(0)} onComplete={onComplete} />
       : termsOpen
       ? <TermsScreen onBack={() => changeStep(3)} onClose={() => changeStep(0)} onContinue={() => { setNicknameOpen(true); setStatus('닉네임은 완료 후 홈에 표시됩니다. 완료 시 닉네임과 설정 완료 여부를 기기에 저장합니다. 실제 약관 동의 기록은 저장하지 않습니다.') }} />
-      : <OnboardingScreen step={step} onStepChange={changeStep} onContinue={() => { setTermsOpen(true); setStatus('약관은 Figma의 임시 원문입니다. 개인정보 처리방침에는 ‘내용바꿔야함’이 남아 있으며 최종 정책이 아닙니다. 동의 기록은 저장하지 않습니다.') }} />}</div>
+      : <OnboardingScreen step={step} onStepChange={changeStep} onContinue={() => { setTermsOpen(true); setStatus('개인정보 관련 약관은 화면 확인용 초안입니다. 필수 두 항목만 체크해도 진행할 수 있으며 실제 동의 기록은 저장하지 않습니다.') }} />}</div>
     {showDeveloperTools && <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="최초 시작·소개 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
       <a href="#home">홈 미리보기</a> · <a href="#components">공통 컴포넌트 보기</a>
       <p role="status">{status}</p>
