@@ -11,7 +11,7 @@ const records=[]
 if(!check)mkdirSync(directory,{recursive:true})
 function emit(name,text){
  const file=new URL(name,directory)
- if(check){if(readFileSync(file,'utf8')!==text)throw Error(`Policy export differs: ${name}. Run npm run policies:sync.`)}
+ if(check){if(readFileSync(file,'utf8').replace(/\r\n/g,'\n')!==text)throw Error(`Policy export differs: ${name}. Run npm run policies:sync.`)}
  else writeFileSync(file,text)
 }
 for(const page of publication.pages){
