@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "consentVersion": "2026-11-10-v5",
+  "consentVersion": "2026-11-10-v6",
   "revisedAt": "2026-11-10",
   "source": "src/app-screens/my/information-draft.json",
   "pages": [
@@ -28,8 +28,8 @@
       "id": "40902821a7f3809aa417d65279f87c37",
       "url": "https://xamxam33.notion.site/40902821a7f3809aa417d65279f87c37",
       "file": "docs/policies/privacy.md",
-      "sourceSha256": "5a4050d93471a74d605a7c4bc83aefdc7ff20b44d990bb46dacd9d5e191605f6",
-      "markdownSha256": "f85d927fbdfe7462e9460f59b7c57baf27a31853c13db65dcdca69cef815c0b3"
+      "sourceSha256": "09029a6c5bbec92e5303df652b9077bd081805db72ee2c0cc34b0c8993bdb5f1",
+      "markdownSha256": "0978874c8833b03912e1f6e722becf67bf8abef45fa2870121a64b61a728d614"
     },
     {
       "key": "processingConsent",
@@ -46,8 +46,8 @@
       "id": "41002821a7f3802c9e4ac923b78fe556",
       "url": "https://xamxam33.notion.site/41002821a7f3802c9e4ac923b78fe556",
       "file": "docs/policies/overseasConsent.md",
-      "sourceSha256": "29294b7a4d01fb600b971d97d951b6c6565a1e7b97851a263c8dd16a2a0fa2cd",
-      "markdownSha256": "02021bebf69b7fc9f7ee64a199a4a5dc4b3d851f61254ee96648deca825ee7ca"
+      "sourceSha256": "a4f2f94817e737f5069b5fdc8b9883ab1ee80beb2f5981ee55be6a7f3c1867d9",
+      "markdownSha256": "421c26e19ddc04744c895919ad2d535a76a21ec1109e8615754da6508cf22994"
     },
     {
       "key": "ai",
@@ -55,8 +55,8 @@
       "id": "41002821a7f38017a9bef636b4c68d8c",
       "url": "https://xamxam33.notion.site/41002821a7f38017a9bef636b4c68d8c",
       "file": "docs/policies/ai.md",
-      "sourceSha256": "9b33986a9e12e95091e1c0e069f2b55f2f2d81b6f2966fb3f7aebba3111d6e9b",
-      "markdownSha256": "134a058844f56713e92f42141759f60d31e0b00506be676ef626734672a11089"
+      "sourceSha256": "a419d2ac6d01feb1e03c38e82a00295431f6a008628ea01f63075de4f4f7d2fc",
+      "markdownSha256": "e91a2f17f78d7e95a2f3898349e8dc763957e92005396176fe7940c9c1073e39"
     }
   ]
 }

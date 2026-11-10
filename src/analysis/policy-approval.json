@@ -2,9 +2,9 @@
   "schema": 1,
   "analysisConsentApproved": false,
   "outstanding": [
-    "Supabase EU 로그의 동등성 인정 적용범위와 비EU 지원·재이전 등 국외 처리 고지·근거 검토",
+    "Supabase EU 로그·비EU 지원과 Render 부수 처리, OpenAI 조건부 검토 등 남은 국가·보유 기준의 고지·이전 근거 검토",
     "최종 Android 앱의 동의 전·거부·철회 후 실제 네트워크 확인",
-    "최종 앱과 실제 서버의 v5 동의 영수증·사진 분석·철회·삭제 검증",
+    "최종 Android 앱의 사진 메타데이터 제거 및 실제 서버의 v6 동의 영수증·사진 분석·철회·삭제 검증",
     "공개 Notion 6개 페이지의 동일 본문 반영 확인(예슬 담당)"
   ],
   "notionSyncMethod": "manual-handoff",

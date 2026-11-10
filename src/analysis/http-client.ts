@@ -6,6 +6,7 @@ import { analysisTimeoutMs, runWithDeadline } from './deadline'
 import type { DeadlineScheduler } from './deadline'
 import { resolveAnalysisBaseUrl, defaultAnalysisBaseUrl } from './endpoint'
 import { configuredAppSession,clearConfiguredAppSession } from './app-session'
+import { prepareAnalysisPhoto } from './photo-privacy'
 
 const failureCodes = new Set<AnalysisFailure['code']>([
   'invalid-input', 'insufficient-input', 'unsupported-input', 'unsafe-input', 'model-refusal', 'analysis-timeout', 'catalog-mismatch', 'budget-limit', 'server-busy', 'api-error',
@@ -79,6 +80,8 @@ export function createHttpAnalysisClient(options: {
   baseUrl?: string
   /** User login token for a hosted trial, never an OpenAI or Supabase secret key. */
   getAccessToken?: (signal: AbortSignal) => Promise<string>
+  /** Local image encoder; injectable for transport tests without a browser canvas. */
+  preparePhoto?: typeof prepareAnalysisPhoto
 }) {
   const requiredRegion=options.requiredProcessingRegion??(!['development','trial','test'].includes(import.meta.env?.MODE??'test')?'us':undefined)
   const fetchImpl = options.fetchImpl ?? fetch
@@ -90,6 +93,16 @@ export function createHttpAnalysisClient(options: {
       !['image/jpeg', 'image/png', 'image/webp'].includes(photo.type) || !photo.size || photo.size > 4 * 1024 * 1024)) {
       fail('invalid-input')
     }
+    const photos: File[] = []
+    try {
+      for (const [index, photo] of input.analysisUserPhotos.entries()) {
+        photos.push(await (options.preparePhoto ?? prepareAnalysisPhoto)(photo, index, signal))
+      }
+    } catch (error) {
+      if (signal.aborted) throw error
+      throw new AnalysisError({ code: 'invalid-input', message: '사진의 위치정보를 제거하지 못했어요. 사진을 다시 선택하거나 글로 문제를 알려 주세요.' })
+    }
+    signal.throwIfAborted()
     const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(options.catalog))
     const catalogVersion = Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, '0')).join('')
     const accessToken = await getAccessToken?.(signal)
@@ -108,7 +121,7 @@ export function createHttpAnalysisClient(options: {
     body.set('requestId', requestId)
     body.set('catalogVersion', catalogVersion)
     body.set('analysisUserText', input.analysisUserText)
-    for (const photo of input.analysisUserPhotos) body.append('analysisUserPhotos', photo)
+    for (const photo of photos) body.append('analysisUserPhotos', photo, photo.name)
     const response = await fetchServer(fetchImpl, `${base}/api/analysis/match`, {
       method: 'POST', headers: { ...authHeaders, 'X-Howhouse-Session': session.token,
         ...(supportsDetails
