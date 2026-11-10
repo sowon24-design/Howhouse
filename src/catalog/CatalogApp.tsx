@@ -57,10 +57,18 @@ export default function CatalogApp() {
   const [visited, setVisited] = useState(false)
   const [resolution, setResolution] = useState<ResolutionStatus>()
   const [editing, setEditing] = useState(false)
+  const caseOrigin = useRef('search')
   const frameRef = useRef<HTMLDivElement>(null)
   useEffect(() => { frameRef.current?.scrollTo({top:0}) },[hash,contact,editing])
-  const navigate = (path: string) => { location.hash = path }
+  const navigate = (path: string) => {
+    if (path.startsWith('case/')) {
+      const origin = location.hash
+      caseOrigin.current = origin === '#search' || origin.startsWith('#solutions/') ? origin.slice(1) : 'home'
+    }
+    location.hash = path
+  }
   const home = () => navigate('home')
+  const backFromCase = () => navigate(caseOrigin.current)
   const caseId = hash.startsWith('#case/') ? hash.slice(6) : ''
   let decodedId = ''
   try { decodedId = decodeURIComponent(caseId) } catch { /* Invalid link is handled below. */ }
@@ -76,6 +84,7 @@ export default function CatalogApp() {
   useAndroidBack(() => {
     if (editing) setEditing(false)
     else if (contact) setContact(false)
+    else if (selected) backFromCase()
     else if (hash !== '#home') home()
     else minimizeAndroidApp()
   })
@@ -112,7 +121,7 @@ export default function CatalogApp() {
     {notice && <p role="status">{notice}</p>}
   </main>)
   if (selected) return frame(<div className="hh-catalog-result">
-    <div hidden={contact}><B02 data={selected} onBack={() => navigate('search')} onComplete={home}
+    <div hidden={contact}><B02 data={selected} onBack={backFromCase} onComplete={home}
       onContact={value => {setResolution(value);setVisited(true);setContact(true)}} onOpenVideo={() => {}} onPreviewOpinion={() => {}}/></div>
     {visited && <div hidden={!contact}><B03 recipients={toMessageRecipients(selected,resolution==='solved')} resolution={resolution} onBack={() => setContact(false)}/></div>}
   </div>)
