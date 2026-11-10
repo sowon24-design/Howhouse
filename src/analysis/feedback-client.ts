@@ -34,6 +34,7 @@ export function feedbackErrorMessage(error: unknown): string {
 /** Only our feedback API. No provider requests, raw problem input or message bodies. */
 export function createFeedbackClient(options: {
   baseUrl: string; target: FeedbackTarget; getAccessToken: (signal: AbortSignal) => Promise<string>;
+  getExistingAccessToken?: () => string | undefined;
   fetchImpl?: typeof fetch; makeId?: () => string
 }) {
   const base = new URL(options.baseUrl)
@@ -45,11 +46,11 @@ export function createFeedbackClient(options: {
   let ratingIntent: { operationId: string; revision: number; rating: FeedbackRating } | undefined
   let opinionIntent: { operationId: string; reason: FeedbackReason; text?: string } | undefined
   let ratingJob: Promise<Receipt> | undefined, opinionJob: Promise<Receipt> | undefined, inFlightRating: FeedbackRating = null
-  async function request(kind: string, body: unknown): Promise<Record<string, unknown>> {
+  async function request(kind: string, body: unknown, existingAccessToken?: string): Promise<Record<string, unknown>> {
     const controller = new AbortController(); controllers.add(controller)
     const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(10000)])
     try {
-      const token = await options.getAccessToken(signal)
+      const token = existingAccessToken ?? await options.getAccessToken(signal)
       const response = await fetchImpl(`${base.href.replace(/\/$/, '')}/api/feedback/${kind}`, {
         method: 'POST', signal, redirect: 'error', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify(body),
       })
@@ -65,8 +66,8 @@ export function createFeedbackClient(options: {
       throw new FeedbackClientError(code)
     } finally { controllers.delete(controller) }
   }
-  async function loadState(): Promise<FeedbackState> {
-    const data = await request('state', { result: options.target })
+  async function loadState(existingAccessToken?: string): Promise<FeedbackState> {
+    const data = await request('state', { result: options.target }, existingAccessToken)
     if (![null, 'like', 'dislike'].includes(data.rating as FeedbackRating) || !Number.isSafeInteger(data.revision) || Number(data.revision) < 0
       || data.updatedAt !== null && typeof data.updatedAt !== 'string') throw new FeedbackClientError('invalid-response')
     revision = Math.max(revision, Number(data.revision)); loaded = true
@@ -74,6 +75,13 @@ export function createFeedbackClient(options: {
   }
   function getState() {
     if (!stateJob) stateJob = loadState().finally(() => { stateJob = undefined })
+    return stateJob
+  }
+  function getStateIfAuthenticated(): Promise<FeedbackState | undefined> {
+    const token = options.getExistingAccessToken?.()
+    if (!token) return Promise.resolve(undefined)
+    // Use the snapshot token directly. A denied/expired read never refreshes Auth.
+    if (!stateJob) stateJob = loadState(token).finally(() => { stateJob = undefined })
     return stateJob
   }
   async function persist(kind: string, intent: { operationId: string; revision?: number }): Promise<Receipt> {
@@ -107,5 +115,5 @@ export function createFeedbackClient(options: {
     opinionJob = persist('opinions', opinionIntent).then(result => { opinionIntent = undefined; return result }).finally(() => { opinionJob = undefined })
     return opinionJob
   }
-  return { getState, setRating, submitOpinion, cancel: () => { for (const c of controllers) c.abort(); controllers.clear() } }
+  return { getState, getStateIfAuthenticated, setRating, submitOpinion, cancel: () => { for (const c of controllers) c.abort(); controllers.clear() } }
 }
