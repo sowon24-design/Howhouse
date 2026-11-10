@@ -1,3 +1,4 @@
+import { hasCurrentConsentReceipt } from './privacy-client'
 import { useEffect, useRef, useState } from 'react'
 import { configuredAppSession } from './app-session'
 import { resolveAnalysisBaseUrl } from './endpoint'
@@ -26,7 +27,7 @@ export function useSolutionFeedback(source: string, id?: string) {
       if (!target) throw new FeedbackClientError('sample-result')
       const auth = configuredAppSession()
       if (!auth) throw new FeedbackClientError('feedback-not-configured')
-      current = createFeedbackClient({ target, getAccessToken: auth, getExistingAccessToken: auth.peekAccessToken, baseUrl: resolveAnalysisBaseUrl() }); client.current = current
+      current = createFeedbackClient({ target, getAccessToken: auth, getExistingAccessToken: () => hasCurrentConsentReceipt(window.localStorage, resolveAnalysisBaseUrl()) ? auth.peekAccessToken() : undefined, baseUrl: resolveAnalysisBaseUrl() }); client.current = current
       current.getStateIfAuthenticated().then(state => { if (active && state) { desired.current = state.rating; setRating(state.rating) } })
         .catch(error => { if (active) setRatingError(feedbackErrorMessage(error)) }).finally(() => { if (active) setLoading(false) })
     } catch (error) { client.current = null; setRatingError(feedbackErrorMessage(error)); setLoading(false) }

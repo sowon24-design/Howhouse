@@ -102,3 +102,4 @@ test('sample IDs never masquerade as a real generated result or existing case',(
  assert.equal(feedbackTarget('generated','욕실·수도:1'),undefined)
  assert.equal(feedbackTarget('existing','generated:'+randomUUID()),undefined)
 })
+
