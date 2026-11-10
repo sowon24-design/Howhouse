@@ -2,7 +2,7 @@ import {createHmac,createDecipheriv} from 'node:crypto'
 export class ReleaseError extends Error {constructor(code){super(code);this.code=code}}
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const secret=/^[0-9a-f]{64}$/
-export const privacyVersion='2026-11-06-v1'
+export const privacyVersion='2026-11-10-v2'
 export function createReleaseStore({supabaseUrl,secretKey,encryptionKey,fetchImpl=fetch,now=Date.now}){
  const origin=new URL(supabaseUrl).origin,key=Buffer.from(encryptionKey??'','base64')
  if(!origin.startsWith('https:')||!secretKey?.startsWith('sb_secret_')||key.length!==32)throw new Error('Invalid release settings')
@@ -37,7 +37,7 @@ export function createReleaseStore({supabaseUrl,secretKey,encryptionKey,fetchImp
   async check(){await call('/rest/v1/howhouse_release_users?select=owner_id&limit=0');try{await rpc(null,'consent-state',{})}catch(error){if(error.code!=='auth-required')throw error}},
   async identity(owner,token){checkId(owner);checkToken(token);return rpc(owner,'identity',{deleteHash:hash(token)})},
   touch:owner=>rpc(owner,'touch'),
-  async acceptConsent(owner,version,ageAtLeast14,processingAccepted,overseasAccepted){if((version!==privacyVersion&&version!==null)||(version!==null&&(ageAtLeast14!==true||processingAccepted!==true||overseasAccepted!==true)))throw new ReleaseError('invalid-input');return rpc(owner,'consent',{version,ageAtLeast14})},
+  async acceptConsent(owner,version,ageAtLeast14,processingAccepted,overseasAccepted){if((version!==privacyVersion&&version!==null)||(version!==null&&(ageAtLeast14!==true||processingAccepted!==true||overseasAccepted!==true)))throw new ReleaseError('invalid-input');return rpc(owner,'consent',{version,ageAtLeast14,processingAccepted:version!==null&&processingAccepted===true,overseasAccepted:version!==null&&overseasAccepted===true})},
   async hasConsent(owner){return (await rpc(owner,'consent-state',{version:privacyVersion})).accepted===true},
   async deleteMine(owner,payload,beforeDelete=()=>{}){
    checkId(owner);checkId(payload.operationId);checkToken(payload.proof)

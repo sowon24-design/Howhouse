@@ -39,6 +39,8 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   const activeId = useRef<string | null>(null)
   const cancelledId = useRef<string | null>(null)
   const mounted = useRef(false)
+  const suspendedRef = useRef(suspended)
+  suspendedRef.current = suspended
   const [status, setStatus] = useState(import.meta.env.MODE === 'trial'
     ? '시험 APK · 실제 API 기본 모드. 분석 버튼을 누르면 요청하며 새 분석은 과금될 수 있습니다. 아래에서 무료 샘플로 전환할 수 있습니다.'
     : '무료 샘플 모드 · 실제 API 호출 없음. 기존 사례 또는 생성 결과 샘플을 선택해 확인하세요.')
@@ -48,6 +50,7 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
   }, [analysis])
   useEffect(() => {
     if (suspended) {
+      setPrivacyOpen(false); privacySnapshot.current = null
       activeId.current = null; request.current?.cancel(); request.current = null
       setResult(null);setPhase('input');setClosingHome(false)
       setStatus('연결 중단으로 분석을 종료했습니다. 글·사진은 유지되며 복구 후 버튼을 눌러야 새 요청이 시작됩니다.')
@@ -131,12 +134,12 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
           onConfirm={() => onSuccess(result)} onBack={() => {setResult(null);setPhase('input')}} onHome={() => {cancel();window.location.hash='home'}} />}
       </div>
     </div>
-    <AnalysisConsentSheet open={privacyOpen} onClose={()=>{setPrivacyOpen(false);privacySnapshot.current=null}}/>
+    <AnalysisConsentSheet open={privacyOpen} onClose={()=>{setPrivacyOpen(false);privacySnapshot.current=null}} onContinue={()=>{setPrivacyOpen(false);const snapshot=privacySnapshot.current;privacySnapshot.current=null;if(snapshot&&mounted.current&&!suspendedRef.current)request.current=analysis.startAnalysis(snapshot,receive)}}/>
     {showDeveloperTools && <details className="hh-home-preview-tools hh-preview-disclosure" aria-label="문제 작성 미리보기 안내"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
       <a href="#home" onClick={cancel}>홈으로 이동 · 입력 초기화</a> · <a href="#components" onClick={cancel}>공통 컴포넌트 보기</a>
       <p role="status">{status}</p>
       <p>현재 모드: {mode === 'api' ? '실제 API' : `무료 샘플 · ${sampleKind === 'existing' ? '기존 사례' : '생성 결과'}`}</p>
-      {phase === 'input' && <button type="button" onClick={() => setPrivacyOpen(true)}>분석 동의 시트 미리보기 · 서버 전송 없음</button>}
+      {phase === 'input' && <button type="button" onClick={() => setPrivacyOpen(true)}>분석 동의 시트 열기</button>}
       {mode === 'sample' && <button type="button" onClick={() => {cancel();setFeedback('');setPhase('limit');setStatus('A07 한도 안내 재현 · API 호출 없음')}}>분석 한도 안내 A07 재현</button>}
       {onConnectionLost && <button type="button" onClick={onConnectionLost}>연결 끊김 재현 · API 호출 없음</button>}
       {<button type="button" disabled={phase === 'pending'} onClick={() => {

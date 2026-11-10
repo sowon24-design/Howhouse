@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import information from '../my/information-draft.json'
 export type ConsentDocumentKind = 'service' | 'processing' | 'overseas'
 export const consentTitles = { service: '서비스 이용약관', processing: '개인정보 수집·이용 동의', overseas: '개인정보 국외 이전 동의' }
-const documents = {
+export const consentDocuments = {
   service: information.terms,
   processing: [
     { title: '수집·이용 목적', paragraphs: ['주거 문제 파악, 기존 사례 판단, 해결 방법·문의 문장 생성, 사용자별 답변 재사용 및 이용 한도·보안 관리에 사용합니다.'] },
@@ -71,7 +71,7 @@ export function ConsentDocument({ kind, onBack }: { kind: ConsentDocumentKind; o
     <h2>{consentTitles[kind]}</h2>
     <div ref={scroll} className="hh-terms-document" key={kind} tabIndex={0} role="region" aria-label={`${consentTitles[kind]} 전문`}>
       <div ref={content} className="hh-terms-document-body">
-      {documents[kind].map(section => <section key={section.title}><h3>{section.title}</h3>{section.paragraphs.map((text, index) => <p key={index}>{text}</p>)}</section>)}
+      {consentDocuments[kind].map(section => <section key={section.title}><h3>{section.title}</h3>{section.paragraphs.map((text, index) => <p key={index}>{text}</p>)}</section>)}
       </div>
     </div>
     <Button onClick={onBack}>닫기</Button>

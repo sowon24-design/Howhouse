@@ -6,6 +6,15 @@ create table if not exists public.howhouse_release_users (
  consent_version text, consent_at timestamptz, age_at_least_14 boolean not null default false,
  last_seen timestamptz not null default now()
 );
+-- Current consent state only, matching the approved account lifetime/deletion policy.
+-- Existing combined receipts do not prove separate consent; never backfill acceptance.
+alter table public.howhouse_release_users
+ add column if not exists processing_accepted boolean not null default false,
+ add column if not exists processing_consent_version text,
+ add column if not exists processing_consent_at timestamptz,
+ add column if not exists overseas_accepted boolean not null default false,
+ add column if not exists overseas_consent_version text,
+ add column if not exists overseas_consent_at timestamptz;
 create table if not exists public.howhouse_deletion_jobs (
  operation_id uuid primary key, proof_hash text not null check(length(proof_hash)=64),
  owner_id uuid, state text not null check(state in ('pending','data-deleted','completed','cancelled')),
@@ -54,11 +63,18 @@ begin
    return jsonb_build_object('ok',true,'data','{}'::jsonb);
  elsif p_kind='consent' then
    if p_payload->>'version' is not null and p_payload->'ageAtLeast14' is distinct from 'true'::jsonb then return jsonb_build_object('ok',false,'code','age-required'); end if;
-   update public.howhouse_release_users set consent_version=p_payload->>'version',age_at_least_14=coalesce(p_payload->'ageAtLeast14'='true'::jsonb,false),consent_at=now(),last_seen=now() where owner_id=p_owner;
+   if p_payload->>'version' is not null and (p_payload->'processingAccepted' is distinct from 'true'::jsonb or p_payload->'overseasAccepted' is distinct from 'true'::jsonb) then return jsonb_build_object('ok',false,'code','consent-required'); end if;
+   update public.howhouse_release_users set
+     consent_version=p_payload->>'version',age_at_least_14=coalesce(p_payload->'ageAtLeast14'='true'::jsonb,false),consent_at=now(),last_seen=now(),
+     processing_accepted=p_payload->>'version' is not null,
+     processing_consent_version=p_payload->>'version',processing_consent_at=now(),
+     overseas_accepted=p_payload->>'version' is not null,
+     overseas_consent_version=p_payload->>'version',overseas_consent_at=now()
+   where owner_id=p_owner;
    if not found then return jsonb_build_object('ok',false,'code','not-registered'); end if;
    return jsonb_build_object('ok',true,'data',jsonb_build_object('accepted',p_payload->>'version' is not null));
  elsif p_kind='consent-state' then
-   return jsonb_build_object('ok',true,'data',jsonb_build_object('accepted',exists(select 1 from public.howhouse_release_users where owner_id=p_owner and consent_version=p_payload->>'version' and age_at_least_14=true)));
+   return jsonb_build_object('ok',true,'data',jsonb_build_object('accepted',exists(select 1 from public.howhouse_release_users where owner_id=p_owner and consent_version=p_payload->>'version' and age_at_least_14=true and processing_accepted=true and overseas_accepted=true and processing_consent_version=p_payload->>'version' and overseas_consent_version=p_payload->>'version')));
  elsif p_kind='begin-delete' then
    if p_payload->>'confirm' is distinct from 'delete-my-data' then return jsonb_build_object('ok',false,'code','invalid-input'); end if;
    op:=(p_payload->>'operationId')::uuid;
