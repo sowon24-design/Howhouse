@@ -57,7 +57,7 @@ node node_modules/@capacitor/cli/bin/capacitor sync android
 node scripts/catalog-preflight.mjs
 ```
 
-`catalog-preflight`는 현재 Android 미검증 및 preview 파일을 이유로 실패하는 것이 예상 결과입니다. 이를 통과시키려고 승인 값을 임의로 변경하지 않습니다.
+`catalog-preflight`의 현재 차단 사유는 `preview-assets-only`입니다. 갤럭시 QA는 통과했지만 debug QA 파일을 Play 제출 파일로 사용하지 않도록 차단합니다.
 
 ## 5. 주요 변경 파일
 
@@ -78,12 +78,12 @@ node scripts/catalog-preflight.mjs
 
 완료: 타입 검사, 공통 자산 검사, 검색·안전 테스트 7개, catalog-preview 웹 빌드, 별도 Android QA APK 빌드, APK의 웹 파일 266개와 최신 dist 일치, 정책 해시 및 권한 대조.
 
-현재 QA APK SHA-256: `05cccd5a01a68e86fcf8454fb15c406d820fb5e8944ac37924a8060adb7fab14`.
+현재 QA APK SHA-256: `cbed9e11013bcc660c0c230636a4bc517f719f1de520cb79b931241b1a19edba`.
 
 남은 일:
 
-1. 실제 갤럭시에서 시작·약관·검색·카테고리·외부 링크·문의 편집/복사·뒤로가기·오프라인·초기화를 확인합니다.
-2. 실제 통과 결과를 기록한 뒤 Android 승인 상태와 최종 화면 자산을 확정합니다.
+1. 갤럭시 QA 검증과 결과 기록은 완료했습니다. 상세 결과는 `CATALOG_ANDROID_QA.md`를 참고합니다.
+2. 최종 서명 파일의 기본 구동과 최종 화면 자산을 확인합니다.
 3. 업로드 키로 출시 AAB를 제작하고 Play App Signing·데이터 보안·대상 연령·등급·스토어 항목을 대조합니다.
 4. 계정에 필요한 비공개 테스트와 프로덕션 액세스 신청 후 공개 심사에 제출합니다.
 
@@ -91,4 +91,8 @@ PR 게시와 main 병합·서버 배포·DB 변경·Play 제출은 서로 다른
 
 ## 7. 실기기 검증 중 후속 보완
 
-카테고리에서 사례를 연 뒤 Android Back을 누르면 홈으로 이동하는 동작을 발견했습니다. catalog 앱 안에서 진입 위치를 메모리에 보관하고 화면 뒤로가기와 Android Back이 같은 원래 목록으로 돌아가도록 수정했습니다. 검색에서 연 사례는 검색어가 유지된 검색 결과로, 홈에서 연 사례는 홈으로 돌아갑니다. 수정 후 브라우저의 카테고리/검색 복귀를 확인했고 실기기 재검증을 이어갑니다. 최신 상세 결과는 CATALOG_ANDROID_QA.md를 확인해 주세요.
+카테고리에서 사례를 연 뒤 Android Back을 누르면 홈으로 이동하는 동작을 발견했습니다. catalog 앱 안에서 진입 위치를 메모리에 보관하고 화면 뒤로가기와 Android Back이 같은 원래 목록으로 돌아가도록 수정했습니다. 검색에서 연 사례는 검색어가 유지된 검색 결과로, 홈에서 연 사례는 홈으로 돌아갑니다. 수정 후 브라우저와 갤럭시에서 카테고리/검색 복귀를 재검증했습니다. 최신 상세 결과는 CATALOG_ANDROID_QA.md를 확인해 주세요.
+
+## 8. 갤럭시 QA 완료
+
+시작/약관 6개/검색/해결 방법/문의 편집·복사·유지/외부 링크 복귀/오프라인/닉네임 보존/초기화/연령 확인/안전 4단계/홈 재실행을 사용자 확인했다. 뒤로가기 보완 APK에서도 카테고리 복귀·검색어 보존 복귀·화면 뒤로가기를 재확인했다. androidVerified=true로 기록하되 QA APK는 Play 제출용이 아니다. 최종 결과는 CATALOG_ANDROID_QA.md를 따른다. 다음 단계는 최종 서명 AAB와 스토어/Play 비공개 테스트이며 main 병합·공개 출시는 별도다.
