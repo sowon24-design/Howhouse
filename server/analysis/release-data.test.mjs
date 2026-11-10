@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import {randomUUID} from 'node:crypto'
 import {readFile} from 'node:fs/promises'
 import {pathToFileURL} from 'node:url'
-import {createReleaseStore} from './release-store.mjs'
+import {createReleaseStore,privacyVersion} from './release-store.mjs'
 const modulePath=process.env.FEEDBACK_PGLITE_MODULE
 test('release privacy SQL: ownership, deletion retry, retention, idle queues and permissions',{skip:!modulePath},async t=>{
  const {PGlite}=await import(pathToFileURL(modulePath).href),db=await PGlite.create();t.after(()=>db.close())
@@ -12,7 +12,28 @@ test('release privacy SQL: ownership, deletion retry, retention, idle queues and
  for(const id of [owner,other,inactive])await db.query('insert into auth.users(id) values($1)',[id])
  await db.exec(await readFile(new URL('./trial-schema.sql',import.meta.url),'utf8'));await db.exec(await readFile(new URL('./feedback-schema.sql',import.meta.url),'utf8'));await db.exec(await readFile(new URL('./release-data.sql',import.meta.url),'utf8'))
  const call=async(owner,kind,payload={})=>(await db.query('select public.howhouse_release_data($1,$2,$3::jsonb) as r',[owner,kind,JSON.stringify(payload)])).rows[0].r
- await t.test('touch is safe before code registration, consent has a server timestamp and can be withdrawn',async()=>{assert.equal((await call(owner,'touch')).ok,true);assert.equal((await call(owner,'identity',{deleteHash:'a'.repeat(64)})).ok,true);assert.equal((await call(owner,'consent',{version:'v1',ageAtLeast14:true})).data.accepted,true);assert.equal((await call(owner,'consent-state',{version:'v1'})).data.accepted,true);assert.equal((await call(owner,'consent',{version:null})).data.accepted,false)})
+ await t.test('separate consent receipts reject partial acceptance, legacy receipts require consent again, and withdrawal clears both',async()=>{
+  assert.equal((await call(owner,'touch')).ok,true)
+  assert.equal((await call(owner,'identity',{deleteHash:'a'.repeat(64)})).ok,true)
+  // A legacy combined receipt must not silently count as either separate consent.
+  await db.query("update public.howhouse_release_users set consent_version='v1',age_at_least_14=true where owner_id=$1",[owner])
+  assert.equal((await call(owner,'consent-state',{version:'v1'})).data.accepted,false)
+  for(const flags of [{},{processingAccepted:true},{overseasAccepted:true},{processingAccepted:true,overseasAccepted:false}]){
+   assert.equal((await call(owner,'consent',{version:'v1',ageAtLeast14:true,...flags})).code,'consent-required')
+  }
+  assert.equal((await call(owner,'consent',{version:'v1',ageAtLeast14:true,processingAccepted:true,overseasAccepted:true})).data.accepted,true)
+  let row=(await db.query('select * from public.howhouse_release_users where owner_id=$1',[owner])).rows[0]
+  assert.equal(row.processing_accepted,true);assert.equal(row.overseas_accepted,true)
+  assert.equal(row.processing_consent_version,'v1');assert.equal(row.overseas_consent_version,'v1')
+  assert.ok(row.processing_consent_at);assert.ok(row.overseas_consent_at)
+  assert.equal((await call(owner,'consent-state',{version:'v1'})).data.accepted,true)
+  assert.equal((await call(owner,'consent-state',{version:'v2'})).data.accepted,false)
+  assert.equal((await call(owner,'consent',{version:null})).data.accepted,false)
+  row=(await db.query('select * from public.howhouse_release_users where owner_id=$1',[owner])).rows[0]
+  assert.equal(row.processing_accepted,false);assert.equal(row.overseas_accepted,false)
+  assert.equal(row.processing_consent_version,null);assert.equal(row.overseas_consent_version,null)
+  assert.equal((await call(owner,'consent-state',{version:'v1'})).data.accepted,false)
+ })
  await t.test('own rows are deleted atomically, another user survives and deletion receipts have no public owner leak',async()=>{
   for(const id of [owner,other])await db.query("insert into public.howhouse_trial_calls(request_id,owner_id,state) values($1,$2,'completed')",[randomUUID(),id])
   const operationId=randomUUID(),proof='b'.repeat(64),payload={operationId,proof,confirm:'delete-my-data'}
@@ -33,6 +54,20 @@ test('release privacy SQL: ownership, deletion retry, retention, idle queues and
  })
  await t.test('application roles cannot inspect receipts or run deletion/cleanup RPC',async()=>{for(const role of ['anon','authenticated']){await db.exec('set role '+role);await assert.rejects(db.exec('select * from public.howhouse_deletion_jobs'));await assert.rejects(call(other,'begin-delete',{}));await db.exec('reset role')}})
 })
+test('store forwards both separately checked choices to the database, including withdrawal',async()=>{
+ const owner=randomUUID(),payloads=[]
+ const store=createReleaseStore({supabaseUrl:'https://project.supabase.co',secretKey:'sb_secret_mock',encryptionKey:Buffer.alloc(32,7).toString('base64'),fetchImpl:async(_url,options)=>{
+  payloads.push(JSON.parse(options.body).p_payload)
+  return Response.json({ok:true,data:{accepted:true}})
+ }})
+ await assert.rejects(store.acceptConsent(owner,privacyVersion,true,true,false),{code:'invalid-input'})
+ assert.equal(payloads.length,0)
+ await store.acceptConsent(owner,privacyVersion,true,true,true)
+ assert.deepEqual(payloads[0],{version:privacyVersion,ageAtLeast14:true,processingAccepted:true,overseasAccepted:true})
+ await store.acceptConsent(owner,null,undefined,undefined,undefined)
+ assert.equal(payloads[1].processingAccepted,false);assert.equal(payloads[1].overseasAccepted,false)
+})
+
 test('Auth deletion failure never reports success; private receipt retry completes without a live user token',async()=>{
  let fail=true,state='data-deleted',deletes=0;const owner=randomUUID(),op=randomUUID(),proof='a'.repeat(64)
  const store=createReleaseStore({supabaseUrl:'https://project.supabase.co',secretKey:'sb_secret_mock',encryptionKey:Buffer.alloc(32,7).toString('base64'),fetchImpl:async(url,options)=>{

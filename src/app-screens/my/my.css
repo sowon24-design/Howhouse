@@ -14,6 +14,9 @@
 .hh-my-menu { display:flex; flex-direction:column; gap:var(--space-2); }
 .hh-my-menu button { width:100%; display:flex; align-items:center; justify-content:space-between; gap:var(--space-32); padding:var(--space-2) 0; border:0; background:transparent; font:inherit; font-size:var(--text-base); line-height:1.5; color:inherit; text-align:left; cursor:pointer; }
 .hh-my-version { color:var(--color-secondary); flex:none; }
+.hh-my-menu a { width:100%; display:flex; align-items:center; padding:var(--space-2) 0; color:inherit; font:inherit; font-size:var(--text-base); line-height:1.5; text-decoration:none; -webkit-tap-highlight-color:transparent; }
+.hh-my-menu a:active { filter:brightness(.94); }
+.hh-my-menu a:focus-visible { outline:2px solid var(--color-primary); outline-offset:3px; }
 .hh-my button { -webkit-tap-highlight-color:transparent; transition:filter 160ms var(--ui-ease); }
 .hh-my button:active:not(:disabled) { filter:brightness(.94); }
 .hh-my button:active:not(:disabled) { transition-duration:0ms; }
