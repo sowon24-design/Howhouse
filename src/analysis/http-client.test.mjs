@@ -13,13 +13,15 @@ const source = readFileSync(new URL('./http-client.ts', import.meta.url), 'utf8'
   .replace("from './deadline'", `from '${new URL('./deadline.ts', import.meta.url).href}'`)
   .replace("from './endpoint'", `from '${new URL('./endpoint.ts', import.meta.url).href}'`)
   .replace("from './app-session'", `from '${appSessionUrl}'`)
+  .replace("from './photo-privacy'", `from '${new URL('./photo-privacy.ts', import.meta.url).href}'`)
 const outputText = stripTypeScriptTypes(source)
 const { createHttpAnalysisClient, checkAnalysisConnection } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`)
 const { getAnalysisFailureKind } = await import('./client.ts')
 
+const preparePhoto = async (photo, index) => new File(['reencoded-pixels'], `analysis-photo-${index + 1}.png`, { type: 'image/png', lastModified: 0 })
 function fixture(responder, { contentVersion = '2' } = {}) {
   const calls = []
-  const client = createHttpAnalysisClient({ catalog: '[]', getSolutionById: id => id === '욕실·수도:1',
+  const client = createHttpAnalysisClient({ catalog: '[]', preparePhoto, getSolutionById: id => id === '욕실·수도:1',
     fetchImpl: async (url, options) => {
       calls.push({ url, options })
       if (url.endsWith('/session')) return Response.json({ token: 'local-ephemeral-token', ...(contentVersion ? { generatedContentVersion: contentVersion } : {}) })
@@ -37,6 +39,10 @@ test('HTTP client sends agreed FormData, fingerprint, request ID and cancellatio
   const options = calls[1].options
   assert.equal(options.body.get('analysisUserText'), '냄새')
   assert.equal(options.body.getAll('analysisUserPhotos').length, 1)
+  const uploaded = options.body.get('analysisUserPhotos')
+  assert.equal(uploaded.name, 'analysis-photo-1.png')
+  assert.equal(await uploaded.text(), 'reencoded-pixels')
+  assert.equal(input.analysisUserPhotos[0].name, 'x.png')
   assert.match(options.body.get('catalogVersion'), /^[a-f0-9]{64}$/)
   assert.equal(options.body.get('requestId'), handle.requestId)
   assert.equal(options.headers['X-Howhouse-Session'], 'local-ephemeral-token')
@@ -100,7 +106,7 @@ test('custom endpoint prefix is shared by session, analysis and both connectivit
     if (url.includes('/health')) return Response.json({ service: 'howhouse-analysis', status: 'ok', connection: 'reachable' })
     return Response.json({ requestId: options.body.get('requestId'), result: { source: 'existing', caseId: '욕실·수도:1' } })
   }
-  const client = createHttpAnalysisClient({ baseUrl, catalog: '[]', getSolutionById: () => true, fetchImpl })
+  const client = createHttpAnalysisClient({ baseUrl, catalog: '[]', preparePhoto, getSolutionById: () => true, fetchImpl })
   assert.equal((await client.startAnalysis(input, () => {}).completed).status, 'succeeded')
   assert.deepEqual(await checkAnalysisConnection({ baseUrl, fetchImpl }), { status: 'reachable', scope: 'analysis-server' })
   assert.deepEqual(await checkAnalysisConnection({ baseUrl, fetchImpl, verifyUpstream: true }), { status: 'reachable', scope: 'analysis-path' })
@@ -204,7 +210,7 @@ test('unsupported/empty/oversized photos and too-long text fail before network o
 
 test('90-second deadline also bounds session/upload/response wait and never auto-retries', async () => {
   let expire, calls = 0, signal
-  const client = createHttpAnalysisClient({ catalog: '[]', getSolutionById: () => true,
+  const client = createHttpAnalysisClient({ catalog: '[]', preparePhoto, getSolutionById: () => true,
     deadlineScheduler(fn, ms) { assert.equal(ms, 90000); expire = fn; return () => {} },
     fetchImpl: async (_url, options) => { calls++; signal = options.signal; return await new Promise(() => {}) },
   })
@@ -215,6 +221,25 @@ test('90-second deadline also bounds session/upload/response wait and never auto
   const end = await handle.completed
   assert.equal(end.status, 'failed'); assert.equal(end.error.code, 'analysis-timeout')
   assert.equal(signal.aborted, true); assert.equal(calls, 1)
+})
+
+test('photo preparation failure never sends the original or opens an authenticated connection', async () => {
+  let connections = 0, auth = 0
+  const client = createHttpAnalysisClient({ catalog: '[]', getSolutionById: () => true,
+    preparePhoto: async () => { throw new Error('decode failed') },
+    getAccessToken: async () => { auth++; return 'not-used' },
+    fetchImpl: async () => { connections++; throw new Error('must not run') } })
+  const result = await client.startAnalysis(input, () => {}).completed
+  assert.equal(result.status, 'failed'); assert.equal(result.error.code, 'invalid-input')
+  assert.equal(auth, 0); assert.equal(connections, 0)
+})
+
+test('text-only analysis works without any image decoder', async () => {
+  const client = createHttpAnalysisClient({ catalog: '[]', getSolutionById: () => true,
+    preparePhoto: async () => { throw new Error('must not run') },
+    fetchImpl: async (url, { body }) => url.endsWith('/session') ? Response.json({ token: 'session' })
+      : Response.json({ requestId: body.get('requestId'), result: { source: 'existing', caseId: 'case' } }) })
+  assert.equal((await client.startAnalysis({ analysisUserText: '누수', analysisUserPhotos: [] }, () => {}).completed).status, 'succeeded')
 })
 
 test('cancelling a connection check propagates abort without a recovery result', async () => {
@@ -228,7 +253,7 @@ test('cancelling a connection check propagates abort without a recovery result',
 
 test('hosted analysis attaches only the user token; denied/expired access is distinct from offline', async () => {
   const seen = []
-  const client = createHttpAnalysisClient({ catalog: '[]', getSolutionById: () => true,
+  const client = createHttpAnalysisClient({ catalog: '[]', preparePhoto, getSolutionById: () => true,
     getAccessToken: async () => 'mock-user-login-token', fetchImpl: async (url, options) => {
       seen.push(options.headers.Authorization)
       if (url.endsWith('/session')) return Response.json({ token: 'local-session' })
