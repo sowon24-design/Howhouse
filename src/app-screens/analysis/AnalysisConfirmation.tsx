@@ -23,7 +23,7 @@ export function AnalysisConfirmation({ title, description, stepCount, onConfirm,
       <div className="ui-sheet-handle" aria-hidden="true" />
       <div className="hh-confirm-sheet-content"><div>
       <h2>문제 상황을 더 자세히 들려주세요</h2>
-      <p>문제가 생긴 위치나 증상을 조금 더 알려주시면<br />다시 찾아볼게요.</p>
+      <p>문제가 생긴 위치나 증상, 해 본 조치 등을<br />조금 더 알려주시면 다시 찾아볼게요.</p>
       </div><img src={moreInformation} alt="" /></div>
       <div className="hh-confirm-actions"><Button variant="pale" onClick={onHome}>홈으로 돌아가기</Button><Button onClick={onBack}>문제 상황 더 알려주기</Button></div>
     </Dialog>
