@@ -1,0 +1,11 @@
+html[data-catalog-app=true] .hh-home-preview { height:100dvh; padding:0; overflow:clip; }
+html[data-catalog-app=true] .hh-home-preview-frame { width:min(100%,412px); height:100dvh; --solutions-screen-height:100dvh; }
+.hh-catalog-page { padding:var(--space-6); min-height:100%; display:flex; flex-direction:column; gap:var(--space-4); }
+.hh-catalog-page :is(h1,h2,p) { margin:0; }
+.hh-catalog-page input { width:100%; min-height:48px; padding:var(--space-3); color:var(--color-on-surface); background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--rounded-sm); }
+.hh-catalog-page input:focus-visible { outline:2px solid var(--color-primary); outline-offset:2px; }
+.hh-catalog-page details { padding:var(--space-4); border:1px solid var(--color-border); border-radius:var(--rounded-sm); }
+.hh-catalog-page details p { margin-top:var(--space-3); overflow-wrap:anywhere; }
+.hh-catalog-page a { color:var(--color-primary); }
+.hh-catalog-list { list-style:none; margin:0; padding:0; }
+.hh-catalog-result [hidden] { display:none; }

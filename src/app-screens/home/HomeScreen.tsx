@@ -29,6 +29,7 @@ export const homeCategories = [
 export type HomeCategoryKey = typeof homeCategories[number]['key']
 export type PopularProblem = { id: string; title: string }
 export type HomeScreenProps = {
+  catalogOnly?: boolean
   nickname: string
   month: number
   popularProblems: readonly PopularProblem[]
@@ -38,7 +39,7 @@ export type HomeScreenProps = {
   onProblem: (id: string) => void
 }
 
-export function HomeScreen({ nickname, month, popularProblems, onProfile, onStartProblem, onCategory, onProblem }: HomeScreenProps) {
+export function HomeScreen({ nickname, month, popularProblems, onProfile, onStartProblem, onCategory, onProblem, catalogOnly = false }: HomeScreenProps) {
   return <main className="hh-home" aria-label="어쩌집 홈">
     <header className="hh-home-header">
       <img src={logo} alt="어쩌집" />
@@ -49,13 +50,13 @@ export function HomeScreen({ nickname, month, popularProblems, onProfile, onStar
         <h1><span>{nickname}</span> 님!</h1>
         <p>어떤 도움이 필요하세요?</p>
       </div>
-      <section className="hh-home-help" aria-label="직접 문제 작성">
+      <section className="hh-home-help" aria-label={catalogOnly ? '기존 사례 검색' : '직접 문제 작성'}>
         <div className="hh-home-art" aria-hidden="true">
           <HomeIllustration />
         </div>
         <HomePressButton type="button" className="hh-home-banner" onClick={onStartProblem}>
           <span className="hh-home-book"><img src={book} alt="" /></span>
-          <span className="hh-home-banner-copy"><span>우리집 문제에 대한</span><strong>해결 방법을 찾아볼까요?</strong></span>
+          <span className="hh-home-banner-copy"><span>{catalogOnly ? '어떤 문제가 생겼나요?' : '우리집 문제에 대한'}</span><strong>{catalogOnly ? '비슷한 사례를 찾아볼까요?' : '해결 방법을 찾아볼까요?'}</strong></span>
           <img src={arrow} alt="" />
         </HomePressButton>
       </section>
@@ -67,7 +68,7 @@ export function HomeScreen({ nickname, month, popularProblems, onProfile, onStar
           </HomePressButton>)}</div>
       </section>
       <section className="hh-home-section" aria-labelledby="home-popular-title">
-        <h2 id="home-popular-title"><span>{month}월</span>에 많이 찾는 문제예요</h2>
+        <h2 id="home-popular-title">{catalogOnly ? '이런 문제를 살펴보세요' : <><span>{month}월</span>에 많이 찾는 문제예요</>}</h2>
         <div className="hh-home-popular">{popularProblems.map(problem =>
           <ListRow className="hh-home-problem" key={problem.id} onClick={() => onProblem(problem.id)}>{problem.title}</ListRow>)}</div>
       </section>

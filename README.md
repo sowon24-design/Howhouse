@@ -1,4 +1,6 @@
 # Howhouse
+> 이 브랜치(`codex/ai-without-supabase`)는 2026-11-10 결정한 **AI 없는 기존 사례 중심 어쩌집**의 개발 브랜치입니다. 아래의 과거 AI·샘플·서버 통합 설명보다 [새 전환 계획](docs/CATALOG_TRANSITION.md)을 우선합니다. 실행: `npm run dev -- --configLoader runner` (5181), 검토 빌드: `npm run build -- --mode catalog-preview --configLoader runner`. 출시 승인은 아직 완료되지 않았습니다.
+
 초보 자취생들을 위한 자취방 문제 솔루션 어플리케이션 개발
 
 ## 팀원 개발 시작
