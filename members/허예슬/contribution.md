@@ -336,7 +336,7 @@ GitHub 저장소 세팅, 기술 타당성 검토, PRD 정리, 디자인 통합 �
 - Figma에 ‘출시용 화면’ 페이지를 추가하고 해당 페이지를 기준으로 이번 주 수정 진행
 - 팀원과 함께 전체 화면의 색상·레이아웃·일러스트 배치·문구를 검토하고 디자인 통일
 - 특히 B02 단계별 해결 방법의 UI 구성을 중심으로 준비물·해결 단계·수리 비용 부담·해결 후 문의 흐름 개선
-- 새로 준비된 캐릭터 일러스트를 화면에 배치하고 크기·비율·반응형 구성 검수. 이미지 재생성 자체와 구분
+- 새로 준비된 캐릭터 일러스트를 화면에 배치하고 크기·비율·반응형 구성 검수. 이미지 재생성 자체는 하지 않음
 
 **Figma 디자인 시스템과 개발용 문서·컴포넌트 수정**
 
@@ -387,7 +387,6 @@ GitHub 저장소 세팅, 기술 타당성 검토, PRD 정리, 디자인 통합 �
 
 ### 결과 (커밋/PR/이슈 링크로 근거 남기기)
 
-- [출시용 Figma 화면](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=717-15739)
 - [커밋 6a0e5d2 — 디자인 컬러·해결 단계 컴포넌트 및 DESIGN.md 수정](https://github.com/sowon24-design/Howhouse/commit/6a0e5d2)
 - [커밋 ddac936 — W10 전체 화면 개편·바텀시트 및 문서 수정](https://github.com/sowon24-design/Howhouse/commit/ddac936)
 - [커밋 d703854 — A07·해결 완료 문의 조건](https://github.com/sowon24-design/Howhouse/commit/d703854)
