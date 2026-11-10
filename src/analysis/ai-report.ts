@@ -1,4 +1,5 @@
-export const aiReportReasons = ['따라하기 위험해요.', '혐오·차별·성적인 내용이 있어요.', '개인정보가 노출됐어요.', '직접 입력하기'] as const
+import { aiReportReasons } from '../solutions/opinion-reasons.ts'
+export { aiReportReasons } from '../solutions/opinion-reasons.ts'
 export function aiReportText(reason: string, comment: string, context: string): string {
   if (!(aiReportReasons as readonly string[]).includes(reason) || reason === '직접 입력하기' && !comment.replace(/[\s\p{Cf}]/gu, '')) throw new Error('신고 사유를 확인해 주세요.')
   if (comment.length > 1000) throw new Error('신고 의견은 1,000자 이내로 작성해 주세요.')

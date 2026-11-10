@@ -68,7 +68,7 @@ export function HomeScreen({ nickname, month, popularProblems, onProfile, onStar
           </HomePressButton>)}</div>
       </section>
       <section className="hh-home-section" aria-labelledby="home-popular-title">
-        <h2 id="home-popular-title">{catalogOnly ? '이런 문제를 살펴보세요' : <><span>{month}월</span>에 많이 찾는 문제예요</>}</h2>
+        <h2 id="home-popular-title"><span>{month}월</span>에 많이 찾는 문제예요</h2>
         <div className="hh-home-popular">{popularProblems.map(problem =>
           <ListRow className="hh-home-problem" key={problem.id} onClick={() => onProblem(problem.id)}>{problem.title}</ListRow>)}</div>
       </section>
