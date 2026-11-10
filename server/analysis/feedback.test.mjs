@@ -81,6 +81,7 @@ test('HTTP feedback uses verified user, bounds input and reports persistence fai
     if (header !== 'Bearer owner') throw new MatchError('auth-required'); return { id: owner }
   }, forUser: () => ({ ledger: { remaining: () => null, reserve() {}, finish() {} } }) }
   const server = createAnalysisServer({ config: { apiKey: 'mock', model: 'gpt-6.1-terra' }, catalog, trial,
+    releaseStore:{touch:async()=>{},hasConsent:async()=>true},
     matchImpl: async () => ({ result: { source: 'existing', caseId: results[0].caseId } }),
     feedbackStore: { execute: async (user, kind, body) => { latestOwner=user; if(rejectStorage)throw new FeedbackError('storage-unavailable'); return { saved: true, operationId: body.operationId } },
       recordResult: async () => { registrations++ } } })

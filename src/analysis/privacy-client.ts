@@ -1,5 +1,8 @@
-export const privacyVersion = '2026-11-10-v2'
+import {privacyVersion,consentEvidenceHash} from './consent-document.ts'
+import type {ConsentSurface} from './consent-document.ts'
+export {privacyVersion} from './consent-document.ts'
 export class PrivacyError extends Error { readonly code:string;constructor(code: string) {super(code);this.code=code} }
+function evidenceReceipt(value:Record<string,unknown>){return typeof value.eventId==='string'&&/^\d+$/.test(value.eventId)&&Number.isFinite(Date.parse(String(value.recordedAt)))}
 type Store = Pick<Storage,'getItem'|'setItem'|'removeItem'>
 export function createPrivacyClient(options:{baseUrl:string;getAccessToken:(signal:AbortSignal)=>Promise<string>;storage:Store;fetchImpl?:typeof fetch;makeId?:()=>string;makeSecret?:()=>string}){
  const origin=new URL(options.baseUrl)
@@ -30,8 +33,21 @@ export function createPrivacyClient(options:{baseUrl:string;getAccessToken:(sign
   identity,
   consentRecorded:()=>options.storage.getItem(consentKey)===privacyVersion,
   clearConsentLocal:()=>options.storage.removeItem(consentKey),
-  async consent(acceptance:{ageAtLeast14:boolean;processingAccepted:boolean;overseasAccepted:boolean}){if(acceptance.ageAtLeast14!==true)throw new PrivacyError('age-required');if(acceptance.processingAccepted!==true||acceptance.overseasAccepted!==true)throw new PrivacyError('consent-required');await identity();const result=await request('consent',{version:privacyVersion,ageAtLeast14:true,processingAccepted:true,overseasAccepted:true});if(result.accepted!==true)throw new PrivacyError('invalid-response');options.storage.setItem(consentKey,privacyVersion)},
-  async withdraw(){const result=await request('consent',{version:null});if(result.accepted!==false)throw new PrivacyError('invalid-response');options.storage.removeItem(consentKey)},
+  async consent(acceptance:{ageAtLeast14:boolean;processingAccepted:boolean;overseasAccepted:boolean;documentSurface?:ConsentSurface}){
+   if(acceptance.ageAtLeast14!==true)throw new PrivacyError('age-required')
+   if(acceptance.processingAccepted!==true||acceptance.overseasAccepted!==true)throw new PrivacyError('consent-required')
+   const documentSurface=acceptance.documentSurface??'analysis'
+   const documentHash=await consentEvidenceHash(documentSurface)
+   await identity()
+   const result=await request('consent',{version:privacyVersion,documentSurface,documentHash,ageAtLeast14:true,processingAccepted:true,overseasAccepted:true})
+   if(result.accepted!==true||result.documentHash!==documentHash||!evidenceReceipt(result))throw new PrivacyError('invalid-response')
+   options.storage.setItem(consentKey,privacyVersion)
+  },
+  async withdraw(){
+   const result=await request('consent',{version:null})
+   if(result.accepted!==false||!evidenceReceipt(result))throw new PrivacyError('invalid-response')
+   options.storage.removeItem(consentKey)
+  },
   async deleteMine(){
    let pending:{operationId:string;proof:string;confirm:string;owner:string}|undefined
    try{const raw=JSON.parse(options.storage.getItem(pendingKey)??'null');if(raw&&/^[0-9a-f-]{36}$/i.test(raw.operationId)&&/^[0-9a-f]{64}$/.test(raw.proof))pending=raw}catch{/* No valid pending receipt. */}

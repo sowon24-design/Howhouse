@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "consentVersion": "2026-11-10-v4",
+  "revisedAt": "2026-11-10",
+  "source": "src/app-screens/my/information-draft.json",
+  "pages": [
+    {
+      "key": "data",
+      "title": "개인정보 및 데이터 관리",
+      "id": "40902821a7f380beb305dd0f095f5d79",
+      "url": "https://xamxam33.notion.site/40902821a7f380beb305dd0f095f5d79",
+      "file": "docs/policies/data.md",
+      "sourceSha256": "4677c46f0471264820a219b18494d1a3697afb89f45b0c8d94d85e4d4d9596f8",
+      "markdownSha256": "2ff93c1c2a0775ae272f0d5ae74f9c79480d8bfdf4bad6510183a273ff0149c8"
+    },
+    {
+      "key": "terms",
+      "title": "이용약관",
+      "id": "40902821a7f38009a098dc50f64202c4",
+      "url": "https://xamxam33.notion.site/40902821a7f38009a098dc50f64202c4",
+      "file": "docs/policies/terms.md",
+      "sourceSha256": "6cea8c3a42459488a6856d8eb7e8966b342b998fee8437d82f9e098c266181b2",
+      "markdownSha256": "a47ea28da89d78b287fc8952b5ccea285a0d0dabfee4f204dafd1eefce56b97f"
+    },
+    {
+      "key": "privacy",
+      "title": "개인정보 처리방침",
+      "id": "40902821a7f3809aa417d65279f87c37",
+      "url": "https://xamxam33.notion.site/40902821a7f3809aa417d65279f87c37",
+      "file": "docs/policies/privacy.md",
+      "sourceSha256": "b6379c22fe6bf0d0317c4405f89d4b470f4ab914d223c46d2bb897bab2d65511",
+      "markdownSha256": "76581fe8763af792ad1e6e4b9413ebf551fa1e4acc982fd373cd4da0309c3d54"
+    },
+    {
+      "key": "processingConsent",
+      "title": "개인정보 수집·이용 동의",
+      "id": "41002821a7f38029bde2c6991015ac60",
+      "url": "https://xamxam33.notion.site/41002821a7f38029bde2c6991015ac60",
+      "file": "docs/policies/processingConsent.md",
+      "sourceSha256": "d9c5d712910c6dfe0d7a1a1cfb37377770b58b299e9ba6898dac7bbbf75e8f2b",
+      "markdownSha256": "16af56382aabeb2b778e7628b1570b1734e3bacdf74dcdeb7145fef1e4680d63"
+    },
+    {
+      "key": "overseasConsent",
+      "title": "개인정보 국외 이전 동의",
+      "id": "41002821a7f3802c9e4ac923b78fe556",
+      "url": "https://xamxam33.notion.site/41002821a7f3802c9e4ac923b78fe556",
+      "file": "docs/policies/overseasConsent.md",
+      "sourceSha256": "29294b7a4d01fb600b971d97d951b6c6565a1e7b97851a263c8dd16a2a0fa2cd",
+      "markdownSha256": "02021bebf69b7fc9f7ee64a199a4a5dc4b3d851f61254ee96648deca825ee7ca"
+    },
+    {
+      "key": "ai",
+      "title": "AI 활용 정보",
+      "id": "41002821a7f38017a9bef636b4c68d8c",
+      "url": "https://xamxam33.notion.site/41002821a7f38017a9bef636b4c68d8c",
+      "file": "docs/policies/ai.md",
+      "sourceSha256": "01cfe4797a0bbdb9a4a6cba23f200ce72445e83dcd46bf1d33ca4b230c482fee",
+      "markdownSha256": "9a33235573ac4d887b45e8999457848c548162c61cdcbc9e459e764eb274c281"
+    }
+  ]
+}

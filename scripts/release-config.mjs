@@ -1,4 +1,6 @@
-export function validateReleaseConfig(mode, env, policy) {
+import approval from '../src/analysis/policy-approval.json' with {type:'json'}
+
+export function validateReleaseConfig(mode, env, policy, approved = approval.analysisConsentApproved) {
   for (const [key, value] of Object.entries(env)) {
     if (key.startsWith('VITE_') && (/OPENAI|SECRET|SERVICE_ROLE|ENCRYPTION|PASSWORD|PRIVATE_KEY/i.test(key) || /^(sk-|sb_secret_)/.test(String(value)))) throw Error('VITE_ 설정에 서버 비밀 값을 넣을 수 없습니다. 앱 인증에는 publishable 키만 사용하세요.')
   }
@@ -15,6 +17,7 @@ export function validateReleaseConfig(mode, env, policy) {
   if (mode === 'trial' || mode === 'release-preview') return
   if (env.VITE_CAPTURE_MODE === 'true') throw Error('출시 빌드에 촬영용 우회 설정을 사용할 수 없습니다.')
   if (env.VITE_RELEASE_PRIVACY_READY !== '1') throw Error('개인정보·국외 처리 고지와 서버 기능 검증 후 출시 승인이 필요합니다.')
+  if (!approved) throw Error('정책 본문 동기화와 별도로 분석 배포 승인이 필요합니다.')
   const strings=value=>typeof value==='string'?[value]:value&&typeof value==='object'?Object.values(value).flatMap(strings):[]
   if (strings(policy).some(text=>/검토 초안|확정 필요|출시 전 확정|\[(?!선택\]|필수\])[^\]]+\]/.test(text))) throw Error('출시 안내 문서에 미확정 항목이 남아 있습니다.')
 }

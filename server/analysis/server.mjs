@@ -173,7 +173,7 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
           reply(200,{...result,operationId:body.operationId});return
         }
         const value=req.url.endsWith('/identity')?await releaseStore.identity(selectedOwnerId,body.code)
-          :req.url.endsWith('/consent')?await (async()=>{if(body.version===null)cancelOwner(selectedOwnerId);return releaseStore.acceptConsent(selectedOwnerId,body.version,body.ageAtLeast14,body.processingAccepted,body.overseasAccepted)})()
+          :req.url.endsWith('/consent')?await (async()=>{if(body.version===null)cancelOwner(selectedOwnerId);return releaseStore.acceptConsent(selectedOwnerId,body.version,body.ageAtLeast14,body.processingAccepted,body.overseasAccepted,body.documentHash,body.documentSurface)})()
           :req.url.endsWith('/delete')?await releaseStore.deleteMine(selectedOwnerId,body,cancelOwner)
           :req.url.endsWith('/feedback')?await releaseStore.listFeedback(body.cursor)
           :req.url.endsWith('/deletions')?await releaseStore.deletionQueue()
@@ -206,6 +206,7 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
     }
     if (req.method !== 'POST' || req.url !== '/api/analysis/match') { reply(404, { code: 'not-found' }); return }
     if (req.headers['x-howhouse-session'] !== token) { reply(403, { code: 'forbidden' }); req.resume(); return }
+    if(trial&&!releaseStore){reply(503,{code:'release-not-configured'});req.resume();return}
     if(releaseStore){try{if(!await releaseStore.hasConsent(selectedOwnerId)){reply(428,{code:'consent-required'});req.resume();return}}catch{reply(503,{code:'storage-unavailable'});req.resume();return}}
     const controller = new AbortController()
     if(selectedOwnerId){if(!activeUsers.has(selectedOwnerId))activeUsers.set(selectedOwnerId,new Set());activeUsers.get(selectedOwnerId).add(controller)}
