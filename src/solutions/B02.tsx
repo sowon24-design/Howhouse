@@ -42,9 +42,6 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
   const opinionError = feedback.opinionError === hiddenFeedbackMessage ? '' : feedback.opinionError
   const rating = feedback.rating === 'like' ? 'up' : feedback.rating === 'dislike' ? 'down' : null
   const [sheet, setSheet] = useState<'closed' | 'edit' | 'thanks'>('closed')
-  const [reason, setReason] = useState('')
-  const [opinion, setOpinion] = useState('')
-  const [reporting,setReporting]=useState(false)
   const [reportReason,setReportReason]=useState(''),[reportText,setReportText]=useState('')
   const root = useRef<HTMLElement>(null)
   const media = useRef<HTMLDivElement>(null)
@@ -87,7 +84,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
   function rate(value: 'up' | 'down') {
     if(feedback.opinionPending)return
     void feedback.rate(value)
-    if (value === 'down' && rating !== value) {setReporting(false);setSheet('edit')}
+    if (value === 'down' && rating !== value) setSheet('edit')
   }
   return <section ref={root} className="solutions-b02 solutions-b02--case" data-generated={data.source === 'generated'} data-without-photos={photos.length === 0} aria-label="해결 방법">
     <div className="solutions-b02__header" data-hidden={headerHidden} data-scrolled={headerScrolled} onFocusCapture={() => { headerState.current.hidden = false; setHeaderHidden(false) }}>
@@ -125,13 +122,12 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onPrevie
         {feedback.ratingPending && <p role="status">평가를 저장하고 있어요.</p>}
         {ratingError && <p role="alert">{ratingError}</p>}
         {feedback.ratingRetry && <Button variant="pale" disabled={feedback.ratingPending} onClick={() => {void feedback.retryRating()}}>평가 다시 저장하기</Button>}
-        <Button variant="pale" disabled={feedback.opinionPending} onClick={()=>{setReporting(true);setSheet('edit')}}>AI 답변 신고</Button>
       </div>
       <div className="solutions-b02__actions"><Button variant="pale" onClick={()=>setResolution('unsolved')}>해결이 어려워요</Button><Button onClick={()=>setResolution('solved')}>해결됐어요</Button></div>
     </main>
-    <OpinionSheet mode={sheet} reporting={reporting} reason={reporting?reportReason:reason} text={reporting?reportText:opinion} onReason={reporting?setReportReason:setReason} onText={reporting?setReportText:setOpinion} onClose={() => setSheet('closed')}
+    <OpinionSheet mode={sheet} reporting reason={reportReason} text={reportText} onReason={setReportReason} onText={setReportText} onClose={() => setSheet('closed')}
       saving={feedback.opinionPending} error={opinionError}
-      onPreviewSubmit={() => {void feedback.submitOpinion(reporting?'직접 입력하기':reason, reporting?aiReportText(reportReason,reportText,[data.title,data.description,...data.steps.map(s=>`${s.title}: ${s.description}`)].join('\n')):opinion).then(saved => {if(saved){onPreviewOpinion();setSheet(current => current === 'edit' ? 'thanks' : current)}})}} />
+      onPreviewSubmit={() => {void feedback.submitOpinion('직접 입력하기', aiReportText(reportReason,reportText,[data.title,data.description,...data.steps.map(s=>`${s.title}: ${s.description}`)].join('\n'))).then(saved => {if(saved){onPreviewOpinion();setSheet(current => current === 'edit' ? 'thanks' : current)}})}} />
     <ResolutionSheet mode={resolution} onClose={()=>setResolution('closed')} onHome={onComplete} onContact={onContact} canContact={data.canContact} hasLandlordMessage={!!data.contacts.landlord.label.trim() && (data.contacts.landlord.solvedSentences?.length ? data.contacts.landlord.solvedSentences : data.contacts.landlord.sentences).some(text => !!text.trim())} hasCompany={!!data.contacts.company.label.trim()}/>
   </section>
 }

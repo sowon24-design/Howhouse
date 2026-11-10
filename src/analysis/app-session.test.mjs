@@ -10,6 +10,18 @@ const settings = { url: 'https://project.supabase.co', publishableKey: 'sb_publi
 const signal = () => new AbortController().signal
 const tokens = { access_token: 'mock-user-access-token', refresh_token: 'mock-user-refresh-token', expires_in: 3600 }
 
+test('view-only token lookup never signs up or refreshes an expired session', async () => {
+  let time = 0, calls = 0
+  const auth = createAppSession({ ...settings, now: () => time, fetchImpl: async () => { calls++; return Response.json(tokens) } })
+  assert.equal(auth.peekAccessToken(), undefined); assert.equal(calls, 0)
+  await auth(signal())
+  assert.equal(auth.peekAccessToken(), tokens.access_token); assert.equal(calls, 1)
+  time = 3600000
+  assert.equal(auth.peekAccessToken(), undefined); assert.equal(calls, 1)
+  auth.reset()
+  assert.equal(auth.peekAccessToken(), undefined); assert.equal(calls, 1)
+})
+
 test('app creates anonymous session without login, password, OpenAI key or analysis call, then reuses it', async () => {
   const saved = new Map(), calls = []
   const storage = { getItem: k => saved.get(k), setItem: (k, v) => saved.set(k, v), removeItem: k => saved.delete(k) }

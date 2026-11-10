@@ -22,8 +22,8 @@ assert.equal(await evaluate(`[...document.querySelectorAll('button')].find(b=>b.
 await clickText('닫기');await pause(300);assert.ok((await evaluate('document.querySelector("textarea").value')).includes('싱크대'));
 const fields=await evaluate(`[...document.querySelectorAll('textarea,input')].map(x=>({tag:x.tagName,type:x.type,placeholder:x.placeholder}))`);
 stage='accepted-case';await evaluate(`localStorage.setItem('howhouse:ai-consent:https://analysis.audit.invalid','${version}');localStorage.setItem('howhouse-analysis-session:auth.audit.invalid',JSON.stringify({accessToken:'audit-token',refreshToken:'audit-refresh',expiresAt:Date.now()+3600000}));location.hash='case/'+encodeURIComponent('욕실·수도:11');location.reload()`);await pause(900);
-assert.ok(requests.some(r=>r.stage==='accepted-case'&&r.url.endsWith('/api/feedback/state')));
-stage='explicit-rating';await evaluate(`document.querySelector('button[aria-label="도움돼요"]').click()`);await pause(500);assert.ok(requests.some(r=>r.stage==='explicit-rating'&&r.url.endsWith('/api/feedback/rating')));
+assert.equal(requests.some(r=>r.stage==='accepted-case'),false,'Unapproved release must block feedback even with a cached receipt');
+stage='explicit-rating';await evaluate(`document.querySelector('button[aria-label="도움돼요"]').click()`);await pause(500);assert.equal(requests.some(r=>r.stage==='explicit-rating'),false,'Release approval guard must remain effective');
 await evaluate(`location.hash='my'`);await pause(500);await clickText('동의 철회·서버 데이터 삭제');await pause(400);
 stage='explicit-withdrawal';await clickText('AI 분석 동의 철회');await pause(600);assert.equal(await evaluate(`localStorage.getItem('howhouse:ai-consent:https://analysis.audit.invalid')`),null);
 stage='withdrawn-case';await evaluate(`location.hash='case/'+encodeURIComponent('욕실·수도:11')`);await pause(700);

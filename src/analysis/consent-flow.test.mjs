@@ -1,7 +1,18 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import {readFileSync} from 'node:fs'
 import {analysisConsentReady,createAnalysisConsentFlow} from './consent-flow.ts'
 const acceptance={ageAtLeast14:true,processingAccepted:true,overseasAccepted:true}
+
+test('current shared policy still blocks transmission even if a ready flag is accidentally enabled',async()=>{
+ const policy=JSON.parse(readFileSync(new URL('../app-screens/my/information-draft.json',import.meta.url),'utf8'))
+ let saves=0
+ const flow=createAnalysisConsentFlow({isReady:()=>analysisConsentReady('1',policy),save:async()=>{saves++}})
+ assert.equal(await flow.submit(acceptance,()=>assert.fail('unresolved disclosures must block analysis')),false)
+ assert.equal(saves,0)
+ // Main's separate approval gate remains closed even after public copy cleanup.
+ assert.equal(analysisConsentReady('1',{overseas:policy.overseasConsent}),false)
+})
 test('draft policy and unapproved flags cannot send consent',async()=>{
  assert.equal(analysisConsentReady(undefined,{paragraphs:['완료']}),false)
  assert.equal(analysisConsentReady('1',{paragraphs:['[출시 전 제공업체별 확정]']}),false)

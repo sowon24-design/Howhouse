@@ -2,6 +2,46 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { randomUUID } from 'node:crypto'
 import { createFeedbackClient, feedbackTarget } from './feedback-client.ts'
+
+test('fresh case viewer makes no authentication or feedback request', async () => {
+ let authCalls=0,requests=0
+ const client=createFeedbackClient({baseUrl:'https://server.example',target:{source:'existing',caseId:'욕실·수도:1'},
+  getAccessToken:async()=>{authCalls++;return 'new-token'},getExistingAccessToken:()=>undefined,
+  fetchImpl:async()=>{requests++;assert.fail('view must remain local')}})
+ assert.equal(await client.getStateIfAuthenticated(),undefined)
+ assert.equal(authCalls,0);assert.equal(requests,0)
+})
+
+test('case viewer restores an existing rating using only an already-valid session', async () => {
+ let authCalls=0,requests=0
+ const client=createFeedbackClient({baseUrl:'https://server.example',target:{source:'existing',caseId:'욕실·수도:1'},
+  getAccessToken:async()=>{authCalls++;assert.fail('view must not authenticate')},getExistingAccessToken:()=> 'cached-token',
+  fetchImpl:async(url,options)=>{requests++;assert.ok(url.endsWith('/state'));assert.equal(options.headers.Authorization,'Bearer cached-token')
+   return Response.json({rating:'like',revision:4,updatedAt:null})}})
+ assert.deepEqual(await client.getStateIfAuthenticated(),{rating:'like',revision:4,updatedAt:null})
+ assert.equal(authCalls,0);assert.equal(requests,1)
+})
+
+test('rejected view-only session never falls back to signup or refresh', async () => {
+ let authCalls=0,requests=0
+ const client=createFeedbackClient({baseUrl:'https://server.example',target:{source:'existing',caseId:'욕실·수도:1'},
+  getAccessToken:async()=>{authCalls++;return 'replacement-token'},getExistingAccessToken:()=> 'revoked-token',
+  fetchImpl:async()=>{requests++;return Response.json({code:'auth-required'},{status:401})}})
+ await assert.rejects(client.getStateIfAuthenticated(),{code:'auth-required'})
+ assert.equal(authCalls,0);assert.equal(requests,1)
+})
+
+test('explicit rating after local viewing can authenticate and persist its first selection', async () => {
+ let authCalls=0;const calls=[]
+ const client=createFeedbackClient({baseUrl:'https://server.example',target:{source:'existing',caseId:'욕실·수도:1'},
+  getAccessToken:async()=>{authCalls++;return 'user-token'},getExistingAccessToken:()=>undefined,
+  fetchImpl:async(url,options)=>{calls.push(url);const body=JSON.parse(options.body)
+   if(url.endsWith('/state'))return Response.json({rating:null,revision:0,updatedAt:null})
+   return Response.json({operationId:body.operationId,saved:true,duplicate:false,revision:1,submittedAt:'2026-11-10T00:00:00Z'})}})
+ await client.getStateIfAuthenticated();assert.equal(authCalls,0)
+ assert.equal((await client.setRating('like')).saved,true)
+ assert.equal(authCalls,2);assert.equal(calls.length,2)
+})
 function fixture(source='existing') {
  const calls=[];let fail=false,saved=false,rev=0,rating=null;const receipts=new Map();let requests=0
  const target=source==='existing'?{source,caseId:'욕실·수도:1'}:{source,resultId:`generated:${randomUUID()}`}
@@ -63,7 +103,3 @@ test('sample IDs never masquerade as a real generated result or existing case',(
  assert.equal(feedbackTarget('existing','generated:'+randomUUID()),undefined)
 })
 
-test('passive state read uses supplied existing token without creating or refreshing auth',async()=>{
- let authCalls=0;const client=createFeedbackClient({baseUrl:'https://server.example',target:{source:'existing',caseId:'욕실·수도:1'},getAccessToken:async()=>{authCalls++;throw Error('No passive signup')},fetchImpl:async(url,options)=>{assert.equal(options.headers.Authorization,'Bearer cached-token');return Response.json({rating:'like',revision:2,updatedAt:null})}});
- assert.equal((await client.getState('cached-token')).rating,'like');assert.equal(authCalls,0);
-});
