@@ -121,16 +121,17 @@ export default function CatalogApp() {
   if (hash === '#home' || hash === '' || hash === '#') return frame(<HomeScreen catalogOnly nickname={profile.nickname} month={new Date().getMonth()+1}
     popularProblems={['욕실·수도:1','욕실·수도:2','난방·전기:17'].flatMap(id=>{const item=getSolutionById(id);return item?[{id,title:item.symptom}]:[]})}
     onProfile={()=>navigate('my')} onStartProblem={()=>navigate('search')} onCategory={key=>navigate(`solutions/${encodeURIComponent(categoryMap[key])}`)} onProblem={id=>navigate(`case/${encodeURIComponent(id)}`)}/> )
-  const results = searchCases(solutionCases,query)
+  const hasQuery = Boolean(query.trim())
+  const results = hasQuery ? searchCases(solutionCases,query) : []
   return frame(<main className="hh-catalog-page">
     <GNB title="사례 찾아보기" onBack={home}/>
     <h1 className="text-heading">비슷한 문제를 찾아보세요</h1>
     <label htmlFor="case-search">문제·증상 검색</label>
     <input id="case-search" type="search" maxLength={200} value={query} onChange={event=>setQuery(event.target.value)} placeholder="예: 배수구, 보일러, 곰팡이" autoComplete="off"/>
-    <p>기기에 포함된 기존 사례를 관련도 순으로 보여드려요. 검색 결과는 진단이 아니며 글이나 사진을 분석하지 않아요.</p>
+
     {/가스\s*냄새|연기|불꽃|감전|탄내|타는\s*냄새/.test(query) && <p role="alert">위험한 상황일 수 있어요. 직접 분해하거나 수리하지 말고 안전을 확보한 뒤 긴급기관 또는 전문가에게 도움을 요청하세요. 검색 결과만으로 안전 여부를 판단하지 마세요.</p>}
-    <p role="status">{results.length}개의 사례</p>
-    {results.length ? <ul className="hh-catalog-list">{results.map(item=><li key={item.id}><ListRow onClick={()=>navigate(`case/${encodeURIComponent(item.id)}`)}>{item.symptom}</ListRow></li>)}</ul>
-      : <p>일치하는 사례가 없어요. 짧은 증상이나 카테고리 이름으로 다시 찾아보세요. 위험한 상황이라면 전문가에게 문의해 주세요.</p>}
+    {hasQuery && <p role="status">{results.length}개의 사례</p>}
+    {hasQuery && (results.length ? <ul className="hh-catalog-list">{results.map(item=><li key={item.id}><ListRow onClick={()=>navigate(`case/${encodeURIComponent(item.id)}`)}>{item.symptom}</ListRow></li>)}</ul>
+      : <p>일치하는 사례가 없어요. 짧은 증상이나 카테고리 이름으로 다시 찾아보세요. 위험한 상황이라면 전문가에게 문의해 주세요.</p>)}
   </main>)
 }

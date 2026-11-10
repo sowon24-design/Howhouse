@@ -5,7 +5,7 @@ import { SolutionSteps } from './SolutionSteps'
 import { ResolutionSheet } from './ResolutionSheet'
 import { CostReference } from './CostReference'
 import type { SolutionView } from './data/types'
-import { displayResponsibility } from './data/presentation'
+import { displayDuration, displayResponsibility } from './data/presentation'
 import type { ResolutionStatus } from './resolution-message'
 import clock from './assets/b02-clock.svg'
 import dollar from './assets/b02-dollar.svg'
@@ -72,7 +72,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo }: {
       <div className="solutions-b02__intro">
         <div>{data.title.trim() && <h1 title={data.title}>{data.title}</h1>}{data.description.trim() && <p>{data.description}</p>}</div>
         <div className="solutions-b02__facts">
-          {data.duration.trim() && <div><img src={clock} alt="" /><span>예상 소요 시간</span><i /><strong>{data.duration}</strong></div>}
+          {data.duration.trim() && <div><img src={clock} alt="" /><span>예상 소요 시간</span><i /><strong>{displayDuration(data.duration)}</strong></div>}
           {(data.responsibility.trim() || data.reference.trim()) && <div><img src={dollar} alt="" /><span>수리 비용 부담</span><i /><div className="solutions-b02__responsibility">
             <strong>{displayResponsibility(data.responsibility)}</strong>
             {data.reference.trim()&&<CostReference text={data.reference}/>}
