@@ -30,7 +30,7 @@ function PolicyDocuments({ all = false }: { all?: boolean }) {
       ['transfer', '분석 국외 이전 동의 — 미사용 안내'], ['ai', '서비스 제공 방식·이미지 안내']] : []),
   ] as const
   return <>{documents.map(([key, title]) => <details key={key}>
-    <summary>{title} (출시 전 확인본)</summary>
+    <summary>{title}</summary>
     <PolicyBody paragraphs={catalogPolicy[key as 'privacy' | 'terms' | 'data' | 'consent' | 'transfer' | 'ai']}/>
   </details>)}</>
 }
@@ -112,7 +112,7 @@ export default function CatalogApp() {
     <GNB title="마이 페이지" onBack={home}/>
     <h1 className="text-heading">{profile.nickname} 님</h1>
     <Button variant="pale" onClick={() => setEditing(true)}>닉네임 수정</Button>
-    <h2 className="text-heading">앱 정보</h2><p>기존 주거 문제 사례를 찾고 문의 문장을 편집하는 어쩌집 개발 버전이에요. 계정·AI 분석·평가 및 의견 서버 저장은 사용하지 않아요.</p>
+    <h2 className="text-heading">앱 정보</h2><p>기존 주거 문제 사례를 찾고 문의 문장을 편집하는 어쩌집이에요. 계정·AI 분석·평가 및 의견 서버 저장은 사용하지 않아요.</p>
     <PolicyDocuments all/>
     <p>운영: {catalogPolicy.operator}<br/>개인정보 보호담당자: {catalogPolicy.officer}</p>
     <a href={`mailto:${catalogPolicy.email}`} rel="noreferrer">이메일 문의 (외부 앱)</a>
