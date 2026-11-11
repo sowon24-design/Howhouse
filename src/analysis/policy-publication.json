@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "consentVersion": "2026-11-11-v8",
-  "revisedAt": "2026-11-11",
+  "consentVersion": "2026-11-12-v9",
+  "revisedAt": "2026-11-12",
   "pages": [
     {
       "key": "data",
