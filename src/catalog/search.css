@@ -1,0 +1,28 @@
+.hh-search { height:100%; min-height:0; display:flex; flex-direction:column; background:var(--color-surface); color:var(--color-on-surface); overflow:hidden; }
+.hh-search > .ui-gnb { flex:none; }
+.hh-search-form { flex:1; min-height:0; display:flex; flex-direction:column; padding:16px 24px var(--space-64); gap:24px; }
+/* Match the existing input screens' compact inset in a resized mobile viewport. */
+@media (pointer: coarse) and (max-height: 700px) {
+  .hh-search-form { padding-bottom:var(--space-5); }
+}
+.hh-search-fields { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; }
+.hh-search-input { display:flex; align-items:center; height:56px; padding:0 16px; border-radius:28px; background:var(--color-neutral); }
+.hh-search-input input { flex:1; min-width:0; width:100%; border:0; outline:none; background:transparent; color:inherit; font:inherit; font-size:16px; }
+.hh-search-input input::placeholder { color:var(--color-secondary); }
+.hh-search-input input::-webkit-search-cancel-button { -webkit-appearance:none; }
+.hh-search-input button { display:grid; place-items:center; border:0; padding:0; background:transparent; color:inherit; width:24px; height:24px; }
+.hh-search-fields h2 { font-size:16px; line-height:24px; font-weight:600; margin:20px 0 12px; }
+.hh-search-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.hh-search-tags button { font:inherit; font-size:16px; line-height:24px; padding:10px 12px; border:0; border-radius:100px; color:var(--color-primary); background:var(--button-pale); }
+.hh-search-tags button:active { background:var(--button-pale-pressed); }
+.hh-search button { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.hh-search button:focus-visible { outline:2px solid var(--color-primary); outline-offset:2px; }
+.hh-search footer { flex:none; }
+.hh-search footer > button { width:100%; }
+.hh-search-results { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column; padding:12px 24px 24px; }
+.hh-search-results h1 { margin:0; font-size:20px; line-height:30px; font-weight:600; overflow-wrap:anywhere; flex:none; }
+.hh-search-results h1 span { color:var(--color-primary); }
+.hh-search-results ul { list-style:none; padding:0; margin:20px 0 0; display:flex; flex-direction:column; gap:12px; }
+.hh-search-empty { flex:1; min-height:190px; display:grid; place-items:center; }
+.hh-search-empty img { width:234px; max-width:100%; height:auto; transform:scaleX(-1); }
+.hh-search-results footer { padding-bottom:40px; }

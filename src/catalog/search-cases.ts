@@ -16,8 +16,9 @@ function phrases(text: string) {
     .replace(/냄새(?:는|가)?\s*안\s*나(?:고|요)|냄새(?:는|가)?\s*없어요/g,' ')
     .replace(/물(?:은|이)?\s*잘\s*빠지(?:는데|고|요)/g,' ')
 }
-const subjects = [ ['세탁기','드럼세탁기','통돌이','세탁통','탈수','빨래'], ['냉장고','냉장실','냉동실','냉동고','채소칸','야채칸'], ['변기','양변기'], ['보일러','난방'], ['환풍기','환기팬'], ['콘센트','플러그','멀티탭'], ['실리콘'], ['줄눈','타일 사이','타일 틈'] ]
+const subjects = [ ['세탁기','드럼세탁기','통돌이','세탁통','탈수','빨래'], ['냉장고','냉장실','냉동실','냉동고','채소칸','야채칸'], ['변기','양변기'], ['보일러','난방'], ['환풍기','환기팬'], ['콘센트','플러그','멀티탭'], ['에어컨','실내기'], ['가습기'], ['제습기'], ['식기세척기','식세기'], ['전자레인지','전자렌지'], ['가스레인지','가스렌지'], ['인덕션','전기레인지','전기렌지'], ['건조기'], ['도어락','도어록','번호키'], ['공기청정기','공기 청정기'], ['전기포트','전기주전자','커피포트'], ['실리콘'], ['줄눈','타일 사이','타일 틈'] ]
 function contains(text: string, phrase: string) {
+  if (!phrase.trim()) return false
   // Avoid matching 수도 inside 하수도. Other known phrases permit Korean particles.
   if (phrase === '수도') return /(^|[^가-힣])수도/.test(text)
   return text.includes(phrase) || (phrase.length >= 3 && text.replace(/\s/g,'').includes(phrase.replace(/\s/g,'')))
@@ -37,11 +38,17 @@ export function searchCases<T extends SearchableCase>(cases: readonly T[], query
     }
     const targets=entry.targets.map(normalize)
     if (explicit.length && !explicit.some(group=>group.some(word=>targets.some(target=>contains(target,word))))) return {item,index,score:0,condition:0}
-    const target = targets.some(word=>!['집','방','물','바닥','수도'].includes(word)&&contains(text,word))
-    const symptom = entry.symptoms.some(word=>contains(text,phrases(word)))
-    const condition = [...targets,...entry.symptoms.map(phrases)].some(word=>word.length>=5&&contains(text,word)) ? 2 : 0
+    const targetMatches = targets.filter(word=>!['집','방','물','바닥','수도'].includes(word)&&contains(text,word))
+    const symptomMatches = entry.symptoms.map(phrases).filter(word=>contains(text,word))
+    const target = targetMatches.length > 0
+    const symptom = symptomMatches.length > 0
+    // Rank joint object + symptom matches before object-only or symptom-only.
+    // Longest match rewards specificity, not the number of registered synonyms.
+    const specificity = Math.min(12, Math.max(0,...targetMatches.map(word=>word.replace(/\s/g,'').length)))
+      + Math.min(16, Math.max(0,...symptomMatches.map(word=>word.replace(/\s/g,'').length)))
+    const condition = specificity
     const exact=normalize(query)===normalize(item.symptom)||normalize(query)===normalize(item.title)
-    const score=exact?16:(target?3:0)+(symptom?5:0)+(target&&symptom?4:0)+(target||symptom?condition:0)
+    const score=exact?200:(target&&symptom?100:target?40:symptom?10:0)+(target||symptom?specificity:0)
     return {item,index,score,condition}
   }).filter(row=>row.score>0).sort((a,b)=>b.score-a.score||b.condition-a.condition||String(a.item.id??a.index).localeCompare(String(b.item.id??b.index),'ko',{numeric:true})).map(row=>row.item)
 }

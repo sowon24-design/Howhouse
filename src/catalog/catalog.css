@@ -1,5 +1,8 @@
 html[data-catalog-app=true] .hh-home-preview { height:100dvh; padding:0; overflow:clip; }
-html[data-catalog-app=true] .hh-home-preview-frame { width:min(100%,412px); height:100dvh; --solutions-screen-height:100dvh; }
+/* The catalog is the app, not a fixed-width phone mockup. All routes share
+   this frame; dialogs measure it too. Keep typography and inner spacing intact. */
+html[data-catalog-app=true] .hh-home-preview-frame { width:100%; max-width:100%; min-width:0; height:100dvh; --solutions-screen-height:100dvh; }
+html[data-catalog-app=true] .hh-preview-disclosure.hh-home-preview-tools { width:100%; max-width:100%; }
 .hh-catalog-page { padding:var(--space-6); min-height:100%; display:flex; flex-direction:column; gap:var(--space-4); }
 .hh-catalog-page :is(h1,h2,p) { margin:0; }
 .hh-catalog-page input { width:100%; min-height:48px; padding:var(--space-3); color:var(--color-on-surface); background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--rounded-sm); }
@@ -9,3 +12,7 @@ html[data-catalog-app=true] .hh-home-preview-frame { width:min(100%,412px); heig
 .hh-catalog-page a { color:var(--color-primary); }
 .hh-catalog-list { list-style:none; margin:0; padding:0; }
 .hh-catalog-result [hidden] { display:none; }
+html[data-catalog-app=true] .hh-home-preview:has(> .hh-preview-disclosure) > .hh-catalog-frame { height:calc(100dvh - 32px); --solutions-screen-height:calc(100dvh - 32px); }
+html[data-catalog-app=true][data-capture-mode=true] .hh-home-preview > .hh-catalog-frame { height:100dvh; --solutions-screen-height:100dvh; }
+.hh-catalog-case-picker { display:flex; flex-direction:column; gap:8px; min-width:0; }
+.hh-catalog-case-picker select { width:100%; min-width:0; min-height:44px; font:inherit; color:var(--color-on-surface); background:var(--color-surface); }

@@ -12,9 +12,9 @@ const pages = [
   { image: intro3, title: '혼자 사는 마음까지 든든하게', lines: ['어디에 물어보고 무엇부터 할지.', '어쩌집과 하나씩 알아가요.'] },
 ] as const
 const catalogPages = [
-  { image: intro1, title: '집 문제, 혼자 고민하지 마세요.', lines: ['갑자기 생긴 문제부터 사소한 불편까지', '어쩌집과 함께 해결 방법을 찾아봐요.'] },
-  { image: intro2, title: '비슷한 사례를 찾아보세요', lines: ['문제가 생긴 곳이나 증상으로 검색해 보세요.', '준비물과 해결 순서를 확인할 수 있어요.'] },
-  { image: intro3, title: '혼자 사는 집도 든든하게', lines: ['집주인이나 업체에 보낼 문의 문장을', '내 상황에 맞게 고치고 복사해 보세요.'] },
+  { image: intro1, title: '혼자 고민하지 마세요', lines: ['갑자기 생긴 문제도, 사소한 불편도.', '어쩌집에서 함께 방법을 찾아봐요.'] },
+  { image: intro2, title: '비슷한 사례를 찾아보세요', lines: ['문제가 생긴 곳이나 증상을 검색해보세요.', '해결 방법을 확인할 수 있어요.'] },
+  { image: intro3, title: '혼자 사는 마음까지 든든하게', lines: ['어디에서 찾고 무엇부터 할지,', '어쩌집과 하나씩 알아가요.'] },
 ] as const
 
 export function OnboardingScreen({ step, onStepChange, onContinue, catalogOnly = false }: {
@@ -22,9 +22,9 @@ export function OnboardingScreen({ step, onStepChange, onContinue, catalogOnly =
 }) {
   const page = (catalogOnly ? catalogPages : pages)[step - 1]
   return <main className={`hh-onboarding${step === 0 ? ' hh-onboarding--welcome' : ''}`} aria-label={step === 0 ? '환영' : `서비스 소개 ${step}`}>
-    <GNB onBack={step > 0 ? () => onStepChange(step - 1) : undefined} onClose={step > 0 ? () => onStepChange(0) : undefined} />
+    <GNB onBack={step > 1 ? () => onStepChange(step - 1) : undefined} onClose={step > 0 ? () => onStepChange(0) : undefined} />
     {step === 0 ? <div className="hh-welcome-content">
-      <div className="hh-welcome-copy"><h1>{catalogOnly ? <>집 문제,<br />혼자 고민하지 마세요.</> : <>우리 집 문제,<br />혼자 고민하지 마세요</>}</h1><p>{catalogOnly ? '비슷한 사례에서 해결 방법을 찾아보세요.' : '상황에 맞는 해결 방법을 찾아드릴게요.'}</p></div>
+      <div className="hh-welcome-copy"><h1><>우리 집 문제,<br />혼자 고민하지 마세요</></h1><p>상황에 맞는 해결 방법을 찾아드릴게요.</p></div>
       <div className="hh-welcome-art-space"><div className="hh-welcome-art"><img src={welcome} alt="" /><div className="hh-welcome-art-crop"><img src={welcomeOverlay} alt="" /></div></div></div>
     </div> : <div className="hh-intro-content">
       <div className="hh-intro-story" key={step}>
@@ -35,7 +35,7 @@ export function OnboardingScreen({ step, onStepChange, onContinue, catalogOnly =
         {[1, 2, 3].map(value => <span key={value} data-active={step === value} />)}
       </div>
     </div>}
-    <footer className="hh-onboarding-next"><Button onClick={() => step < 3 ? onStepChange(step + 1) : onContinue()}>{step === 0 ? '시작하기' : catalogOnly ? '다음' : '다음으로'}</Button></footer>
+    <footer className="hh-onboarding-next"><Button onClick={() => step < 3 ? onStepChange(step + 1) : onContinue()}>{step === 0 ? '시작하기' : step === 3 ? '약관 동의하러 가기' : '다음으로'}</Button></footer>
   </main>
 }
 

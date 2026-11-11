@@ -1,4 +1,5 @@
 import { GNB, ListRow } from '../components/ui'
+import { getCaseListLabel } from './data/case-list-labels'
 import './b01.css'
 import questionUrl from './assets/question.svg'
 import toilet from './assets/categories/toilet.png'
@@ -28,7 +29,7 @@ export type B01Props = {
   categoryLabel: string
   items: readonly B01Item[]
   onSelect: (key: string) => void
-  onWriteProblem: () => void
+  onWriteProblem?: () => void
   onBack: () => void
 }
 
@@ -45,13 +46,13 @@ export function B01({ categoryLabel, items, onSelect, onWriteProblem, onBack }: 
       <h1 className="text-heading">나의 상황과<br />가장 비슷한 문제를 골라주세요.</h1>
       <ul className="solutions-b01__list" aria-label="사례 목록">
         {items.map(item => <li key={item.key}>
-          <ListRow onClick={() => onSelect(item.key)}>{item.label}</ListRow>
+          <ListRow onClick={() => onSelect(item.key)}>{getCaseListLabel(item.key, item.label)}</ListRow>
         </li>)}
       </ul>
-      <ListRow variant="pale" onClick={onWriteProblem}
+      {onWriteProblem && <ListRow variant="pale" onClick={onWriteProblem}
         icon={<img src={questionUrl} alt="" width="24" height="24" />}>
         다른 사례 찾아보기
-      </ListRow>
+      </ListRow>}
     </main>
   </section>
 }
