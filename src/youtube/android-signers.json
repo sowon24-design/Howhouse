@@ -1,0 +1,8 @@
+{
+  "applicationId": "com.howhouse.app",
+  "directInstallSha1": "F1C08FE75331263A979655F96C618973608DFA78",
+  "playSha1": "AB059BFC7D3F5D9F690D7E57EA2B7120BE8A9EE6",
+  "playSha256": "7D30F1A47E6A9A0731263FE91BBC39578F99178B2A74138E0CE9AE839B7FC97B",
+  "verifiedAt": "2026-11-11",
+  "source": "Direct-install DER certificate; current Play SHA-256 read in Console, SHA-1 copied by the user from the current app-signing-key section. Public fingerprints only."
+}

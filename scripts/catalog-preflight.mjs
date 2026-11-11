@@ -5,7 +5,9 @@ const root=new URL('../',import.meta.url)
 const read=path=>readFile(new URL(path,root),'utf8')
 const approval=JSON.parse(await read('src/catalog/release-approval.json'))
 const release=JSON.parse(await read('src/catalog/app-release.json'))
+const youtubeApproval=JSON.parse(await read('src/youtube/release-approval.json'))
 const blockers=[]
+for(const key of ['privacyNoticePublished','providerPolicyReviewed','androidPreviewVerified','playSigningRestrictionVerified'])if(youtubeApproval[key]!==true)blockers.push('youtube:'+key)
 if(release.applicationId!=='com.howhouse.app'||!Number.isInteger(release.versionCode)||release.versionCode<1||!release.versionName)blockers.push('invalid-release-identity')
 for(const key of ['publicPolicyVerified','androidVerified','externalContentRightsVerified','legacyDataTransitionReviewed'])if(approval[key]!==true)blockers.push(key)
 if(catalogPolicy.status!=='published')blockers.push('policy-not-published')
@@ -15,6 +17,7 @@ try {
  if(info.policySha256!==createHash('sha256').update(await read('src/catalog/policy.ts')).digest('hex'))blockers.push('android-policy-stale')
  if(info.variant!=='catalog'||info.aiEnabled!==false||info.serverStorage!==false)blockers.push('wrong-app-variant')
  if(info.releaseApproved!==true)blockers.push('preview-assets-only')
+ if(info.youtubePreview!==true||info.youtubeApiConfigured!==true||info.youtubeReleaseVerified!==true)blockers.push('youtube-build-not-approved')
 }catch{blockers.push('android-build-info-missing')}
 console.log(JSON.stringify({release,readyForPlaySubmission:blockers.length===0,blockers,deviceTestNotAssumed:true},null,2))
 process.exitCode=blockers.length?1:0

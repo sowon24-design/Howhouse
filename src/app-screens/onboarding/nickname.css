@@ -16,7 +16,7 @@
 /* Match A02's compact footer when the mobile viewport shrinks for the keyboard.
    Shared by E04 (create) and D02 (edit); B screens are independent. */
 @media (pointer: coarse) and (max-height: 700px) {
-  .hh-nickname-next { padding-bottom: var(--space-5); }
+  .hh-nickname-next { padding-bottom: var(--space-2); }
 }
 
 

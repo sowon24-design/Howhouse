@@ -3,7 +3,7 @@ import { ListRow } from '../../components/ui'
 import { HomePressButton } from './HomePressButton'
 import logo from './assets/imgVector132Stroke.svg'
 import profile from './assets/imgIconProfile.svg'
-
+import book from './assets/w10-imgIconBook.svg'
 import arrow from './assets/w10-imgIconArrowRight.svg'
 import boiler from './assets/w10-imgIcon.svg'
 import bathroom from './assets/w10-imgIcon1.svg'
@@ -55,8 +55,8 @@ export function HomeScreen({ nickname, month, popularProblems, onProfile, onStar
           <HomeIllustration />
         </div>
         <HomePressButton type="button" className="hh-home-banner" onClick={onStartProblem}>
-          <span className="hh-home-book"><img className="hh-home-search-icon" src="/icons/figma/408-3710.svg" alt="" /></span>
-          <span className="hh-home-banner-copy"><span>우리집 문제에 대한</span><strong>해결 방법을 찾아볼까요?</strong></span>
+          <span className="hh-home-book"><img src={book} alt="" /></span>
+          <span className="hh-home-banner-copy"><span>{catalogOnly ? '어떤 문제가 생겼나요?' : '우리집 문제에 대한'}</span><strong>{catalogOnly ? '비슷한 사례를 찾아볼까요?' : '해결 방법을 찾아볼까요?'}</strong></span>
           <img src={arrow} alt="" />
         </HomePressButton>
       </section>

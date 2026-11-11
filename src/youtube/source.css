@@ -1,0 +1,30 @@
+.solutions-b02__video-container > .solutions-b02__video {
+  isolation: isolate;
+}
+.solutions-b02__video-container > .solutions-b02__video::after {
+  /* One existing overlay, not a second darkening layer. The source icon is
+     a sibling above this isolated thumbnail stack and remains unblended. */
+  background: #000;
+  opacity: .2;
+  mix-blend-mode: multiply;
+}
+.hh-youtube-source {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+}
+.hh-youtube-source > a {
+  display: inline-flex;
+  background: transparent;
+}
+.hh-youtube-source > a > img {
+  display: block;
+  width: auto;
+  /* Official raster includes clear space. Its 578px mark within a 1075px
+     canvas needs a 186px canvas to keep the visible mark at least 100px. */
+  height: 186px;
+  max-width: none;
+}
