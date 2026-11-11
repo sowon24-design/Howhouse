@@ -15,15 +15,15 @@ export function TermsView({ onBack, onClose, onContinue, documents }: {
   const all = service && privacy && age
   const title = sheet === 'service' ? '서비스 이용약관' : '개인정보 처리방침'
   const show = (kind: 'service' | 'privacy') => { setSheet(kind); setOpen(true) }
-  return <main className="hh-terms" aria-label="약관 동의">
-    <GNB title="약관 동의" onBack={onBack} onClose={onClose}/>
+  return <main className="hh-terms" aria-label="이용 동의">
+    <GNB title="이용 동의" onBack={onBack} onClose={onClose}/>
     <div className="hh-terms-content">
-      <h1>서비스를 이용하려면 약관에 동의해 주세요.</h1>
+      <h1>시작하기 전에 확인해 주세요</h1>
       <div className="hh-terms-checks">
-        <div className="hh-terms-row hh-terms-all"><Checkbox label="전체 동의" checked={all} onChange={event => { setService(event.target.checked); setPrivacy(event.target.checked); setAge(event.target.checked) }}/></div>
-        <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 만 14세 이상이에요." checked={age} onChange={event => setAge(event.target.checked)}/></div>
-        <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 서비스 이용약관에 동의해요" checked={service} onChange={event => setService(event.target.checked)}/><button type="button" className="hh-terms-view" aria-label="서비스 이용약관 보기" onClick={() => show('service')}>보기</button></div>
-        <div className="hh-terms-row"><Checkbox variant="stroke" label="[필수] 개인정보 처리방침을 확인했어요" checked={privacy} onChange={event => setPrivacy(event.target.checked)}/><button type="button" className="hh-terms-view" aria-label="개인정보 처리방침 보기" onClick={() => show('privacy')}>보기</button></div>
+        <div className="hh-terms-row hh-terms-all"><Checkbox label="모두 동의" checked={all} onChange={event => { setService(event.target.checked); setPrivacy(event.target.checked); setAge(event.target.checked) }}/></div>
+        <div className="hh-terms-row"><Checkbox variant="stroke" label={<><span className="hh-terms-required">[필수]</span> 만 14세 이상입니다.</>} checked={age} onChange={event => setAge(event.target.checked)}/></div>
+        <div className="hh-terms-row"><Checkbox variant="stroke" label={<><span className="hh-terms-required">[필수]</span> 서비스 이용약관 동의</>} checked={service} onChange={event => setService(event.target.checked)}/><button type="button" className="hh-terms-view" aria-label="서비스 이용약관 보기" onClick={() => show('service')}>보기</button></div>
+        <div className="hh-terms-row"><Checkbox variant="stroke" label={<><span className="hh-terms-required">[필수]</span> 개인정보 처리방침 동의</>} checked={privacy} onChange={event => setPrivacy(event.target.checked)}/><button type="button" className="hh-terms-view" aria-label="개인정보 처리방침 보기" onClick={() => show('privacy')}>보기</button></div>
       </div>
     </div>
     <footer className="hh-onboarding-next"><Button disabled={!all} onClick={() => { if (all) onContinue() }}>동의하고 시작하기</Button></footer>
