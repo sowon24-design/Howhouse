@@ -2,10 +2,10 @@
   "schema": 1,
   "analysisConsentApproved": false,
   "outstanding": [
-    "Supabase EU 로그·비EU 지원과 Render 부수 처리, OpenAI 조건부 검토 등 남은 국가·보유 기준의 고지·이전 근거 검토",
+    "공개 계약·서비스별 처리 국가·조건을 근거로 한 고지 범위와 실제 계정 적용 계약·보호조치 확인(요청별 서버 경유 추적은 필수 조건으로 두지 않음)",
     "최종 Android 앱의 동의 전·거부·철회 후 실제 네트워크 확인",
-    "검토된 출시 커밋 배포 후 최종 서명 Android의 v7 동의·분석·철회·삭제 및 평가 기능 확인(v6 실연결 기록은 docs/AI_RELEASE_PRIVACY_HANDOFF.md 참조)",
-    "공개 Notion 6개 페이지의 v7 동일 본문 반영 확인(예슬 담당)"
+    "검토된 출시 커밋 배포 후 최종 서명 Android의 v8 동의·분석·철회·삭제 및 평가 기능 확인(v6 실연결 기록은 docs/AI_RELEASE_PRIVACY_HANDOFF.md 참조)",
+    "공개 Notion 6개 페이지의 v8 동일 본문 반영 확인(예슬 담당)"
   ],
   "notionSyncMethod": "manual-handoff",
   "notionSyncVerified": false
