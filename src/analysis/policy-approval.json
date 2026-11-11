@@ -2,10 +2,10 @@
   "schema": 1,
   "analysisConsentApproved": false,
   "outstanding": [
-    "공개 자료가 특정하지 않는 부수 로그·지원 처리의 국가·보유기간 및 적용 근거 검토",
-    "동의 전 자동 인증·평가 조회 경로와 최종 네트워크 범위 확인",
-    "최종 증빙 SQL·서버·호환 앱 적용 및 실기기 검증",
-    "공개 Notion 6개 페이지의 동일 본문 반영 확인"
+    "최종 국외 이전 본문·공개 자료 적용 범위의 출시 검토(계정·계약은 docs/FINAL_OVERSEAS_NOTICE_V9.md의 사용자 지정 조건 기준; 요청별 서버 경유 추적이나 업체 답변을 새 필수 절차로 두지 않음)",
+    "최종 Android 앱의 동의 전·거부·철회 후 실제 네트워크 확인",
+    "검토된 출시 커밋 배포 후 최종 서명 Android의 v9 동의·분석·철회·삭제 및 평가 기능 확인(v6 실연결 기록은 docs/AI_RELEASE_PRIVACY_HANDOFF.md 참조)",
+    "공개 Notion 6개 페이지의 v9 동일 본문 반영 확인(예슬 담당)"
   ],
   "notionSyncMethod": "manual-handoff",
   "notionSyncVerified": false
