@@ -36,7 +36,7 @@ export function NicknameScreen({ onBack, onClose, onComplete, initialValue = '',
       if (isValidNickname(trimmed) && changed) onComplete(trimmed)
     }}>
       <div className="hh-nickname-content">
-        <h1><label htmlFor={id}>{mode === 'edit' ? '닉네임' : '어떻게 불러드릴까요?'}</label></h1>
+        <h1><label htmlFor={id}>{mode === 'edit' ? '닉네임' : '어떤 이름으로 불러드릴까요?'}</label></h1>
         <div className="hh-nickname-field" data-error={error}>
           <input id={id} aria-label="닉네임" autoFocus autoComplete="off" autoCapitalize="off" spellCheck={false}
             placeholder="닉네임을 입력해 주세요." value={value} maxLength={composing ? undefined : 10}
@@ -49,7 +49,7 @@ export function NicknameScreen({ onBack, onClose, onComplete, initialValue = '',
         </div>
         <p id={`${id}-error`} className="hh-nickname-error" data-visible={error} aria-hidden={!error} role="alert"><span className="hh-nickname-warning" aria-hidden="true"><img src={warning} alt="" /></span><span>{spaceError || value.trim().length === 0 ? '공백만으로는 닉네임을 만들 수 없어요.' : '한글 · 영문 · 숫자 10자 이내로 입력해 주세요.'}</span></p>
       </div>
-      <footer ref={cta} className="hh-nickname-next"><Button type="submit" disabled={!valid || !changed}>{mode === 'edit' ? '수정하기' : '시작하기'}</Button></footer>
+      <footer ref={cta} className="hh-nickname-next"><Button type="submit" disabled={!valid || !changed}>{mode === 'edit' ? '수정하기' : value.length === 0 ? '다음' : '시작하기'}</Button></footer>
     </form>
   </main>
 }

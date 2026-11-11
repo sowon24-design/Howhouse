@@ -1,4 +1,7 @@
 # Add project specific ProGuard rules here.
+# Keep crash location information in the R8 mapping for this release.
+# Capacitor's runtime plugin/annotation keep rules are supplied by its library.
+-keepattributes SourceFile,LineNumberTable
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
 #

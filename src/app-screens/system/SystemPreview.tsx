@@ -1,11 +1,18 @@
 import {showDeveloperTools} from '../../analysis/release-mode'
 import { useState } from 'react'
 import { Button } from '../../components/ui'
-import { LaunchScreen } from './LaunchScreen'
-export { LaunchScreen } from './LaunchScreen'
+import symbol from './assets/logo-symbol.svg'
+import wordmark from './assets/logo-wordmark.svg'
 import offline from './assets/offline.svg'
 import '../home/home-preview.css'
 import './system.css'
+
+export function LaunchScreen() {
+  return <main className="hh-launch" aria-label="어쩌집 접속 로딩" aria-busy="true">
+    <div className="hh-launch-brand"><img src={symbol} alt="" /><img src={wordmark} alt="어쩌집" /></div>
+    <span className="ui-sr-only" role="status">앱을 준비하고 있어요.</span>
+  </main>
+}
 
 export function OfflineScreen({ retrying, onRetry }: { retrying: boolean; onRetry: () => void }) {
   return <main className="hh-offline" aria-label="오프라인">

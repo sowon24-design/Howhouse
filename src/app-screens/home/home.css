@@ -53,5 +53,3 @@
 .hh-home-art-stage img {width:100%;height:100%;object-fit:contain;}
 .hh-home-categories {background:#fff;}
 .hh-home .hh-home-problem {background:var(--color-neutral);box-shadow:none;}
-
-.hh-home-book .hh-home-search-icon { width:28px; height:28px; filter:brightness(0) invert(1); }

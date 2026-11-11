@@ -15,17 +15,19 @@
 
 ## SolutionStep (2026-11-03)
 
+2026-11-11 사용자 요청: 준비물에 클릭 연결이 없거나 disabled인 항목은 동일한 태그 스타일의 span으로 표시한다. 이 경우 외부 이동 아이콘·클릭·탭 포커스·누름 효과가 없다. 실제 콜백이 있는 활성 항목만 기존 버튼 계약을 사용한다. 현재 사례 앱에는 쿠팡 연결이 없으므로 모두 정적 태그다.
+
 소스: [SolutionStep.tsx](ui/SolutionStep.tsx), [Figma 725:28299](https://www.figma.com/design/6WGOaMy4R6jiO6Q7fQ09w8/figma-design?node-id=725-28299).
 
 - 필수 Props: `number: number`, `title: string`, `description: string`. number는 화면이 전달하는 단계 번호다. B02 준비물은 0, 해결 단계는 1부터 표시한다.
-- 선택 Props: `active?: boolean`(기본 false), `materials?: readonly StepMaterial[]`(기본 빈 배열).
-- StepMaterial: `id: string`, `label: string`. id는 목록 내 고유값이다.
+- 선택 Props: `active?: boolean`(기본 false), `materials?: readonly StepMaterial[]`(기본 빈 배열), `onMaterialClick?: (material: StepMaterial) => void`.
+- StepMaterial: `id: string`, `label: string`, `disabled?: boolean`. id는 목록 내 고유값이다.
 - 최신 Figma 840:8523: 연한 번호 배경과 파란 숫자의 고정 행이다. active는 이전 호출 호환용이며 시각 변화와 aria-current를 만들지 않는다. B02는 모든 행을 하나의 흰 카드와 세로 연결선으로 묶는다.
 - 준비물 수에 제한을 두지 않는다. 부모 폭에 맞춰 줄바꿈하며 긴 이름도 넘치지 않는다. 빈 배열이면 준비물 영역과 해당 간격을 렌더링하지 않는다.
-- 준비물은 Figma 725:28299의 둥근 회색 태그로 표시한다. 배경 border, 글자 on-surface, Pretendard Medium 14px/1.4, 상하 4px·좌우 12px, 반경 24px, 태그 간격 8px이다. 모든 B02와 미리보기에 공통 적용한다.
-- 준비물은 span으로 표시하며 외부 링크 아이콘·클릭 콜백·탭 포커스·누름 효과가 없다. 쿠팡으로 이동하지 않는다.
+- 준비물 버튼은 클릭한 항목만 콜백으로 전달한다. disabled 또는 콜백 부재 시 비활성이다. 링크·검색·외부 브라우저는 화면 책임이며 현재 API 요청을 하지 않는다.
+- 원본 외부 링크 아이콘은 `public/components/figma/solution-step-external-link.svg`(725:31185), 16×16 그대로 사용한다.
 - W10 색상은 공통 토큰을 재사용한다. B02의 SolutionSteps가 이 컴포넌트를 조립한다.
-- B02는 하나의 흰 카드 안에서 단계를 고정 표시하며 스크롤에 따라 바꾸지 않는다. 공통 컴포넌트 자체는 스크롤을 감지하지 않는다.
+- 준비물 누름에는 기존 승인 밝기 피드백을 사용하고 키보드 focus-visible을 유지한다. B02는 하나의 흰 카드 안에서 단계를 고정 표시하며 스크롤에 따라 바꾸지 않는다. 공통 컴포넌트 자체는 스크롤을 감지하지 않는다.
 
 ## Button
 
@@ -105,7 +107,7 @@
 
 소스: [Photo.tsx](ui/Photo.tsx)
 
-- AddImage Props: `onClick: () => void`(기본 false). 접근성 이름은 “사진 추가”다.
+- AddImage Props: `onClick: () => void`, `disabled?: boolean`(기본 false). 접근성 이름은 “사진 추가”다.
 - Photo 필수 Props: `src: string`, `alt: string`, `onRemove: () => void`. 삭제 버튼 이름은 alt에 “삭제”를 붙인다.
 - 사진은 지정 영역을 채우도록 잘라 표시한다. 추가·삭제 버튼은 콜백만 호출한다.
 - 사진 배열, 최대 5장 제한, 추가 버튼 숨김/재표시, 파일 검증, 카메라·앨범·권한·업로드는 화면 책임이다. 미리보기는 예시 사진만 추가한다.
@@ -116,7 +118,7 @@
 
 - 필수 Props: `open: boolean`, `onClose: () => void`, `label: string`, `actions: readonly SheetAction[]`.
 - 선택 Props: `cancelLabel?: string`(기본 “취소”).
-- SheetAction: `id: string`, `label: string`, `onClick: () => void`. id는 목록 내 고유값이다.
+- SheetAction: `id: string`, `label: string`, `onClick: () => void`, `disabled?: boolean`. id는 목록 내 고유값이다.
 - 액션 클릭은 해당 onClick만 호출하며 자동 닫힘이 아니다. 화면에서 필요 시 open을 false로 변경한다.
 - 취소·Escape·배경 바깥 클릭은 onClose를 호출한다. 배경 클릭은 포인터 시작과 종료가 모두 dialog 바깥일 때 처리한다.
 - 아래에서 올라와 열리고 아래로 내려가 닫힌다. 상단 중앙 손잡이 주변에서 시작한 드래그로 닫을 수 있다. 아래 Dialog 계약을 따른다.

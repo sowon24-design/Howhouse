@@ -33,10 +33,27 @@ android {
         }
     }
     buildTypes {
+        youtubeQa {
+            initWith debug
+            versionNameSuffix '-youtube-check'
+            matchingFallbacks = ['debug']
+            if (signingReady) signingConfig signingConfigs.upload
+        }
         release {
             if (signingReady) signingConfig signingConfigs.upload
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+// Same package/key update for the owner's device; never a Play-submission build.
+tasks.matching { it.name == 'preYoutubeQaBuild' }.configureEach {
+    doFirst {
+        if (!signingReady) throw new GradleException('YouTube 확인용 APK도 기존 업로드 키로 서명해야 합니다.')
+        def info = new groovy.json.JsonSlurper().parse(file('src/main/assets/public/howhouse-build.json'))
+        if (info.variant != 'catalog' || info.mode != 'catalog-preview' || info.releaseApproved != false || info.youtubePreview != true || info.youtubeApiConfigured != true) {
+            throw new GradleException('YouTube 확인용 웹 빌드가 아닙니다. Play 제출에 사용하지 마세요.')
         }
     }
 }
@@ -90,6 +107,10 @@ tasks.matching { it.name == 'preReleaseBuild' }.configureEach {
         def policyFile = rootProject.file('../src/catalog/policy.ts')
         def policyHash = java.security.MessageDigest.getInstance('SHA-256').digest(policyFile.bytes).encodeHex().toString()
         def approval = new groovy.json.JsonSlurper().parse(rootProject.file('../src/catalog/release-approval.json'))
+        def youtubeApproval = new groovy.json.JsonSlurper().parse(rootProject.file('../src/youtube/release-approval.json'))
+        if (info.youtubePreview != true || info.youtubeApiConfigured != true || info.youtubeReleaseVerified != true || !youtubeApproval.privacyNoticePublished || !youtubeApproval.providerPolicyReviewed || !youtubeApproval.androidPreviewVerified || !youtubeApproval.playSigningRestrictionVerified) {
+            throw new GradleException('YouTube 미리보기의 공개 개인정보 안내 및 Android/Play 서명 검증이 필요합니다.')
+        }
         if (info.schema != 2 || info.variant != 'catalog' || !(info.mode in ['release', 'production']) || info.aiEnabled != false || info.serverStorage != false || info.releaseApproved != true || info.policyStatus != 'published' || info.policySha256 != policyHash || info.policyVersion != approval.policyVersion || !approval.publicPolicyVerified || !approval.androidVerified || !approval.externalContentRightsVerified || !approval.legacyDataTransitionReviewed) {
             throw new GradleException('현재 웹 파일은 승인된 최신 출시 빌드가 아닙니다. release 웹 빌드와 Capacitor 동기화를 다시 확인하세요.')
         }
