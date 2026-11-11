@@ -1,5 +1,19 @@
 apply plugin: 'com.android.application'
 
+// AI branch release inputs are process-local; never commit keys or passwords.
+def signingNames = ['HOWHOUSE_KEYSTORE_PATH','HOWHOUSE_KEYSTORE_PASSWORD','HOWHOUSE_KEY_ALIAS','HOWHOUSE_KEY_PASSWORD']
+def signingValues = signingNames.collectEntries { [(it): System.getenv(it)] }
+def signingReady = signingValues.values().every { it != null && !it.trim().isEmpty() }
+def releaseVersionCode = System.getenv('HOWHOUSE_VERSION_CODE')
+def releaseVersionName = System.getenv('HOWHOUSE_VERSION_NAME')
+if (releaseVersionCode && (!(releaseVersionCode ==~ /[1-9][0-9]*/) || releaseVersionCode.toBigInteger() > 2100000000)) {
+    throw new GradleException('HOWHOUSE_VERSION_CODE는 1~2100000000 정수여야 합니다.')
+}
+def verifyAiReleaseInputs = {
+    if (!signingReady) throw new GradleException('출시 서명 환경변수 4개가 필요합니다. 키·비밀번호를 로그나 Git에 기록하지 마세요.')
+    if (!releaseVersionCode || !releaseVersionName?.trim()) throw new GradleException('HOWHOUSE_VERSION_CODE와 HOWHOUSE_VERSION_NAME이 필요합니다. 같은 앱이면 기존 Play 코드보다 높은 값을 사용하세요.')
+}
+
 android {
     namespace = "com.howhouse.app"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -7,8 +21,8 @@ android {
         applicationId "com.howhouse.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode releaseVersionCode ? releaseVersionCode.toInteger() : 1
+        versionName releaseVersionName ?: "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,12 +30,29 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (signingReady) {
+            upload {
+                storeFile file(signingValues.HOWHOUSE_KEYSTORE_PATH)
+                storePassword signingValues.HOWHOUSE_KEYSTORE_PASSWORD
+                keyAlias signingValues.HOWHOUSE_KEY_ALIAS
+                keyPassword signingValues.HOWHOUSE_KEY_PASSWORD
+            }
+        }
+    }
     buildTypes {
         release {
+            if (signingReady) signingConfig signingConfigs.upload
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+tasks.register('verifyAiReleaseInputs') {
+    group = 'verification'
+    description = 'Validate required signing/version inputs without creating a signed artifact.'
+    doLast { verifyAiReleaseInputs() }
 }
 
 repositories {
@@ -56,6 +87,7 @@ try {
 // A signed release must use an approved web release, not the last trial assets.
 tasks.matching { it.name == 'preReleaseBuild' }.configureEach {
     doFirst {
+        verifyAiReleaseInputs()
         def infoFile = file('src/main/assets/public/howhouse-build.json')
         if (!infoFile.exists()) {
             throw new GradleException('출시 웹 파일 확인표가 없습니다. 승인된 release 웹 빌드 후 Capacitor 동기화가 필요합니다.')
@@ -63,7 +95,7 @@ tasks.matching { it.name == 'preReleaseBuild' }.configureEach {
         def info = new groovy.json.JsonSlurper().parse(infoFile)
         def policyFile = rootProject.file('../src/app-screens/my/information-draft.json')
         def policyHash = java.security.MessageDigest.getInstance('SHA-256').digest(policyFile.bytes).encodeHex().toString()
-        if (info.schema != 1 || !(info.mode in ['release', 'production']) || info.developerTools != false || info.privacyReady != true || info.requiredProcessingRegion != 'us' || info.policySha256 != policyHash) {
+        if (info.schema != 1 || info.variant != 'ai' || info.aiEnabled != true || info.serverStorage != true || !(info.mode in ['release', 'production']) || info.developerTools != false || info.privacyReady != true || info.requiredProcessingRegion != 'us' || info.policySha256 != policyHash) {
             throw new GradleException('현재 웹 파일은 승인된 최신 출시 빌드가 아닙니다. release 웹 빌드와 Capacitor 동기화를 다시 확인하세요.')
         }
     }
