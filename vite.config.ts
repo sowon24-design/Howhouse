@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
   validateReleaseConfig(mode, env, JSON.parse(policyText))
   const developerTools=['development','trial','test'].includes(mode)
   const buildInfo:Plugin={name:'howhouse-build-info',generateBundle(){
-    this.emitFile({type:'asset',fileName:'howhouse-build.json',source:JSON.stringify({schema:1,mode,developerTools,privacyReady:env.VITE_RELEASE_PRIVACY_READY==='1',requiredProcessingRegion:developerTools?null:'us',policySha256:createHash('sha256').update(policyText).digest('hex')})})
+    this.emitFile({type:'asset',fileName:'howhouse-build.json',source:JSON.stringify({schema:1,variant:'ai',aiEnabled:true,serverStorage:true,mode,developerTools,privacyReady:env.VITE_RELEASE_PRIVACY_READY==='1',requiredProcessingRegion:developerTools?null:'us',policySha256:createHash('sha256').update(policyText).digest('hex')})})
   }}
   return {
     plugins: [react(),buildInfo],

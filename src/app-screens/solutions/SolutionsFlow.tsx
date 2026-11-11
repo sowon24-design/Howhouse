@@ -7,6 +7,7 @@ import { B01 } from '../../solutions/B01'
 import { B02 } from '../../solutions/B02'
 import { B03 } from '../../solutions/B03'
 import { getCategoryCases, getSolutionById, solutionCases, type CategoryId } from '../../solutions/data'
+import { getCaseListLabel } from '../../solutions/data/case-list-labels'
 import { toMessageRecipients } from '../../solutions/message-model'
 import type { ResolutionStatus } from '../../solutions/resolution-message'
 import type { HomeCategoryKey } from '../home/HomeScreen'
@@ -32,7 +33,7 @@ export function SolutionsFlow({ category, onHome, onWriteProblem, initialCaseId,
   const reduced = !screenSlidesEnabled || prefersReduced
   const transition = {duration: reduced ? 0 : .32, ease: [.4, 0, .2, 1] as const}
   const data = selectedId ? getSolutionById(selectedId) : undefined
-  const items = getCategoryCases(solutionCases, category).map(c => ({key: c.id, label: c.symptom}))
+  const items = getCategoryCases(solutionCases, category).map(c => ({key: c.id, label: getCaseListLabel(c.id,c.symptom)}))
   function leaveSolution() {
     if (initialCaseId) { onHome(); return }
     setDepth(0)

@@ -3,6 +3,8 @@
 2026-11-10. 기준 main `3a1ec48`, 별도 브랜치 `codex/ai-release-privacy`.
 AI 없는 버전과 병행 검토한다. 이 PR은 Draft이며 자동 병합·배포하지 않는다. AI·사진 분석·Supabase Free와 기존 평가·동의 증빙·철회·삭제를 유지한다.
 
+현재 사용자는 AI 없는 main을 보존하고 PR62 브랜치에서 AI 출시 후보를 완성하도록 지정했다. 최신 main `6dea025`의 공통 사례·UI만 선택 반영했으며 현재 적용 순서는 `AI_BRANCH_RELEASE_PLAN.md`를 따른다. 아래 과거 기록의 main 병합 순서를 현재 승인으로 해석하지 않는다. main 병합 없이 이 브랜치의 후보를 선택할 수 있다.
+
 ## 2026-11-12 후속 — v9 최종 본문·전달 파일
 
 v9 Android 비운영 차이 검증도 완료했다. 가상기기 APK의 본문/해시·동의 전/거부 후 외부 요청0·승인 차단과 별도 WebView 로컬 SQL 하네스의 양쪽 영수증·이전 동의 차단·철회·삭제를 통과했다. 최종 서명 앱의 실제 운영 검증은 아니다. `ANDROID_V9_OFFLINE_VALIDATION.md` 및 후속 로그인 검토 `LOGIN_FEASIBILITY_V9.md`를 따른다. 앱 제품 코드·운영 설정 변경은 없었다.

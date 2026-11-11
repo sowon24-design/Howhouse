@@ -15,10 +15,26 @@ const output = (decision = 'existing', caseId = '욕실·수도:1') => ({ status
 const config = { apiKey: 'never-a-real-key', model: 'gpt-6.1-terra' }
 
 test('catalog uses same active IDs and excludes management/contact fields', () => {
-  assert.equal(catalog.cases.length, 53)
+  assert.equal(catalog.cases.length, 115)
+  assert.equal(catalog.cases.filter(c=>/^G\d+$/.test(c.number)).length,62)
   assert.ok(!catalog.cases.some(c => c.id === '가전:32'))
   assert.ok(catalog.cases.some(c => c.id === '욕실·수도:1'))
   assert.deepEqual(Object.keys(JSON.parse(catalog.serialized)[0]), ['id', 'symptom', 'description', 'steps'])
+})
+
+test('new reviewed guides are valid model matches with their full steps',()=>{
+  const item=catalog.cases.find(c=>c.number==='G01')
+  assert.ok(item.steps.length>=4)
+  assert.deepEqual(parseMatchingResponse(output('existing',item.id),catalog),{source:'existing',caseId:item.id})
+  const serialized=JSON.parse(catalog.serialized).find(c=>c.id===item.id)
+  assert.deepEqual(serialized.steps,item.steps)
+})
+
+test('incidental identifying text is not a blanket client-side/model-request rejection',()=>{
+  const text='합성 테스트 사용자 홍길동입니다. 싱크대 배수관에서 물이 떨어져요.'
+  const request=buildMatchingRequest({model:config.model,catalog,text,photos:[]})
+  assert.ok(request.input[1].content.some(c=>c.type==='input_text'&&c.text.includes(text)))
+  assert.equal(request.store,false)
 })
 
 test('multimodal request has strict schema, original photo, no tools, no storage', () => {

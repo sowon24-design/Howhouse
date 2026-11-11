@@ -55,6 +55,7 @@ export function OnboardingPreview({ onComplete, storageStatus, onResetSetup }: {
   const [step, setStep] = useState(readStep)
   const [termsOpen, setTermsOpen] = useState(false)
   const [nicknameOpen, setNicknameOpen] = useState(false)
+  const [nicknameDraft, setNicknameDraft] = useState('')
   const [status, setStatus] = useState('소개 단계를 기기에 저장합니다. 새로고침 후 같은 단계에서 이어집니다.')
   function changeStep(next: number) {
     setNicknameOpen(false)
@@ -73,7 +74,7 @@ export function OnboardingPreview({ onComplete, storageStatus, onResetSetup }: {
   })
   return <div className="hh-home-preview">
     <div className="hh-home-preview-frame hh-onboarding-frame">{nicknameOpen
-      ? <NicknameScreen onBack={() => { setNicknameOpen(false); setStatus('약관 동의 화면으로 돌아왔습니다. 실제 동의 기록은 저장하지 않습니다.') }} onClose={() => changeStep(0)} onComplete={onComplete} />
+      ? <NicknameScreen initialValue={nicknameDraft} onDraftChange={setNicknameDraft} onBack={() => { setNicknameOpen(false); setStatus('약관 동의 화면으로 돌아왔습니다. 실제 동의 기록은 저장하지 않습니다.') }} onClose={() => changeStep(0)} onComplete={onComplete} />
       : termsOpen
       ? <TermsScreen onBack={() => changeStep(3)} onClose={() => changeStep(0)} onContinue={() => { setNicknameOpen(true); setStatus('닉네임은 완료 후 홈에 표시됩니다. 완료 시 닉네임과 설정 완료 여부를 기기에 저장합니다. 실제 약관 동의 기록은 저장하지 않습니다.') }} />
       : <OnboardingScreen step={step} onStepChange={changeStep} onContinue={() => { setTermsOpen(true); setStatus('개인정보 관련 약관은 화면 확인용 초안입니다. 필수 두 항목만 체크해도 진행할 수 있으며 실제 동의 기록은 저장하지 않습니다.') }} />}</div>
