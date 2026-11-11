@@ -1,5 +1,5 @@
 import {releaseBuild,ageConfirmationKey} from './analysis/release-mode'
-import { categories, getCategoryCases, solutionCases, type CategoryId } from './solutions/data'
+import { categoryForCaseDetail, solutionCases, type CategoryId } from './solutions/data'
 import { AnimatePresence } from 'motion/react'
 import { SolutionsFlow, categoryForHome } from './app-screens/solutions/SolutionsFlow'
 import { SystemPreview } from './app-screens/system/SystemPreview'
@@ -120,7 +120,7 @@ function AppContent({ suspended, onConnectionLost }: { suspended: boolean; onCon
     return () => window.removeEventListener('hashchange', update)
   }, [])
   const selectedCase = solutionCases.find(item => hash === `#case/${encodeURIComponent(item.id)}`)
-  const caseCategory = selectedCase && categories.find(item => getCategoryCases([selectedCase], item.id).length)?.id
+  const caseCategory = selectedCase && categoryForCaseDetail(selectedCase)
   const category = (hash === '#problem' ? problemBackground : undefined) ?? caseCategory ?? Object.values(categoryForHome).find(value => hash === `#solutions/${encodeURIComponent(value)}`)
   const frontOpen = hash === '#problem' || hash === '#my' || Boolean(category)
   if(releaseBuild&&!ageConfirmed&&hash!=='#onboarding')return null

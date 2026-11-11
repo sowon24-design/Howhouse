@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { readFileSync, existsSync } from 'node:fs'
 import { convertCsv, parseCsv } from './convert.ts'
 import { applyAdditionalGuides } from './additional-guides.ts'
-import { categories, getCategoryCases } from './categories.ts'
+import { categories, getCategoryCases, categoryForCaseDetail } from './categories.ts'
 import guides from './additional62/refined-guides.json' with {type:'json'}
 import videos from './additional62/videos.json' with {type:'json'}
 const fields=['난방·전기','해충·곰팡이','욕실·수도','가전']
@@ -26,6 +26,16 @@ test('23 home additions route exactly once; 39 remain searchable only',()=>{
   assert.equal(home.length,23)
   assert.equal(new Set(home.map(c=>c.id)).size,23)
   assert.equal(cases.length-home.length,39)
+})
+
+test('all additions have a working detail shell without adding the 39 omitted cases to home',()=>{
+  for(const item of cases){
+    const category=categories.find(c=>c.id===categoryForCaseDetail(item))
+    assert.equal(category.field,item.field,item.id)
+  }
+  const gas=cases.find(c=>c.number==='G01')
+  assert.equal(categoryForCaseDetail(gas),'보일러')
+  assert.ok(categories.every(c=>!getCategoryCases([gas],c.id).length))
 })
 test('33 approved videos have packaged thumbnails; 29 have no video area',()=>{
   assert.equal(cases.filter(c=>c.videos.length).length,33)

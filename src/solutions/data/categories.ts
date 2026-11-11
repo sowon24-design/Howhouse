@@ -20,3 +20,9 @@ export function getCategoryCases(cases: readonly SolutionCase[], categoryId: Cat
     ? homeRouting[c.number] === categoryId
     : c.field === category.field && c.category.trim() === category.csvCategory)
 }
+
+/** A detail route must also work for cases intentionally omitted from home lists. */
+export function categoryForCaseDetail(item: SolutionCase): CategoryId {
+  return categories.find(c=>getCategoryCases([item],c.id).length)?.id
+    ?? categories.find(c=>c.field===item.field)!.id
+}

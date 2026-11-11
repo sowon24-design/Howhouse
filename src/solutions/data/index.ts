@@ -11,7 +11,7 @@ import { isActiveCase } from './deleted-cases'
 import { additionalCases } from './additional-cases'
 import { additionalCasePhotos } from './additional-photos'
 import type { SolutionView } from './types'
-export { categories, getCategoryCases } from './categories'
+export { categories, getCategoryCases, categoryForCaseDetail } from './categories'
 export type { CategoryId } from './categories'
 export type { CaseId, Field, SolutionCase, SolutionView } from './types'
 
