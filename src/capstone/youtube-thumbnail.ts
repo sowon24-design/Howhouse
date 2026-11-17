@@ -2,7 +2,7 @@
 export async function requestCapstoneThumbnail(videoId: string, signal: AbortSignal): Promise<Blob | undefined> {
   if (!/^[A-Za-z0-9_-]{11}$/.test(videoId) || signal.aborted) return
   try {
-    const response = await fetch(`http://127.0.0.1:8787/api/youtube/thumbnail?videoId=${videoId}`, {
+    const response = await fetch(`${import.meta.env.VITE_ANALYSIS_API_BASE_URL || 'http://127.0.0.1:8787'}/api/youtube/thumbnail?videoId=${videoId}`, {
       signal, credentials: 'omit', cache: 'no-store', redirect: 'error', referrerPolicy: 'no-referrer',
     })
     if (!response.ok || !/^image\/(jpeg|png|webp)(;|$)/i.test(response.headers.get('content-type') ?? '')) return

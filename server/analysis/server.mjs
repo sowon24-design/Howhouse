@@ -104,11 +104,11 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
   const releaseStatus=code=>code==='invalid-input'?422:code==='auth-required'?401:code==='not-found'?404:code==='conflict'?409:503
   const feedback = trial && feedbackStore ? createFeedbackService({ store: feedbackStore, catalog }) : undefined
   const feedbackPaths = new Map([['/api/feedback/state', 'state'], ['/api/feedback/rating', 'rating'], ['/api/feedback/opinions', 'opinions']])
-  const allowedOrigins = trial ? new Set(trial.origins) : origins
+  const allowedOrigins = trial ? new Set(trial.origins) : new Set([...origins, ...(config.capstoneAndroidUsb ? ['http://127.0.0.1'] : [])])
   return createServer(async (req, res) => {
     const origin = req.headers.origin
     const host = req.headers.host ?? ''
-    const allowedHost = trial ? host === trial.host : /^(127\.0\.0\.1|localhost):\d+$/.test(host)
+    const allowedHost = trial ? host === trial.host : config.capstonePublicHost ? host === config.capstonePublicHost : /^(127\.0\.0\.1|localhost):\d+$/.test(host)
     const allowed = (allowedOrigins.has(origin) || privacyPaths.has(req.url) && origin===`https://${host}`) && allowedHost
     const reply = (status, data) => {
       if (res.destroyed) return

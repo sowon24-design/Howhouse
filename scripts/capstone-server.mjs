@@ -26,7 +26,7 @@ export function startCapstoneServer(args = process.argv.slice(2)) {
   // It is not a substitute for the hosted monthly/user quota policies.
   const ledger = createCallLedger(resolve(dataDir, 'calls.local'), 5)
   const cache = createAnswerCache({ path: resolve(dataDir, 'answers.local'), keyPath: resolve(dataDir, 'answer-key.local') })
-  const server = createAnalysisServer({ config, catalog, ledger, cache })
+  const server = createAnalysisServer({ config: { ...config, capstoneAndroidUsb: true }, catalog, ledger, cache })
   const analysisRequest = server.listeners('request')[0]
   const thumbnail = createCapstoneYoutubeHandler({ apiKey: process.env.HOWHOUSE_YOUTUBE_API_KEY?.trim() })
   server.removeAllListeners('request')

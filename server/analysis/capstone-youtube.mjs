@@ -2,11 +2,11 @@ import { requestYoutubePreview, requestYoutubeImage } from '../../src/youtube/pr
 import signers from '../../src/youtube/android-signers.json' with { type: 'json' }
 
 /** Owner-only loopback proxy: no browser Google key or catalog-profile dependency. */
-export function createCapstoneYoutubeHandler({ apiKey, fetchImpl = fetch }) {
+export function createCapstoneYoutubeHandler({ apiKey, fetchImpl = fetch, publicHost }) {
   return async (req, res) => {
     if (!req.url?.startsWith('/api/youtube/')) return false
-    const allowed = req.headers.origin === 'http://127.0.0.1:5190'
-      && /^(127\.0\.0\.1|localhost):\d+$/.test(req.headers.host ?? '')
+    const allowed = ['http://127.0.0.1:5190', 'http://127.0.0.1'].includes(req.headers.origin)
+      && (publicHost ? req.headers.host === publicHost : /^(127\.0\.0\.1|localhost):\d+$/.test(req.headers.host ?? ''))
     const reply = (status, body, type = 'application/json') => {
       if (res.destroyed) return
       res.writeHead(status, { 'Content-Type': type, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',

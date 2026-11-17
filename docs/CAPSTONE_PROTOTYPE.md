@@ -72,7 +72,6 @@ node --experimental-strip-types scripts/capstone-server.mjs --test-data-only --e
 YouTube 썸네일까지 사용하려면 API 서버 프로세스의 `HOWHOUSE_YOUTUBE_API_KEY`도 설정한다. 현재 PC에서는 기존 DPAPI 암호화 파일에서 키를 읽어 서버에만 전달하는 `C:/Users/user/Documents/Codex/howhouse-capstone-server-start-20261117.txt`의 전체 명령을 PowerShell에 붙여넣어 실행할 수 있다. 이 명령이 위 API 서버 명령을 대신하므로 이미 서버가 켜져 있다면 중복 실행하지 않는다. 종료는 해당 터미널에서 Ctrl+C다. 키 값·Google 설정·공개 앱 설정은 변경하지 않는다.
 
 - 각 터미널에서 Ctrl+C로 종료한다. Codex가 현재 백그라운드로 실행한 프로세스의 종료는 별도로 요청할 수 있다. 기존 앱·서버를 이름만 보고 한꺼번에 종료하지 않는다.
-- API 서버는 `127.0.0.1:8787`에만 바인딩하며 PC 외부에 공개하지 않는다. 웹 연결 주소도 loopback으로 고정한다. Android·외부 배포는 이번 검증 범위가 아니다.
 - 모델은 기존 `gpt-6.1-terra`를 재사용하고 미국 지정 외 자동 fallback은 하지 않는다. 새 모델/요금제는 선택하지 않았다.
 - 실제 사용자·타인의 민감정보가 아닌 소유/허락된 테스트 자료만 사용한다. 새 입력 분석은 API 비용이 발생하며 자동 재시도는 없다.
 - 프로토타입 전용 예약 기록은 누적 최대 5개다. 실패한 시도도 포함하며, 다시 시작해도 기록을 읽는다. 이 제한은 새 공개 서비스의 월 예산·사용자별 하루 한도를 구현한 것이 아니다. 제한을 초기화하기 위해 기록을 임의 삭제하지 않는다.
@@ -108,3 +107,19 @@ YouTube 썸네일까지 사용하려면 API 서버 프로세스의 `HOWHOUSE_YOU
 ## Git 공유 범위 (2026-11-17)
 
 사용자 요청에 따라 지금까지의 프로토타입 코드·설정·검사·설명 문서를 `캡스톤-프로토타입` 브랜치에 커밋·푸시한다. main에는 병합하지 않으며 PR도 만들지 않는다. OpenAI/YouTube 키, `.env`, 암호화 답변·호출 기록, 빌드 결과와 개인 PC용 키 설정 명령은 포함하지 않는다. 다른 PC에서는 서버 전용 OpenAI 설정과 `HOWHOUSE_YOUTUBE_API_KEY`를 별도로 준비해야 하며 저장소만 내려받아 키가 자동 제공되지는 않는다.
+
+## Android 시연 준비 (2026-11-17)
+
+사용자는 최종적으로 PC·USB 없이 폰만 사용하는 시연을 선호한다. APK 설치 자체와 AI 서버의 위치는 별개다. API 키를 APK에 넣어 직접 OpenAI를 호출하지 않는다.
+
+- `scripts/capstone-android-prepare.mjs`는 기존 `android/`와 출시 Capacitor 설정을 수정하지 않고 Git 제외 폴더 `capstone-android.local/`에 별도 네이티브 프로젝트를 준비한다. 기존 의존성과 아이콘을 사용한다. 앱 ID는 `com.howhouse.capstone`, 앱 이름은 `어쩌집 캡스톤`이며 기존 출시 앱을 덮어쓰지 않는다.
+- 웹 디자인·문구는 동일하다. App·Camera·Network 플러그인을 연결하고 기존 사진 선택·촬영·뒤로가기 코드를 사용한다. 실제 기기 검증은 별도로 필요하다.
+- 기본 APK는 USB 연결용이다. WebView origin `http://127.0.0.1`에서만 로컬 서버 연결을 추가 허용하며 기존 hosted 인증 정책은 바꾸지 않는다. API 서버는 여전히 PC loopback에만 바인딩한다.
+- USB 연결 명령은 `scripts/capstone-android-connect.ps1 -AdbPath <adb.exe 경로> -Install`이다. 승인된 기기 한 대만 선택하고 `adb reverse tcp:8787 tcp:8787`로 API를 연결한다. 원래 앱 삭제나 설정 초기화는 하지 않는다. 현재 서버 프로세스가 이전 코드라면 새 origin 설정을 반영하도록 해당 캡스톤 서버만 다시 시작해야 한다.
+- 원격 연결 준비: 빌드 전에 공개 설정 `VITE_CAPSTONE_API_BASE_URL=https://전용서버주소`를 지정하면 분석·썸네일이 같은 HTTPS 서버를 사용한다. URL만 공개 설정이며 비밀 키는 아니다. 계정 비밀번호·키·경로·쿼리 문자열은 허용하지 않는다. 이 설정만으로 현재 PC 서버가 인터넷 서버로 바뀌지는 않는다.
+- **폰 단독 시연의 남은 조건:** 캡스톤 전용 HTTPS 서버 배포, 서버 측 origin/host·요청 보호·재시작 후 비용 제한·보관 범위 확인, 서버 전용 OpenAI/YouTube 키 설정, 최종 서버 주소로 APK 재빌드와 실기기 검증. 기존 Render 출시 서비스나 Supabase를 임의 변경하지 않는다. 무료 서비스의 절전·영구 저장 제한도 실제 배포 전에 확인한다.
+- 테스트 자료는 소유·허락된 비민감 자료로 한정한다. 기존 출시용 약관을 AI 프로토타입용 동의 완료로 간주하지 않는다. 타인 대상 공개 배포·Play 제출은 이번 APK 준비에 포함하지 않는다.
+
+준비 명령: `node scripts/capstone-android-prepare.mjs`. 네이티브 빌드는 JDK 21과 Android SDK 36으로 `capstone-android.local/android/gradlew.bat -p capstone-android.local/android assembleDebug`를 실행한다. 이 프로젝트의 release/Play 빌드는 차단한다. APK에는 OpenAI·YouTube 비밀 키를 넣지 않는다.
+
+공식 참고: [Android ADB](https://developer.android.com/tools/adb), [Capacitor 설정](https://capacitorjs.com/docs/config). USB 통신과 로컬 HTTP 설정은 개발 시연용이며 공개 앱의 보안·개인정보 승인으로 해석하지 않는다.

@@ -24,7 +24,7 @@ test('loopback HTTP accepts photos, existing and generated results, and protects
   let paidWork = 0
   const seen = []
   const server = createAnalysisServer({
-    config: { apiKey: 'not-a-real-key', model: 'gpt-6.1-terra', processingRegion: 'us' }, catalog,
+    config: { apiKey: 'not-a-real-key', model: 'gpt-6.1-terra', processingRegion: 'us', capstoneAndroidUsb: true }, catalog,
     ledger: { reserve: () => { paidWork++ }, finish: () => {}, remaining: () => 5 - paidWork },
     matchImpl: async input => {
       seen.push(input)
@@ -37,6 +37,7 @@ test('loopback HTTP accepts photos, existing and generated results, and protects
   const base = `http://127.0.0.1:${server.address().port}`
   const origin = 'http://127.0.0.1:5190'
   assert.equal((await fetch(base + '/session', { headers: { Origin: 'https://other.example' } })).status, 403)
+  assert.equal((await fetch(base + '/session', { headers: { Origin: 'http://127.0.0.1' } })).status, 200)
   const session = await (await fetch(base + '/session', { headers: { Origin: origin } })).json()
   assert.equal(session.processingRegion, 'us')
   const send = (text, token = session.token) => {

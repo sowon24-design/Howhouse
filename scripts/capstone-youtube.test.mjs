@@ -30,6 +30,7 @@ test('thumbnail proxy restricts origin/ID and returns current image bytes withou
   assert.equal(calls.length, 2)
   assert.equal(calls[0].options.credentials, 'omit')
   assert.equal(calls[0].options.headers.get('X-Forwarded-For'), null)
+  assert.equal((await fetch(base + '?videoId=abcdefghijk', { headers: { Origin: 'http://127.0.0.1' } })).status, 200)
 })
 
 test('missing thumbnail server key and provider failure fail closed without exposing details', async () => {

@@ -1,0 +1,25 @@
+# Separate prototype only. Do not import this into an existing release service.
+services:
+  - type: web
+    name: howhouse-capstone-prototype
+    runtime: node
+    plan: free
+    region: singapore
+    branch: "캡스톤-프로토타입"
+    autoDeployTrigger: off
+    buildCommand: node --version
+    startCommand: node --experimental-strip-types server/analysis/capstone-render.mjs
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 24.15.0
+      - key: OPENAI_MODEL
+        value: gpt-6.1-terra
+      - key: OPENAI_PROCESSING_REGION
+        value: us
+      - key: CAPSTONE_DEMO_ENABLED
+        value: "0"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: HOWHOUSE_YOUTUBE_API_KEY
+        sync: false
