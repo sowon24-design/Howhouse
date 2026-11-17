@@ -15,7 +15,7 @@ import { createFeedbackService, parseFeedbackBody, FeedbackError, feedbackStatus
 import { ReleaseError } from './release-store.mjs'
 import { releasePage } from './release-pages.mjs'
 
-const origins = new Set(['http://127.0.0.1:5173', 'http://localhost:5173'])
+const origins = new Set(['http://127.0.0.1:5173', 'http://localhost:5173', 'http://127.0.0.1:5190'])
 const bodyLimit = 12 * 1024 * 1024
 const codes = new Set(['invalid-input', 'insufficient-input', 'unsupported-input', 'unsafe-input', 'model-refusal', 'analysis-timeout', 'catalog-mismatch', 'budget-limit', 'server-busy', 'api-error', 'auth-required'])
 

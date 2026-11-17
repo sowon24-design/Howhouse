@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { requestYoutubeImage, requestYoutubePreview, youtubeVideoId } from './preview-client'
 import { youtubePreviewConfig } from './config'
 import { readYoutubePrivacyAcceptance } from './privacy-acceptance'
+import { requestCapstoneThumbnail } from '../capstone/youtube-thumbnail'
 import './source.css'
 import youtubeIcon from './assets/youtube-icon-white.png'
 
@@ -11,6 +12,7 @@ const empty: State = { loading: false, failed: false }
 /** Thumbnail-only design review. Release remains blocked pending attribution/privacy review. */
 export function YoutubePreview({ url, externalIcon, onOpen }: { url: string; externalIcon: string; onOpen: (url: string) => void }) {
   const id = youtubeVideoId(url)
+  const capstone = import.meta.env.MODE === 'capstone'
   const link = useRef<HTMLAnchorElement>(null)
   const imageUrl = useRef<string | undefined>(undefined)
   const [state, setState] = useState<State>(empty)
@@ -33,16 +35,20 @@ export function YoutubePreview({ url, externalIcon, onOpen }: { url: string; ext
     }
     const fail = () => { clear(); if (active) setState({ loading: false, failed: true }) }
     const load = async () => {
-      if (!accepted || !id || !config || !active || attempted || document.hidden || !inView) return
+      if ((!capstone && (!accepted || !config)) || !id || !active || attempted || document.hidden || !inView) return
       attempted = true
       const request = new AbortController()
       controller = request
       setState({ loading: true, failed: false })
       timer = setTimeout(fail, 10000)
-      const result = await requestYoutubePreview(id, { ...config, privacyAccepted: accepted }, request.signal)
-      if (!active || controller !== request || request.signal.aborted) return
-      if (result.status !== 'ready') { fail(); return }
-      const blob = await requestYoutubeImage(result.preview, request.signal)
+      let blob: Blob | undefined
+      if (capstone) blob = await requestCapstoneThumbnail(id, request.signal)
+      else {
+        const result = await requestYoutubePreview(id, { ...config!, privacyAccepted: accepted }, request.signal)
+        if (!active || controller !== request || request.signal.aborted) return
+        if (result.status !== 'ready') { fail(); return }
+        blob = await requestYoutubeImage(result.preview, request.signal)
+      }
       if (!active || controller !== request || request.signal.aborted) return
       if (!blob) { fail(); return }
       if (timer) clearTimeout(timer)

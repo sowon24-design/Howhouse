@@ -1,4 +1,4 @@
-import {showDeveloperTools} from '../../analysis/release-mode'
+import {capstonePrototype,showDeveloperTools} from '../../analysis/release-mode'
 import { AnalysisLimit } from '../analysis/AnalysisLimit'
 import { AnalysisConfirmation } from '../analysis/AnalysisConfirmation'
 import { useEffect, useRef, useState } from 'react'
@@ -118,7 +118,10 @@ export function ProblemPreview({ input, onChange, onInputBack, onSuccess, suspen
                 return
               }
               cancel()
-              if(mode==='api' && (!showDeveloperTools || import.meta.env.VITE_RELEASE_PRIVACY_READY==='1')){
+              // The owner-only loopback prototype uses the separately acknowledged
+              // test-data server, not the hosted Supabase consent/identity service.
+              // Existing hosted/release consent checks remain unchanged.
+              if(mode==='api' && !capstonePrototype && (!showDeveloperTools || import.meta.env.VITE_RELEASE_PRIVACY_READY==='1')){
                 try{if(!configuredPrivacyClient().consentRecorded()){privacySnapshot.current=snapshot;setPrivacyOpen(true);return}}
                 catch{privacySnapshot.current=snapshot;setPrivacyOpen(true);return}
               }
