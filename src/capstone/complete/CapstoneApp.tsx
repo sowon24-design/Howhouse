@@ -16,6 +16,10 @@ import { SolutionStep } from '../../components/ui/SolutionStep'
 import { InformationScreen } from '../../app-screens/my/InformationScreen'
 import type { SolutionView } from '../../solutions/data/types'
 import { CommunityCard, figmaAsset } from './CommunityCard'
+import { CommunityComment } from './CommunityComment'
+import { CommentComposer } from './CommentComposer'
+import likedHeart from './assets/800b4df4-347c-41c2-b2bb-5d2e13a11615.svg'
+import unlikedHeart from './assets/360726bd-00a6-43ab-a9ed-3497746c8752.svg'
 import { searchCases } from '../../catalog/search-cases'
 import { DurationWheel } from './DurationWheel'
 import { Accordion } from '../../components/ui/Accordion'
@@ -65,6 +69,15 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
  const [query,setQuery]=useState(''),[history,setHistory]=useState<string[]>(['누수','곰팡이','보일러 누수'])
  const [draft,setDraft]=useState({kind:'',title:'',body:'',tags:''}),[postPhotos,setPostPhotos]=useState<string[]>([]),[comment,setComment]=useState('')
  const [editingPostId,setEditingPostId]=useState<string|null>(null)
+ const [postMenuOpen,setPostMenuOpen]=useState(false),[commentOpen,setCommentOpen]=useState(false)
+ useEffect(()=>{setPostMenuOpen(false);setCommentOpen(false)},[postId])
+ useEffect(()=>{if(!screens[screen].name.startsWith('C03')){setPostMenuOpen(false);setCommentOpen(false)}},[screen])
+ useEffect(()=>{
+  const dismiss=(event:PointerEvent)=>{if(!(event.target as Element).closest('[data-name^="Post menu"],[data-post-menu-trigger]'))setPostMenuOpen(false)}
+  const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){setPostMenuOpen(false);setCommentOpen(false)}}
+  document.addEventListener('pointerdown',dismiss);document.addEventListener('keydown',escape)
+  return()=>{document.removeEventListener('pointerdown',dismiss);document.removeEventListener('keydown',escape)}
+ },[])
  const profile=useRef(readProfile()),[nickname,setNickname]=useState<string>(profile.current.nickname),[years,setYears]=useState<number>(profile.current.years),[months,setMonths]=useState<number>(profile.current.months),[avatar,setAvatar]=useState('')
  const [reportReason,setReportReason]=useState(''),[reportBody,setReportBody]=useState(''),[withdrawReasons,setWithdrawReasons]=useState<string[]>([]),[withdrawBody,setWithdrawBody]=useState('')
  const [message,setMessage]=useState<string|null>(null),[companyMessage,setCompanyMessage]=useState<string|null>(null),[phrases,setPhrases]=useState<string[]>(['0','1','2'])
@@ -96,6 +109,8 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
   if(dialog&&!matchMedia('(prefers-reduced-motion: reduce)').matches){const sheet=dialog.dataset.cgSheet==='true',duration=sheet?320:100;dialog.style.pointerEvents='none';dialog.animate(sheet?[{transform:'translateY(0)'},{transform:'translateY(100%)'}]:[{opacity:1},{opacity:0}],{duration,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});closingTimer.current=setTimeout(navigate,duration)}else navigate()
  }
  function back(){
+  if(postMenuOpen){setPostMenuOpen(false);return}
+  if(commentOpen){setCommentOpen(false);return}
   if(information){setInformation(null);return}
   if(screen===S.withdrawDone){go(S.home,true);return}
   if(is(screen,[S.mine,S.commented,S.solved,S.recent,S.logout,S.withdraw,S.mind])){go(S.my,true);return}
@@ -126,7 +141,7 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
  }
  function openCase(data?:SolutionView|GeneratedSolution){if(data?.source==='existing'){location.hash='case/'+encodeURIComponent(data.id);return}if(!data)return;setSelectedCase(data);setRecent(previous=>[data.id,...previous.filter(id=>id!==data.id)].slice(0,20));setMessage(data.contacts.landlord.sentences.join('\n\n'));setCompanyMessage(data.contacts.company.sentences.join('\n\n'));location.hash='analysis-result';setScreen(S.solution)}
  function openResult(){const data=analysisResult?.source==='existing'?getSolutionById(analysisResult.caseId):analysisResult?.solution;openCase(data)}
- function openPost(p=post){if(!p)return;setPostId(p.id);go(p.mine?S.own:S.detail)}
+ function openPost(p=post){if(!p)return;setPostMenuOpen(false);setCommentOpen(false);setPostId(p.id);go(p.mine?S.own:S.detail)}
  function search(){setHistory(previous=>rememberQuery(previous,query));const community=screens[screen].name.startsWith('C');go(community?(found.length?S.communityResults:S.communityEmpty):(searchCases(solutionCases,query).length?S.caseResults:S.caseEmpty))}
  async function selectPhoto(purpose:'post'|'analysis'|'avatar',source:'camera'|'gallery'){
   filePurpose.current=purpose
@@ -166,7 +181,7 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
   if(t.includes('문의')&&/메시지|메세지/.test(t))return()=>go(S.message)
   if(t.includes('다른 해결 방법')||t.includes('계속 해결'))return()=>go(S.solution,true)
   if(t.includes('도움됐어요'))return()=>{if(post)setPosts(previous=>previous.map(p=>p.id===postId?toggleLike(p):p))}
-  if(t==='댓글 11'||t.startsWith('댓글 '))return()=>document.querySelector<HTMLInputElement>('[data-comment-input]')?.focus()
+  if(t==='댓글 11'||t.startsWith('댓글 '))return()=>{setCommentOpen(true);document.querySelector<HTMLTextAreaElement>('[data-comment-input]')?.focus()}
   if(t==='집주인')return()=>{setRecipient('landlord');go(S.message)}
   if(t==='전문 업체')return()=>{setRecipient('company');go(S.company)}
   if(t==='이메일 보내기')return()=>{location.href='mailto:happytanglee@gmail.com'}
@@ -178,6 +193,8 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
   return undefined
  }
  function action(n:NodeInfo):(()=>void)|undefined{
+  if(screens[screen].name.startsWith('C03')&&n.parents.at(-1)?.name==='Reactions')return n.text.includes('도움됐어요')?()=>{if(post)setPosts(previous=>previous.map(p=>p.id===postId?toggleLike(p):p))}:()=>setCommentOpen(true)
+  if(screens[screen].name.startsWith('C03')&&n.parents.some(p=>p.name==='Reactions'))return
   if(screen===S.categories){
    if(n.parents.some(parent=>categoryScreens[parent.name]))return
    if(categoryScreens[n.name])return()=>go(categoryScreens[n.name])
@@ -185,9 +202,9 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
   if(n.parents.some(p=>p.name==='Navigation Bar'))return
   if(n.parents.some(p=>['Button','List','Action','Write post','Chip','Message Button'].includes(p.name)))return
   if(n.parents.at(-1)?.name==='GNB'&&n.index===0&&screen!==S.home&&screen!==S.community&&screen!==S.my)return back
-  if(n.name==='Icon/Kebab')return()=>go(post?.mine?S.own:S.postMenu)
+  if(n.name==='Icon/Kebab')return()=>{setPostMenuOpen(previous=>!previous);if(!post?.mine&&screen!==S.postMenu)go(S.postMenu,true)}
   if(n.name==='Icon/Send'||(n.name==='Button'&&n.parents.some(p=>p.name==='CommunityDetail')))return submitComment
-  if(directSearch(screen)&&/Icon.*(Search|Magnifier|search)/.test(n.name))return search
+  if(directSearch(screen)&&(n.id==='408:3708'||/Icon.*(Search|Magnifier|search)/.test(n.name)))return search
   if(directSearch(screen)&&n.name==='Icon/X-mark')return()=>setQuery('')
   if(n.name==='Icon/Thums up')return()=>go(S.solvedSheet)
   if(n.name==='Icon/Thums down')return()=>go(S.solutionReport)
@@ -224,6 +241,11 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
   return options.multiline?<textarea {...props} rows={Math.max(2,value.split('\n').length)} />:<input {...props}/>
  }
  function replace(n:NodeInfo):ReactNode|undefined{
+  if(screens[screen].name.startsWith('C03')){
+   if(n.name.startsWith('Post menu')&&!postMenuOpen)return null
+   if(n.name==='CommunityDetail')return commentOpen?<CommentComposer value={comment} onChange={setComment} onSubmit={submitComment} onClose={()=>setCommentOpen(false)}/>:null
+   if(n.type==='img'&&n.parents.some(p=>p.name==='Icon/Heart')&&n.parents.some(p=>p.name==='Reactions'))return <img {...n.props as React.ImgHTMLAttributes<HTMLImageElement>} src={post?.liked?likedHeart:unlikedHeart}/>
+  }
   const p=n.parents.at(-1),isWrite=screens[screen].name.startsWith('C02'),isEdit=screens[screen].name.startsWith('D02')
   if(n.name==='자취 팁'&&['인기 순','추천 순','최신 순'].includes(n.text))return <CommunitySort className={n.props.className} value={sort} onChange={setSort}>{n.props.children}</CommunitySort>
   if(screens[screen].name.startsWith('C03')&&post){
@@ -304,6 +326,12 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
  }
  const adapter:SceneAdapter={action,replace,decorate:n=>{
   const extra:Record<string,unknown>={}
+  if(directSearch(screen)&&n.id==='408:3708')extra['aria-label']='검색'
+  if(screens[screen].name.startsWith('C03')&&n.name==='Icon/Kebab'){extra['data-post-menu-trigger']=true;extra['aria-expanded']=postMenuOpen;extra['aria-label']='글 메뉴'}
+  if(screens[screen].name.startsWith('C03')&&n.parents.at(-1)?.name==='Reactions'){
+   extra['aria-label']=n.text.includes('도움됐어요')?`도움됐어요 ${post?.likes??0}`:`댓글 ${post?.comments.length??0}`
+   if(n.text.includes('도움됐어요')){extra.style={...n.props.style,backgroundColor:post?.liked?'#fce3e3':'var(--color-neutral,#e9eef7)'};extra['aria-pressed']=!!post?.liked}
+  }
   if(n.name==='Chip'){const selected=n.text===(screens[screen].name.startsWith('C02')?draft.kind:kind);extra.className=(n.props.className??'')+(selected?' cg-selected':' cg-chip-unselected');extra['aria-pressed']=selected;extra['data-chip-selected']=selected}
   if(n.name==='Button'&&n.text==='글 올리기'){extra['data-ready']=publishReady;extra.disabled=!publishReady}
   if(n.name==='Button'&&n.text==='문제 분석하기'){extra['data-ready']=!!analysisInput.analysisUserText.trim()||analysisInput.analysisUserPhotos.length>0;extra.disabled=!extra['data-ready']}
@@ -315,7 +343,7 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
   if(n.type==='div'&&reportReason===n.text&&reportReason){extra.className=(n.props.className??'')+' cg-radio-row';extra['aria-checked']=true}
   if(n.type==='div'&&withdrawReasons.includes(n.text)){extra.className=(n.props.className??'')+' cg-check-row';extra['aria-checked']=true}
   return extra
- },append:n=>n.name==='Section'&&screens[screen].name.startsWith('C03')&&post?post.comments.map(item=><article key={item.id} style={{display:'flex',flexDirection:'column',gap:12,paddingLeft:0}}><div style={{fontSize:14,color:'var(--color-primary)'}}>{item.author} <span style={{color:'var(--color-secondary)'}}>{postTime(post.created)}</span></div><p style={{fontSize:16,lineHeight:1.5}}>{item.body}</p></article>):null}
+ },append:n=>n.name==='Section'&&screens[screen].name.startsWith('C03')&&post?post.comments.map(item=><CommunityComment key={item.id} comment={item} created={post.created}/>):null}
  if(auxiliary==='onboarding')return <OnboardingPreview onComplete={name=>{setNickname(name);saveProfile(name,years,months);go(S.home)}}/>
  if(auxiliary==='system')return <SystemPreview/>
  if(screen===S.solution&&selectedCase&&!location.hash.startsWith('#frame/'))return <AnalysisResultFlow data={selectedCase} onHome={()=>go(S.home)} onConnectionLost={onConnectionLost}/>

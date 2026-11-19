@@ -33,11 +33,31 @@
 [data-capstone-main]:has(.cg-main-navigation) .hh-home::after,[data-capstone-main]:has(.cg-main-navigation) .hh-catalog-page::after{content:'';display:block;height:116px;flex:none}
 .cg-prototype-my.cg-frame{min-height:0;display:flex;flex-direction:column;gap:36px}
 .cg-frame .cg-chip-unselected{background-color:var(--surface-white,#fff)!important;color:var(--color-secondary)!important}.cg-frame .cg-chip-unselected p{color:var(--color-secondary)!important}
-.cg-sort{position:relative;cursor:pointer}.cg-sort select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.cg-sort:focus-within{outline:2px solid var(--color-primary);outline-offset:2px}
+.cg-sort{position:relative;cursor:pointer;overflow:visible!important}
+.cg-frame [data-name="Categories"]:has(.cg-sort){overflow:visible}
+.cg-sort-trigger{display:flex;align-items:center;gap:8px;background:transparent;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+.cg-sort-menu{position:absolute;right:0;top:calc(100% + 8px);z-index:45;width:180px;padding:8px 0;border-radius:20px;background:#fff;box-shadow:0 3px var(--w9-shadow-shadow-sm,12px) var(--w9-primitive-shadow-color,rgba(102,131,181,.1));overflow:hidden}
+.cg-sort-menu>button{display:flex;align-items:center;min-height:48px;width:100%;padding:0 16px;background:transparent;border:0;text-align:left;font-family:inherit;font-size:16px;font-weight:400;line-height:24px;color:#000;cursor:pointer}
+.cg-sort-trigger:focus-visible,.cg-sort-menu>button:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
+.cg-frame[data-screen-id="336:28715"] [data-name="Search"]>.cg-input,.cg-frame[data-screen-id="336:29043"] [data-name="Search"]>.cg-input,.cg-frame[data-screen-id="336:29150"] [data-name="Search"]>.cg-input{flex:1 1 0;min-width:0;width:0}
+.cg-frame [data-name="Search"]>[data-node-id="408:3708"]{flex:0 0 24px;width:24px;height:24px}
 .cg-post-image{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
 /* Figma C01 floating action: viewport anchor independent of list length/filter. */
 .cg-frame>[data-node-id="336:28711"]{position:fixed!important;bottom:124px!important;right:max(16px,calc((100vw - 412px)/2 + 16px))!important;z-index:31}
 .cg-home-stories.cg-frame{min-height:0}
+.cg-comment{display:flex;flex-direction:column;gap:8px;padding:8px 0;width:100%;min-width:0;font-family:inherit;font-style:normal;letter-spacing:0}
+.cg-comment-header{display:flex;align-items:flex-start;gap:12px;width:100%}
+.cg-comment-author{color:var(--color-primary,#1157ce)}
+.cg-comment-metadata{display:flex;align-items:center;gap:4px;font-size:14px;font-weight:500;line-height:1.4;color:var(--color-on-surface,#19212e)}
+.cg-comment-divider{height:8px;width:1px;background:#d7dee7;flex:none}
+.cg-comment-time{color:#4f5969}
+.cg-comment-body{width:100%;font-size:16px;font-weight:400;line-height:1.5;color:#4f5c6f;overflow-wrap:break-word}
+.cg-comment-composer{position:fixed;left:max(24px,calc((100vw - 364px)/2));right:max(24px,calc((100vw - 364px)/2));z-index:35;display:flex;align-items:flex-end;gap:8px;min-height:56px;padding:8px 8px 8px 12px;border:.676px solid #dce4ee;border-radius:12px;background:#fff;backdrop-filter:blur(14px);box-shadow:0 10px 14px rgba(37,49,68,.14)}
+.cg-comment-composer textarea{flex:1;min-width:0;max-height:84px;align-self:center;resize:none;border:0;padding:0;background:transparent;font:inherit;font-size:16px;line-height:24px;color:#19212e;outline:none}
+.cg-comment-composer button{display:grid;place-items:center;flex:none;width:48px;height:48px;border:0;border-radius:12px;background:var(--color-primary);padding:0;cursor:pointer}
+.cg-comment-composer button:disabled{background:#edf0f4;cursor:default}
+.cg-comment-composer button img{width:28px;height:28px}
+.cg-frame>[data-name^="Post menu"]{z-index:40}
 /* Keep horizontal chip scrolling, but give the original 12px shadow room.
    Compensating margins preserve button positions and the following list gap. */
 .cg-frame [data-name="Categories"]:has(>[data-name="Chip"]){
