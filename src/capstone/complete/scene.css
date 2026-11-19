@@ -38,3 +38,26 @@
 /* Figma C01 floating action: viewport anchor independent of list length/filter. */
 .cg-frame>[data-node-id="336:28711"]{position:fixed!important;bottom:124px!important;right:max(16px,calc((100vw - 412px)/2 + 16px))!important;z-index:31}
 .cg-home-stories.cg-frame{min-height:0}
+/* Keep horizontal chip scrolling, but give the original 12px shadow room.
+   Compensating margins preserve button positions and the following list gap. */
+.cg-frame [data-name="Categories"]:has(>[data-name="Chip"]){
+  padding-block:24px;margin-block:-24px;flex-shrink:0;
+}
+/* Figma GLASS: retain the original fills/shadows/geometry; filter backdrop only.
+   The plain blur is the fallback for engines without SVG backdrop filters. */
+.cg-glass-definitions{position:fixed;width:0;height:0;pointer-events:none;overflow:hidden}
+.cg-frame [data-name="Navigation Bar"]>[data-name="Navigation Bar"]{
+  -webkit-backdrop-filter:blur(6px);
+  backdrop-filter:blur(6px) url(#cg-glass-nav);
+}
+.cg-frame [data-node-id="336:28711"]{
+  -webkit-backdrop-filter:blur(6px);
+  backdrop-filter:blur(6px) url(#cg-glass-write);
+}
+/* Original light direction -45deg, intensity .8: thin inset specular edge.
+   Pseudo layers don't participate in layout or intercept pointer events. */
+.cg-frame [data-name="Navigation Bar"]>[data-name="Navigation Bar"]::after,
+.cg-frame [data-node-id="336:28711"]::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 1px 1px 1px rgba(255,255,255,.64),inset -1px -1px 1px rgba(255,255,255,.12);
+}
