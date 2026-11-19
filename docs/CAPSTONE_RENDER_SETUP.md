@@ -61,6 +61,17 @@
 
 ## 5. 아직 하지 않은 작업
 
-GitHub 새 변경 게시, 실제 신규 서비스 생성/키 설정/Live 확인, 계정 무료 사용량 확인, 시연 활성화 일정 합의, 원격 URL로 APK 재빌드, 실제 폰의 인터넷 분석 검증. 기존 USB용 APK 빌드 성공을 이 항목의 완료로 간주하지 않는다.
+계정 무료 사용량 확인, 시연 활성화 일정 합의, 실제 폰의 인터넷 분석 검증이 남아 있다. 준비 상태 확인을 실제 유료 분석 성공으로 간주하지 않는다.
+
+## 2026-11-17 실제 서버 및 폰용 APK 확인
+
+- 사용자 생성 신규 서버: `https://howhouse-capstone-prototype.onrender.com`.
+- `/health` HTTP 200, Live 커밋 `9c500f667d1a0df638ce376b8570d7a2c6474688`, `variant: capstone`, `database: false`, `demoEnabled: false` 확인.
+- Android origin `http://127.0.0.1`의 `/session` HTTP 200 및 CORS 허용, 미국 처리 설정, 남은 신규 호출 5회 확인. 세션 토큰 값은 기록·출력하지 않았다.
+- 같은 origin의 YouTube 썸네일 HTTP 200, JPEG 8,231바이트 확인. OpenAI 유료 분석 호출은 하지 않았다.
+- 사용자는 ‘APK부터 준비하고 분석은 꺼두기’를 선택했다. 서버 설정·활성화·종료 시각은 바꾸지 않았다.
+- 실제 HTTPS 주소를 지정한 Android debug APK 빌드 성공. 디자인 소스 보존 검사와 타입 검사 통과. APK의 앱 ID `com.howhouse.capstone`, 원격 주소 포함, 실제 키 형식 패턴 미포함을 확인했다.
+- 전달 파일: `C:/Users/user/Documents/Codex/howhouse-capstone-phone-20261117/Howhouse-Capstone-Phone-20261117.apk`. SHA-256 및 무료 연결 검사 결과는 같은 폴더의 `verification.json`에 기록했다.
+- 이 APK는 설치 후 PC·USB 없이 인터넷 서버를 사용할 수 있는 연결본이다. 현재 분석은 서버에서 차단하므로 실제 AI 분석은 활성화 이후 별도 확인해야 한다. 휴대폰 설치·실기기 검증은 아직 하지 않았다.
 
 참고: [Render 무료 제한](https://render.com/docs/free), [Web Service 배포](https://render.com/docs/web-services), [Blueprint 설정](https://render.com/docs/blueprint-spec).

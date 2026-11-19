@@ -1,5 +1,5 @@
-import { cpSync, mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { cpSync, mkdirSync, readFileSync, writeFileSync, existsSync, rmSync } from 'node:fs'
+import { resolve, dirname } from 'node:path'
 import { spawnSync } from 'node:child_process'
 
 // Isolate all native generation from the catalog/Play Android project.
@@ -15,7 +15,11 @@ mkdirSync(stage, { recursive: true })
 cpSync(resolve(root, 'android'), resolve(stage, 'android'), { recursive: true, filter: p => !/[\\/](build|\.gradle|assets)([\\/]|$)/.test(p) && !/local\.properties$/.test(p) })
 mkdirSync(resolve(stage, 'src/catalog'), { recursive: true })
 writeFileSync(resolve(stage, 'src/catalog/app-release.json'), JSON.stringify({ applicationId: 'com.howhouse.capstone', appName: '어쩌집 캡스톤', versionCode: 1, versionName: '1.0-capstone' }))
-cpSync(resolve(root, 'dist-capstone'), resolve(stage, 'www'), { recursive: true })
+// Only reset this generated web directory, never the native project or user files.
+const web = resolve(stage, 'www')
+if (dirname(web) !== stage || web === stage) throw Error('Unexpected generated web path.')
+rmSync(web, { recursive: true, force: true })
+cpSync(resolve(root, 'dist-capstone'), web, { recursive: true })
 cpSync(resolve(stage, 'www/capstone.html'), resolve(stage, 'www/index.html'))
 writeFileSync(resolve(stage, 'package.json'), readFileSync(resolve(root, 'package.json')))
 writeFileSync(resolve(stage, 'capacitor.config.json'), JSON.stringify({
@@ -37,5 +41,5 @@ tasks.matching { it.name == 'preReleaseBuild' || it.name == 'preYoutubeQaBuild' 
     doFirst { throw new GradleException('Capstone USB prototype supports debug APK only; not for Google Play.') }
 }
 `)
-console.log('Prepared isolated USB-only capstone Android project: ' + stage)
+console.log('Prepared isolated capstone Android project: ' + stage)
 console.log('Build debug APK only. Do not upload this prototype to Google Play.')

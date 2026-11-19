@@ -1,0 +1,40 @@
+.capstone-complete{height:100dvh;width:min(100%,412px);margin-inline:auto;position:relative;background:var(--color-surface);overflow:hidden}
+:where(.cg-frame,.cg-frame *){border-width:0;border-style:solid}
+.cg-scene{height:100%;width:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;isolation:isolate;scrollbar-width:none}.cg-scene::-webkit-scrollbar{display:none}
+.cg-frame{width:100%!important;height:auto!important;min-height:100%;border-radius:0!important;overflow:visible!important;position:relative}
+.cg-frame p,.cg-frame ul,.cg-frame li{margin:0}.cg-frame ul{padding:0}.cg-frame img{display:block}:where(.cg-frame button){font:inherit;border-style:solid;border-width:0;letter-spacing:inherit}:where(.cg-action){background-color:transparent;padding:0;text-align:inherit;color:inherit}.cg-action{cursor:pointer}.cg-action:focus-visible,.cg-input:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}.cg-action:active{filter:brightness(.95)}
+.cg-bottom-nav{position:fixed!important;bottom:0!important;left:50%!important;right:auto!important;translate:-50% 0;width:min(100%,412px)!important;z-index:30}
+.cg-frame>[data-cg-overlay]{position:fixed!important;left:max(24px,calc((100vw - 364px)/2))!important;right:max(24px,calc((100vw - 364px)/2))!important;z-index:80;max-height:90dvh;overflow-y:auto;margin:0;max-width:none;color:inherit;outline:0}
+.cg-frame>[data-cg-sheet=true]{left:max(0px,calc((100vw - 412px)/2))!important;right:max(0px,calc((100vw - 412px)/2))!important}
+.cg-frame>[data-name="Overlay"]:not([class*="cg-overlay"]){bottom:0}
+.cg-frame>.cg-overlay{width:auto}.cg-frame>.cg-scrim{position:fixed!important;inset:0!important;z-index:70}
+.cg-sheet-handle{touch-action:none;cursor:grab}.cg-sheet-handle:after{content:"";position:absolute;inset:-14px -8px}
+.cg-duration-wheel{height:200px;width:176px;overflow-y:auto;scroll-snap-type:y mandatory;padding:80px 0;scrollbar-width:none;overscroll-behavior:contain}.cg-duration-wheel::-webkit-scrollbar{display:none}.cg-duration-wheel button{display:block;height:40px;width:176px;background:transparent;scroll-snap-align:center;font-size:16px;line-height:24px;padding:8px 16px;color:#19212e;border:0}
+.cg-frame>[data-name="CommunityDetail"]{position:fixed!important;top:auto!important;bottom:24px!important;left:max(24px,calc((100vw - 364px)/2))!important;right:max(24px,calc((100vw - 364px)/2))!important;z-index:35}
+.cg-input{font:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;border:0;background:transparent;padding:0;margin:0;outline:none;resize:none;min-width:0;width:100%;display:block}.cg-input::placeholder{color:inherit;opacity:1}.cg-selected{background-color:var(--color-primary)!important;color:white!important}.cg-selected p{color:white!important}
+.cg-frame [data-ready=true]{background-color:var(--color-primary)!important}.cg-frame [data-ready=false]{background-color:var(--color-border)!important;cursor:default}.cg-radio-row[aria-checked=true]>:first-child{border:5px solid var(--color-primary)!important}.cg-check-row[aria-checked=true]>:first-child{background:var(--color-primary)!important}
+.cg-community-rows{width:100%}.cg-new-photo{position:relative;width:82px;height:82px;border-radius:12px;overflow:hidden}.cg-new-photo img{width:100%;height:100%;object-fit:cover}.cg-photo-list{display:flex;gap:8px;flex-wrap:wrap}.cg-native-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.cg-community-card{display:flex;flex-direction:column;gap:12px;width:100%;padding:12px 0 20px;background:transparent;border-bottom:1px solid #d7dee7!important;text-align:left;color:#19212e;cursor:pointer}.cg-community-card-main{display:flex;align-items:start;gap:12px;width:100%}.cg-community-card-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}.cg-community-card-copy strong{font-size:16px;line-height:24px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cg-community-card-copy>span{font-size:14px;line-height:21px;color:#5f6979;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.cg-community-card-photo{width:70px;height:70px;object-fit:cover;border-radius:12px}.cg-community-card-meta{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:500;line-height:20px;color:#5f6979}.cg-community-card-meta>span{display:flex;align-items:center;gap:4px}.cg-community-card-meta img{width:16px;height:16px}.cg-community-card-meta i{height:8px;width:1px;background:#d7dee7}.cg-photo-remove{position:absolute;right:4px;top:4px;border-radius:50%;width:20px;height:20px;background:#f8faff;display:grid;place-items:center;padding:0}.cg-history-tag{display:flex;align-items:center;gap:8px;background:#ddeaff;border-radius:100px;min-height:44px;padding:8px 12px;color:#1157ce}.cg-history-tag button{padding:0;background:none;color:inherit}.cg-history-tag img{width:16px;height:16px}.cg-activity-case{display:block;text-align:left;background:transparent;border:0;width:100%;padding:12px 0;font:inherit;color:inherit}
+@media(min-width:600px){.capstone-complete{width:412px;margin:0 auto;box-shadow:0 0 30px #19212e10}}
+.cg-frame [data-name^="Category row"]{width:100%}.cg-frame [data-name^="Category row"]>*{min-width:0;flex:1}.cg-frame [data-name="Categories"]{overflow-x:auto;scrollbar-width:none}.cg-frame [data-name="Categories"]::-webkit-scrollbar{display:none}.cg-duration-wheel{flex:1;min-width:0}.cg-duration-wheel button{width:100%}
+.cg-check-row[aria-checked=true]>:first-child{background:transparent url('./assets/18ec98e6-f583-4a9f-8cb4-2660f5978a9e.svg') center/20px 20px no-repeat!important;border:0!important}
+/* Explicit Figma geometry for auto-sized absolute image containers. */
+.cg-frame [data-name="Navigation Bar/Community_Post"] [data-name="Image (햇빛이 드는 창가와 화분)"]{width:70px;height:70px;flex:none}
+.cg-frame [data-name="Navigation Bar/Community_Post"] p.cg25{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.cg-frame .cg416{width:48px;height:48px;flex:none}.cg-frame [data-name="Profile header"]>.cg416{width:56px;height:55px}
+@media(prefers-reduced-motion:reduce){.cg-frame *{animation:none!important;transition:none!important}}
+/* Reuse main B02 video geometry without its full-screen root container. */
+.cg-case-video{width:100%;min-width:0;flex:none}
+.cg-case-video a.solutions-b02__video{display:block;color:inherit}
+/* The four root destinations use the supplied Figma navigation, not a new design. */
+.cg-main-navigation.cg-frame{display:none;position:fixed;bottom:0;left:50%;translate:-50% 0;width:min(100%,412px)!important;min-height:0;z-index:30}
+[data-capstone-main]:has(.hh-home) .cg-main-navigation,[data-capstone-main]:has(.hh-catalog-page) .cg-main-navigation{display:block}
+.cg-main-navigation .cg-global-nav{position:static!important;translate:none!important;left:auto!important;width:100%}
+[data-capstone-main]:has(.cg-main-navigation) .hh-home::after,[data-capstone-main]:has(.cg-main-navigation) .hh-catalog-page::after{content:'';display:block;height:116px;flex:none}
+.cg-prototype-my.cg-frame{min-height:0;display:flex;flex-direction:column;gap:36px}
+.cg-frame .cg-chip-unselected{background-color:var(--surface-white,#fff)!important;color:var(--color-secondary)!important}.cg-frame .cg-chip-unselected p{color:var(--color-secondary)!important}
+.cg-sort{position:relative;cursor:pointer}.cg-sort select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.cg-sort:focus-within{outline:2px solid var(--color-primary);outline-offset:2px}
+.cg-post-image{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
+/* Figma C01 floating action: viewport anchor independent of list length/filter. */
+.cg-frame>[data-node-id="336:28711"]{position:fixed!important;bottom:124px!important;right:max(16px,calc((100vw - 412px)/2 + 16px))!important;z-index:31}
+.cg-home-stories.cg-frame{min-height:0}
