@@ -5,7 +5,7 @@ import signers from '../../src/youtube/android-signers.json' with { type: 'json'
 export function createCapstoneYoutubeHandler({ apiKey, fetchImpl = fetch, publicHost }) {
   return async (req, res) => {
     if (!req.url?.startsWith('/api/youtube/')) return false
-    const allowed = ['http://127.0.0.1:5190', 'http://127.0.0.1'].includes(req.headers.origin)
+    const allowed = ['http://127.0.0.1:5190', 'http://127.0.0.1', ...(publicHost ? [`https://${publicHost}`] : [])].includes(req.headers.origin)
       && (publicHost ? req.headers.host === publicHost : /^(127\.0\.0\.1|localhost):\d+$/.test(req.headers.host ?? ''))
     const reply = (status, body, type = 'application/json') => {
       if (res.destroyed) return

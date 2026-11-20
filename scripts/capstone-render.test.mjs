@@ -42,5 +42,10 @@ test('remote readiness is public but exact-host scoped; analysis remains disable
   assert.equal((await send('/health', {})).status, 403)
   assert.equal((await send('/session', { Host: host, Origin: 'https://other.example' })).status, 403)
   assert.equal((await send('/session', { Host: host, Origin: 'http://127.0.0.1' })).status, 200)
+  assert.equal((await send('/session', { Host: host, Origin: `https://${host}` })).status, 200)
+  assert.equal((await send('/session', { Host: host, 'Sec-Fetch-Site': 'same-origin' })).status, 200)
+  assert.equal((await send('/session', { Host: host, 'Sec-Fetch-Site': 'cross-site' })).status, 403)
+  assert.equal((await send('/api/youtube/thumbnail?videoId=abcdefghijk', { Host: host, 'Sec-Fetch-Site': 'same-origin' })).status, 503) // no test key; origin accepted
+  assert.equal((await send('/api/youtube/thumbnail?videoId=abcdefghijk', { Host: host, 'Sec-Fetch-Site': 'cross-site' })).status, 403)
   assert.equal((await send('/api/analysis/match', { Host: host, Origin: 'http://127.0.0.1' }, 'POST')).status, 503)
 })

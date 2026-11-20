@@ -6,6 +6,7 @@ import { createAnswerCache } from './answer-cache.mjs'
 import { loadCapstoneCatalog } from './capstone-catalog.mjs'
 import { validateConfig } from './verify-openai.mjs'
 import { createCapstoneYoutubeHandler } from './capstone-youtube.mjs'
+import { createCapstoneWebHandler } from './capstone-web.mjs'
 
 export function renderDemoOptions(env, now = Date.now()) {
   const host = env.RENDER_EXTERNAL_HOSTNAME
@@ -30,15 +31,20 @@ export function startRenderDemo(env = process.env) {
   const server = createAnalysisServer({ config: { ...config, capstoneAndroidUsb: true, capstonePublicHost: options.host }, catalog: loadCapstoneCatalog(), ledger, cache })
   const analysis = server.listeners('request')[0]
   const thumbnails = createCapstoneYoutubeHandler({ apiKey: env.HOWHOUSE_YOUTUBE_API_KEY?.trim(), publicHost: options.host })
+  const web = createCapstoneWebHandler()
   server.removeAllListeners('request')
   server.on('request', async (req, res) => {
     const reject = status => {
       req.resume()
       res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store',
-        ...(req.headers.origin === 'http://127.0.0.1' ? { 'Access-Control-Allow-Origin': req.headers.origin, Vary: 'Origin' } : {}) })
+        ...(['http://127.0.0.1', `https://${options.host}`].includes(req.headers.origin) ? { 'Access-Control-Allow-Origin': req.headers.origin, Vary: 'Origin' } : {}) })
       res.end('{"code":"api-error"}')
     }
     if (req.headers.host !== options.host) return reject(403)
+    // Same-origin browser GET fetches omit Origin. Keep cross-site requests denied;
+    // normalize only the browser's same-origin metadata on the exact service host.
+    if (!req.headers.origin && req.headers['sec-fetch-site'] === 'same-origin') req.headers.origin = `https://${options.host}`
+    if (web(req, res)) return
     if (req.method === 'GET' && req.url === '/health' && !req.headers.origin) {
       res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' })
       res.end(JSON.stringify({ service: 'howhouse-analysis', status: 'ok', variant: 'capstone', commit: env.RENDER_GIT_COMMIT || 'unknown', demoEnabled: options.enabled && Date.now() < options.expires, database: false }))

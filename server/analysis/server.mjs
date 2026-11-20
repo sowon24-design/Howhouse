@@ -104,7 +104,7 @@ export function createAnalysisServer({ config, catalog = loadCatalog(), ledger, 
   const releaseStatus=code=>code==='invalid-input'?422:code==='auth-required'?401:code==='not-found'?404:code==='conflict'?409:503
   const feedback = trial && feedbackStore ? createFeedbackService({ store: feedbackStore, catalog }) : undefined
   const feedbackPaths = new Map([['/api/feedback/state', 'state'], ['/api/feedback/rating', 'rating'], ['/api/feedback/opinions', 'opinions']])
-  const allowedOrigins = trial ? new Set(trial.origins) : new Set([...origins, ...(config.capstoneAndroidUsb ? ['http://127.0.0.1'] : [])])
+  const allowedOrigins = trial ? new Set(trial.origins) : new Set([...origins, ...(config.capstoneAndroidUsb ? ['http://127.0.0.1'] : []), ...(config.capstonePublicHost ? [`https://${config.capstonePublicHost}`] : [])])
   return createServer(async (req, res) => {
     const origin = req.headers.origin
     const host = req.headers.host ?? ''
