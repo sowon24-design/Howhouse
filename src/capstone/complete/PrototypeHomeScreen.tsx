@@ -20,6 +20,6 @@ function HomeStories(){
 }
 /** Keep all main home content; append only the owner-requested Figma section. */
 export function PrototypeHomeScreen(props:HomeScreenProps){
- const home=HomeScreen(props)
+ const home=HomeScreen({...props,onStartProblem:()=>{location.hash='screen/1042:10739'}})
  return cloneElement(home,{},Children.map(home.props.children,(child:ReactNode)=>isValidElement<Props>(child)&&child.props.className==='hh-home-content'?cloneElement(child,{},child.props.children,<HomeStories key="community-stories"/>):child))
 }

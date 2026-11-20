@@ -11,7 +11,7 @@ export function adaptCatalog(sourceText){
  text=text.replace("import { CatalogOnboarding } from '../../catalog/CatalogOnboarding'","import { PrototypeOnboarding as CatalogOnboarding } from './PrototypeOnboarding'")
  text=text.replace("import { TermsView } from '../../app-screens/onboarding/TermsView'","import { PrototypeTermsView as TermsView } from './PrototypeTermsScreen'\nimport { PrototypeMyAdditions } from './PrototypeMyAdditions'")
  text=text.replace('AI 분석 동의 — 미사용 안내','개인정보 수집·이용 동의').replace('분석 국외 이전 동의 — 미사용 안내','개인정보 국외 이전 동의').replace('서비스 제공 방식·이미지 안내','AI 활용 정보')
- text=text.replace('기존 주거 문제 사례를 찾고 문의 문장을 편집하는 어쩌집이에요. 계정·AI 분석·평가 및 의견 서버 저장은 사용하지 않아요.','기존 사례와 AI 분석 화면을 확인하는 캡스톤 프로토타입이에요. 현재 분석은 꺼져 있고, 커뮤니티·로그아웃·탈퇴는 시연이에요.')
+ text=text.replace('기존 주거 문제 사례를 찾고 문의 문장을 편집하는 어쩌집이에요. 계정·AI 분석·평가 및 의견 서버 저장은 사용하지 않아요.','기존 사례와 AI 분석을 확인하는 캡스톤 프로토타입이에요. 실제 분석은 서버에서 활성화한 시연 기간에만 동작하고, 커뮤니티·로그아웃·탈퇴는 시연이에요.')
  text=text.replace('<PolicyDocuments all/>','<PolicyDocuments all/>\n    <PrototypeMyAdditions/>')
  return '// Main CatalogApp controller/layout; only owner-approved prototype documents, onboarding and Figma additions differ.\n'+text
 }

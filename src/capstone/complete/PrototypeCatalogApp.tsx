@@ -112,7 +112,7 @@ export default function CatalogApp() {
     <GNB title="마이 페이지" onBack={home}/>
     <h1 className="text-heading">{profile.nickname} 님</h1>
     <Button variant="pale" onClick={() => setEditing(true)}>닉네임 수정</Button>
-    <h2 className="text-heading">앱 정보</h2><p>기존 사례와 AI 분석 화면을 확인하는 캡스톤 프로토타입이에요. 현재 분석은 꺼져 있고, 커뮤니티·로그아웃·탈퇴는 시연이에요.</p>
+    <h2 className="text-heading">앱 정보</h2><p>기존 사례와 AI 분석을 확인하는 캡스톤 프로토타입이에요. 실제 분석은 서버에서 활성화한 시연 기간에만 동작하고, 커뮤니티·로그아웃·탈퇴는 시연이에요.</p>
     <PolicyDocuments all/>
     <PrototypeMyAdditions/>
     <p>운영: {catalogPolicy.operator}<br/>개인정보 보호담당자: {catalogPolicy.officer}</p>
