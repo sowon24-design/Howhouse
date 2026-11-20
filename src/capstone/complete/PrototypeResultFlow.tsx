@@ -11,15 +11,15 @@ import '../../app-screens/solutions/solutions-flow.css'
 import '../../app-screens/home/home-preview.css'
 
 /** Both origins use one in-memory view. Generated data never uses an existing ID lookup. */
-export function AnalysisResultFlow({ data, onHome, onConnectionLost }: { data: B02ViewData; onHome: () => void; onConnectionLost?: () => void }) {
+export function AnalysisResultFlow({ data, onHome, onBack=onHome, onConnectionLost }: { data: B02ViewData; onHome: () => void; onBack?: () => void; onConnectionLost?: () => void }) {
   const [contact, setContact] = useState(false)
   const [visited, setVisited] = useState(false)
   const [resolution, setResolution] = useState<ResolutionStatus | undefined>()
-  useAndroidBack(() => contact ? setContact(false) : onHome())
+  useAndroidBack(() => contact ? setContact(false) : onBack())
   return <div className="hh-home-preview">
     <div className="hh-home-preview-frame hh-solutions-frame">
       <div className="hh-solutions-layer" inert={contact} aria-hidden={contact}>
-        <B02 data={data} onBack={onHome} onComplete={onHome}
+        <B02 data={data} onBack={onBack} onComplete={onHome}
           onContact={status => { setResolution(status);setVisited(true);setContact(true) }} onOpenVideo={() => {}} onPreviewOpinion={() => {}} />
       </div>
       {visited && <div className="hh-solutions-layer hh-solutions-front" hidden={!contact} inert={!contact} aria-hidden={!contact}>

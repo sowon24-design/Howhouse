@@ -17,6 +17,8 @@ import { InformationScreen } from '../../app-screens/my/InformationScreen'
 import type { SolutionView } from '../../solutions/data/types'
 import { CommunityCard, figmaAsset } from './CommunityCard'
 import { CommunityComment } from './CommunityComment'
+import {RecentCases,RecentCasesProvider,useRecentCases} from './RecentCases'
+import {recentCasePath} from './recent-navigation'
 import { CommentComposer } from './CommentComposer'
 import likedHeart from './assets/800b4df4-347c-41c2-b2bb-5d2e13a11615.svg'
 import unlikedHeart from './assets/360726bd-00a6-43ab-a9ed-3497746c8752.svg'
@@ -51,7 +53,7 @@ const directSearch=(frame:ScreenId)=>is(frame,[S.caseSearch,S.caseResults,S.case
 
 // Main owns all overlapping release routes. Figma additions never replace them.
 export default function CapstoneApp(){
- return <CommunityProvider owner={readProfile().nickname}><CapstoneRouter/></CommunityProvider>
+ return <CommunityProvider owner={readProfile().nickname}><RecentCasesProvider><CapstoneRouter/></RecentCasesProvider></CommunityProvider>
 }
 function CapstoneRouter(){
  const [hash,setHash]=useState(location.hash)
@@ -83,7 +85,9 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
  const [message,setMessage]=useState<string|null>(null),[companyMessage,setCompanyMessage]=useState<string|null>(null),[phrases,setPhrases]=useState<string[]>(['0','1','2'])
  const phraseTexts=useRef(new Map<string,string>())
  const [recipient,setRecipient]=useState<'landlord'|'company'>('landlord')
- const [solved,setSolved]=useState<string[]>([]),[recent,setRecent]=useState<string[]>([]),[selectedCase,setSelectedCase]=useState<SolutionView|GeneratedSolution>()
+ const [solved,setSolved]=useState<string[]>([]),[selectedCase,setSelectedCase]=useState<SolutionView|GeneratedSolution>()
+ const {rememberGenerated}=useRecentCases()
+ const generatedFromRecent=useRef(false)
  const [analysisInput,setAnalysisInput]=useState<AnalysisInput>({analysisUserText:'',analysisUserPhotos:[]}),[analysisResult,setAnalysisResult]=useState<AnalysisResult<GeneratedSolution>|null>(null)
  const analysisPhotoUrls=useMemo(()=>analysisInput.analysisUserPhotos.map(file=>URL.createObjectURL(file)),[analysisInput.analysisUserPhotos])
  useEffect(()=>()=>analysisPhotoUrls.forEach(url=>URL.revokeObjectURL(url)),[analysisPhotoUrls])
@@ -139,7 +143,7 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
   }
   handle.current=client.current!.startAnalysis({...analysisInput,analysisUserPhotos:[...analysisInput.analysisUserPhotos]},receive)
  }
- function openCase(data?:SolutionView|GeneratedSolution){if(data?.source==='existing'){location.hash='case/'+encodeURIComponent(data.id);return}if(!data)return;setSelectedCase(data);setRecent(previous=>[data.id,...previous.filter(id=>id!==data.id)].slice(0,20));setMessage(data.contacts.landlord.sentences.join('\n\n'));setCompanyMessage(data.contacts.company.sentences.join('\n\n'));location.hash='analysis-result';setScreen(S.solution)}
+ function openCase(data?:SolutionView|GeneratedSolution,fromRecent=false){if(data?.source==='existing'){location.hash=fromRecent?recentCasePath(data.id):'case/'+encodeURIComponent(data.id);return}if(!data)return;generatedFromRecent.current=fromRecent;setSelectedCase(data);rememberGenerated(data);setMessage(data.contacts.landlord.sentences.join('\n\n'));setCompanyMessage(data.contacts.company.sentences.join('\n\n'));location.hash='analysis-result';setScreen(S.solution)}
  function openResult(){const data=analysisResult?.source==='existing'?getSolutionById(analysisResult.caseId):analysisResult?.solution;openCase(data)}
  function openPost(p=post){if(!p)return;setPostMenuOpen(false);setCommentOpen(false);setPostId(p.id);go(p.mine?S.own:S.detail)}
  function search(){setHistory(previous=>rememberQuery(previous,query));const community=screens[screen].name.startsWith('C');go(community?(found.length?S.communityResults:S.communityEmpty):(searchCases(solutionCases,query).length?S.caseResults:S.caseEmpty))}
@@ -269,14 +273,17 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
   if(n.name==='Message Button'){const key=String(n.index);phraseTexts.current.set(key,n.text);return <MessageButton selected={phrases.includes(key)} onSelectedChange={()=>setPhrases(previous=>previous.includes(key)?previous.filter(value=>value!==key):[...previous,key])}>{n.text}</MessageButton>}
   if(n.id==='336:27406'||n.id==='336:27390')return <Accordion title="게시글 작성 전 확인해 주세요." open={noticeOpen} onOpenChange={setNoticeOpen}><ul>{['이름, 전화번호, 주소 등 개인정보가 노출되지 않도록 주의해 주세요.','집주인이나 타인의 신상을 공개하거나 비방하는 글은 작성하지 말아 주세요.','확인되지 않은 정보나 잘못된 해결 방법은 사실인 것처럼 단정하지 말아 주세요.','서로 다른 경험과 의견을 존중하며 예의를 지켜 주세요.','사진을 첨부할 때는 개인정보나 타인의 사생활이 노출되지 않았는지 확인해 주세요.'].map(text=><li key={text}>{text}</li>)}</ul></Accordion>
   if(n.name==='Community / Solid list')return <div className={n.props.className}>{found.map(item=><CommunityCard key={item.id} post={item} onOpen={()=>openPost(item)}/>)}</div>
-  if((screen===S.mine||screen===S.commented)&&Children.toArray(n.props.children).some(child=>isValidElement(child)&&((child.props as Record<string,unknown>)['data-name']==='Navigation Bar/Community_Post'||typeof child.type==='function'&&child.type.name==='NavigationBarCommunityPost'))){const mine=posts.filter(item=>screen===S.mine?item.mine:item.comments.some(c=>c.mine));return <div className={n.props.className}>{mine.map(item=><CommunityCard key={item.id} post={item} onOpen={()=>openPost(item)}/>)}</div>}
+  if((screen===S.mine&&n.id==='336:31324')||(screen===S.commented&&n.id==='372:3066')){const mine=posts.filter(item=>screen===S.mine?item.mine:item.comments.some(c=>c.mine));return <div className={n.props.className}>{mine.map(item=><CommunityCard key={item.id} post={item} onOpen={()=>openPost(item)}/>)}</div>}
   if(directSearch(screen)&&n.name==='태그'){const label=history[n.index];if(!label)return null;return <div className="cg-history-tag"><button type="button" onClick={()=>{setQuery(label);go(screens[screen].name.startsWith('C')?S.communityResults:S.caseResults)}}>{label}</button><button type="button" aria-label={label+' 검색어 삭제'} onClick={()=>setHistory(previous=>previous.filter(value=>value!==label))}><img src={figmaAsset('90b067a8-b105-4faf-9f88-7014a07760e5.svg')} alt=""/></button></div>}
   // Owner-selected profile art: Figma 1047:19184, original ratio 115:91.
   if(screen===S.my&&n.id==='1047:18838')return <div {...n.props as React.HTMLAttributes<HTMLDivElement>} style={{...n.props.style,width:44,height:44*91/115}}><img className="cg0 cg2 cg3 cg33 cg31 cg4" src={avatar||figmaAsset('27871bc8-3b7b-4c6a-a0f5-b028e717f6b2.png')} alt="내 프로필" style={{objectFit:avatar?'cover':'contain'}}/></div>
   if(avatar&&n.type==='img'&&n.parents.some(parent=>parent.name==='image 262'||screen===S.my&&parent.name==='image 8'))return <img {...n.props as React.ImgHTMLAttributes<HTMLImageElement>} src={avatar}/>
   if(screen===S.my&&n.type==='p'&&n.text==='김서윤')return <p className={n.props.className}>{nickname}</p>
   if(screen===S.my&&n.type==='p'&&n.text==='자취 6개월')return <p className={n.props.className}>자취 {years?`${years}년 `:''}{months}개월</p>
-  if((screen===S.solved||screen===S.recent)&&n.name==='Message / Content'&&(screen===S.solved?solved.length:recent.length)>0){const list=(screen===S.solved?solved:recent).map(id=>getSolutionById(id)).filter(Boolean);return <div className={n.props.className}>{list.map(item=><button key={item!.id} type="button" className="cg-activity-case" onClick={()=>openCase(item)}>{item!.title}</button>)}</div>}
+  if(screen===S.my&&n.type==='p'&&n.parents.some(parent=>parent.id==='1047:18859'))return <p className={n.props.className}>{posts.filter(post=>post.mine).length}개</p>
+  if(screen===S.recent&&n.name==='Message / Content')return <div className={n.props.className+' cg-recent-content'}><p className="cg12 cg37 cg38 cg18 cg9 cg10 cg26 cg23 cg11">최근 열람한 사례는 최대 10개까지 저장돼요.</p><RecentCases onOpen={data=>openCase(data,true)}/></div>
+  if(screen===S.my&&n.id==='336:30928')return <RecentCases limit={2} onOpen={data=>openCase(data,true)}/>
+  if(screen===S.solved&&n.name==='Message / Content'&&solved.length>0){const list=solved.map(id=>getSolutionById(id)).filter(Boolean);return <div className={n.props.className}>{list.map(item=><button key={item!.id} type="button" className="cg-activity-case" onClick={()=>openCase(item)}>{item!.title}</button>)}</div>}
   const directChildren=Children.toArray(n.props.children)
   const listRows=directChildren.filter(child=>isValidElement(child)&&(child.props as Record<string,unknown>)['data-name']==='List')
   if(screen===S.caseResults&&n.name==='Case list'||!directSearch(screen)&&screens[screen].name.startsWith('B02')&&listRows.length>1){
@@ -348,7 +355,7 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
  },append:n=>n.name==='Section'&&screens[screen].name.startsWith('C03')&&post?post.comments.map(item=><CommunityComment key={item.id} comment={item} created={post.created}/>):null}
  if(auxiliary==='onboarding')return <OnboardingPreview onComplete={name=>{setNickname(name);saveProfile(name,years,months);go(S.home)}}/>
  if(auxiliary==='system')return <SystemPreview/>
- if(screen===S.solution&&selectedCase&&!location.hash.startsWith('#frame/'))return <AnalysisResultFlow data={selectedCase} onHome={()=>go(S.home)} onConnectionLost={onConnectionLost}/>
+ if(screen===S.solution&&selectedCase&&!location.hash.startsWith('#frame/'))return <AnalysisResultFlow data={selectedCase} onBack={()=>go(generatedFromRecent.current?S.recent:S.home)} onHome={()=>go(S.home)} onConnectionLost={onConnectionLost}/>
  if(information)return <div className="capstone-complete"><PrototypeInformation page={information} onBack={()=>setInformation(null)}/></div>
  return <main className="capstone-complete" aria-label="어쩌집 캡스톤"><Scene key={screen} id={screen} adapter={location.hash.startsWith('#frame/')?{}:adapter} onBack={back}/><input ref={fileInput} className="cg-native-input" type="file" accept="image/*" onChange={event=>{acceptPhotos(Array.from(event.target.files??[]));event.target.value=''}}/></main>
 }

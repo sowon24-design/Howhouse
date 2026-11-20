@@ -1,4 +1,6 @@
 // Main CatalogApp controller/layout; only owner-approved prototype documents, onboarding and Figma additions differ.
+import { caseIdPart, isRecentCaseHash, recentListPath } from './recent-navigation'
+import { useRecentCases } from './RecentCases'
 import { useEffect, useRef, useState } from 'react'
 import { Button, GNB, ListRow } from '../../components/ui'
 import { PrototypeHomeScreen as HomeScreen } from './PrototypeHomeScreen'
@@ -49,6 +51,7 @@ function readProfile(): Profile | undefined {
 }
 
 export default function CatalogApp() {
+  const { rememberExisting } = useRecentCases()
   useAndroidBackBridge()
   const [profile, setProfile] = useState(readProfile)
   const [skipPolicyReview, setSkipPolicyReview] = useState(false)
@@ -60,7 +63,7 @@ export default function CatalogApp() {
   const [visited, setVisited] = useState(false)
   const [resolution, setResolution] = useState<ResolutionStatus>()
   const [editing, setEditing] = useState(false)
-  const caseOrigin = useRef('search')
+  const caseOrigin = useRef(isRecentCaseHash(location.hash) ? recentListPath : 'search')
   const frameRef = useRef<HTMLDivElement>(null)
   useEffect(() => { frameRef.current?.scrollTo({top:0}) },[hash,contact,editing])
   const navigate = (path: string) => {
@@ -72,11 +75,12 @@ export default function CatalogApp() {
   }
   const home = () => navigate('home')
   const backFromCase = () => navigate(caseOrigin.current)
-  const caseId = hash.startsWith('#case/') ? hash.slice(6) : ''
+  const caseId = caseIdPart(hash)
   let decodedId = ''
   try { decodedId = decodeURIComponent(caseId) } catch { /* Invalid link is handled below. */ }
   const originalCase = getSolutionById(decodedId)
   const selected = originalCase ? reviewedCatalogCase(originalCase) : undefined
+  useEffect(() => { if (selected && profile) rememberExisting(selected.id) }, [selected?.id, profile?.nickname, rememberExisting])
   const category = categories.find(item => hash === `#solutions/${encodeURIComponent(item.id)}`)?.id
   useEffect(() => {
     const update = () => { setHash(location.hash); setContact(false); setVisited(false); setResolution(undefined); setEditing(false); setNotice('') }
