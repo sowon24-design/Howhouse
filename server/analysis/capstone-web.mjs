@@ -7,7 +7,7 @@ export function createCapstoneWebHandler(root = resolve('dist-capstone')) {
   return (req, res) => {
     let path
     try { path = decodeURIComponent((req.url ?? '').split('?')[0]) } catch { return false }
-    const file = path === '/' || path === '/capstone.html' ? 'capstone.html' : path.startsWith('/assets/') ? path.slice(1) : null
+    const file = path === '/' || path === '/capstone.html' ? 'capstone.html' : /^\/(assets|components|fonts|icons)\//.test(path) ? path.slice(1) : null
     if (!file || !/^[\w./-]+$/.test(file) || file.split('/').some(part => part.startsWith('.')) || !types[extname(file)]) return false
     const headers = { 'X-Content-Type-Options':'nosniff', 'Referrer-Policy':'no-referrer', 'Cache-Control':'no-cache' }
     if (!['GET','HEAD'].includes(req.method)) { req.resume(); res.writeHead(405, headers); res.end(); return true }

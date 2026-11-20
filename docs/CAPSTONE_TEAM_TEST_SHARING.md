@@ -8,9 +8,9 @@
 - 같은 서비스의 `/capstone.html#home`도 지원한다. `/health`, 기존 Android/PC API 경로는 유지한다.
 - Render 연결 브랜치: `캡스톤-프로토타입`만 사용한다.
 - Render Build Command: `npm ci && node scripts/capstone-web-build.mjs`
-- 기존 Start Command: `node server/analysis/capstone-render.mjs` 유지.
+- 기존 Start Command: `node --experimental-strip-types server/analysis/capstone-render.mjs` 유지.
 - 빌드 시 Render의 공개 hostname으로 API 주소를 설정한다. 키는 서버 환경변수에만 있으며 웹 번들에는 넣지 않는다.
-- 정적 파일은 `dist-capstone`의 HTML 및 허용한 `/assets/` 확장자만 제공한다. 원본 소스·서버 파일·.env·소스맵·경로 탈출을 허용하지 않는다.
+- 정적 파일은 `dist-capstone`의 HTML 및 `/assets/`, `/components/`, `/fonts/`, `/icons/`의 허용한 확장자만 제공한다. 체크박스 등 공통 Figma 자산도 기존 디자인 그대로 제공한다. 원본 소스·서버 파일·.env·소스맵·경로 탈출을 허용하지 않는다.
 - 웹 API는 정확히 해당 서비스의 HTTPS origin만 추가로 허용한다. 동일 origin GET에서 Origin 헤더가 생략되면 브라우저의 `Sec-Fetch-Site: same-origin`을 확인한다. 다른 origin/cross-site 요청은 계속 거절한다. 이는 로그인이나 팀원 전용 접근 인증을 의미하지 않는다.
 - 초기화되지 않은 새 브라우저에서는 사용자가 직접 연령·약관 확인과 닉네임 설정을 진행한다. 기존 화면·문구·디자인은 유지한다.
 - 서버가 잠든 경우 최초 접속에 약 1분 이상 걸릴 수 있다. AI 활성화 만료는 2026-11-27 11:00 KST이며 프로세스당 신규 유료 분석 5회 한도다. 재배포/재시작하면 한도·캐시가 초기화돼 전체 누적 비용을 보장하는 상한은 아니다.
