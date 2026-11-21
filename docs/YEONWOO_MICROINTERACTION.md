@@ -1,6 +1,6 @@
 # 연우 개인 과제 — 마이크로 인터랙션
 
-- 브랜치: yeonwoo/microinteraction-assignment
+- 브랜치: yeonwoo-microinteraction-assignment
 - 기준: 원격 main 0a337ca54596259487e72103ca21e10e95e3ff37 (2026-11-21 확인)
 - 실제 서비스 컴포넌트에 적용. 메인 병합 및 출시 배포는 수행하지 않음.
 - 사용자가 선정한 두 영역과 효과를 구현했으며, 아래 세부 시간·거리 수치는 Codex의 구현 초안이다. 개인 보고서에는 직접 실습하며 유지·수정한 판단을 덧붙인다.
