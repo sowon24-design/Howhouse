@@ -13,3 +13,5 @@
 .solutions-b01__list > li { animation:yw-list-in 260ms cubic-bezier(.2,.7,.3,1) both; animation-delay:calc(70ms + var(--yw-order,0) * 38ms); }
 @keyframes yw-list-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 @media(prefers-reduced-motion:reduce) { .solutions-b01__list > li { animation:none; } }
+
+.yw-bathroom__layer { position:absolute; inset:0; width:157px; height:200px; }
