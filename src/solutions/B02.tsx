@@ -1,3 +1,4 @@
+import { usePressFeedback } from './microinteraction/usePressFeedback'
 import { VideoPreview } from './VideoPreview'
 import { useEffect, useRef, useState } from 'react'
 import { Button, GNB } from '../components/ui'
@@ -24,6 +25,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo }: {
   const photos = data.source === 'generated'
     ? [{ src: generatedResultDefault, alt: '돋보기로 문제를 살펴보는 어쩌집 캐릭터' }]
     : data.photos
+  const feedback=usePressFeedback()
   const [resolution,setResolution]=useState<'closed'|'solved'|'unsolved'>('closed')
   const root = useRef<HTMLElement>(null)
   const media = useRef<HTMLDivElement>(null)
@@ -91,7 +93,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo }: {
         </section>
       </>}
       <LocalFeedback key={data.id ?? data.title}/>
-      <div className="solutions-b02__actions"><Button variant="pale" onClick={()=>setResolution('unsolved')}>해결이 어려워요</Button><Button onClick={()=>setResolution('solved')}>해결됐어요</Button></div>
+      <div className="solutions-b02__actions"><Button variant="pale" {...feedback(()=>setResolution('unsolved'),'pale')}>해결이 어려워요</Button><Button {...feedback(()=>setResolution('solved'),'primary')}>해결됐어요</Button></div>
     </main>
     <ResolutionSheet mode={resolution} onClose={()=>setResolution('closed')} onHome={onComplete} onContact={onContact} canContact={data.canContact} hasLandlordMessage={!!data.contacts.landlord.label.trim() && (data.contacts.landlord.solvedSentences?.length ? data.contacts.landlord.solvedSentences : data.contacts.landlord.sentences).some(text => !!text.trim())} hasCompany={!!data.contacts.company.label.trim()}/>
   </section>

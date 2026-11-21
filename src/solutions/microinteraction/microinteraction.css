@@ -8,3 +8,30 @@
 .yw-press.yw-press:is(:active,[data-pressed=true],[data-home-pressed=true]):not(:disabled) { background:var(--yw-press-hover); transform:scale(.97); filter:none; }
 .yw-press:focus-visible { outline:2px solid var(--color-primary); outline-offset:3px; }
 @media(prefers-reduced-motion:reduce) { .yw-press { transition:none; } .yw-press.yw-press:is(:active,[data-pressed=true],[data-home-pressed=true]) { transform:none; } }
+
+/* Real transparent Figma parts, with layout outside each animated pivot. */
+.yw-completion-art { position:relative; width:186px; height:163px; flex:none; overflow:hidden; }
+.yw-completion-art img { position:absolute; display:block; max-width:none; object-fit:cover; }
+.yw-completion-art .yw-completion-art__body { width:189px; height:140.655px; left:0; top:11px; }
+.yw-completion-art__left { position:absolute; left:28.23px; top:76.11px; width:86.433px; height:86.433px; }
+.yw-completion-art__right { position:absolute; left:66.84px; top:28.29px; width:115.244px; height:172.866px; }
+.yw-completion-art__left > div,.yw-completion-art__right > div,.yw-completion-art__file-pivot > div { position:relative; width:100%; height:100%; }
+.yw-completion-art .yw-completion-art__front { width:189px; height:142.211px; left:-28.23px; top:-65.11px; }
+.yw-completion-art__file-pivot { position:absolute; left:25.93px; top:17.29px; width:97.957px; height:97.957px; }
+.yw-completion-art .yw-completion-art__file { width:55.432px; height:66.841px; left:36.88px; top:-10.08px; }
+.yw-completion-art .yw-completion-art__hand { width:42.64px; height:46.098px; left:52.44px; top:57.62px; }
+.solutions-sheet.yw-completion-sheet { --dialog-duration:480ms; }
+.solutions-sheet.yw-completion-sheet[data-motion=enter] { animation:yw-sheet-settle var(--dialog-duration) both; }
+.solutions-sheet.yw-completion-sheet[data-motion=exit] { --dialog-duration:220ms; animation:ui-sheet-exit var(--dialog-duration) ease-in both; }
+.solutions-sheet.yw-completion-sheet[data-motion=enter]::backdrop { animation:ui-fade-enter 240ms ease-out both; }
+@keyframes yw-sheet-settle {
+  0% { transform:translateY(100%); animation-timing-function:cubic-bezier(.16,.8,.24,1); }
+  72% { transform:translateY(-4px); animation-timing-function:ease-in-out; }
+  88% { transform:translateY(1px); animation-timing-function:ease-out; }
+  100% { transform:translateY(0); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .solutions-sheet.yw-completion-sheet[data-motion],.solutions-sheet.yw-completion-sheet[data-motion]::backdrop { animation:none; }
+}
+
+.solutions-opinion__thanks .yw-completion-art img { position:absolute; object-fit:cover; max-width:none; }
