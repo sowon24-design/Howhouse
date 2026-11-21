@@ -1,0 +1,10 @@
+/* Yeonwoo assignment: opt-in values read from the supplied Figma, 2026-11-21. */
+.yw-press { --yw-press-rest:var(--color-neutral); --yw-press-hover:#d4dde9; transition:background-color 120ms ease-out, transform 120ms ease-out; touch-action:manipulation; }
+.yw-press--neutral { --yw-press-rest:#e9eef7; background:var(--yw-press-rest); }
+.yw-press--tile { --yw-press-rest:transparent; }
+.yw-press--primary { --yw-press-rest:var(--color-primary); --yw-press-hover:var(--button-primary-hover); }
+.yw-press--pale { --yw-press-rest:var(--button-pale); --yw-press-hover:var(--button-pale-hover); }
+@media(hover:hover) { .yw-press.yw-press:hover:not(:disabled) { background:var(--yw-press-hover); } }
+.yw-press.yw-press:is(:active,[data-pressed=true],[data-home-pressed=true]):not(:disabled) { background:var(--yw-press-hover); transform:scale(.97); filter:none; }
+.yw-press:focus-visible { outline:2px solid var(--color-primary); outline-offset:3px; }
+@media(prefers-reduced-motion:reduce) { .yw-press { transition:none; } .yw-press.yw-press:is(:active,[data-pressed=true],[data-home-pressed=true]) { transform:none; } }

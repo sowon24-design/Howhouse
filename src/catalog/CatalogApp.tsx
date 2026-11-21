@@ -1,3 +1,4 @@
+import { flushSync } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
 import { Button, GNB, ListRow } from '../components/ui'
 import { HomeScreen, type HomeCategoryKey } from '../app-screens/home/HomeScreen'
@@ -65,7 +66,11 @@ export default function CatalogApp() {
       const origin = location.hash
       caseOrigin.current = origin === '#search' || origin.startsWith('#solutions/') ? origin.slice(1) : 'home'
     }
-    location.hash = path
+    const dissolve = (location.hash === '#home' || !location.hash) && path.startsWith('solutions/')
+    const update = () => { location.hash = path; flushSync(() => setHash(location.hash)) }
+    if (dissolve && document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.startViewTransition(update)
+    } else location.hash = path
   }
   const home = () => navigate('home')
   const backFromCase = () => navigate(caseOrigin.current)

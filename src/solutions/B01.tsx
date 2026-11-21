@@ -1,3 +1,6 @@
+import { type CSSProperties } from 'react'
+import { BathroomIllustration } from './microinteraction/BathroomIllustration'
+import { usePressFeedback } from './microinteraction/usePressFeedback'
 import { GNB, ListRow } from '../components/ui'
 import './b01.css'
 import questionUrl from './assets/question.svg'
@@ -34,9 +37,10 @@ export type B01Props = {
 
 export function B01({ categoryLabel, items, onSelect, onWriteProblem, onBack }: B01Props) {
   const art = artwork[categoryLabel]
+  const feedback = usePressFeedback()
   return <section className="solutions-b01" aria-label={`${categoryLabel} 카테고리`}>
     <GNB title={`${categoryLabel} 카테고리`} onBack={onBack} />
-    {art && <div className="solutions-b01__art" aria-hidden="true">
+    {categoryLabel === '화장실' ? <div className="solutions-b01__art"><BathroomIllustration/></div> : art && <div className="solutions-b01__art" aria-hidden="true">
       <div style={{width:art.width,aspectRatio:`${art.width} / ${art.height}`}}>
         <img src={art.src} alt="" style={{width:`${art.scale}%`,left:`${art.left}%`,top:`${art.top}%`}} />
       </div>
@@ -44,11 +48,11 @@ export function B01({ categoryLabel, items, onSelect, onWriteProblem, onBack }: 
     <main className="solutions-b01__content">
       <h1 className="text-heading">나의 상황과<br />가장 비슷한 문제를 골라주세요.</h1>
       <ul className="solutions-b01__list" aria-label="사례 목록">
-        {items.map(item => <li key={item.key}>
-          <ListRow onClick={() => onSelect(item.key)}>{item.label}</ListRow>
+        {items.map((item, index) => <li key={item.key} style={{'--yw-order':index} as CSSProperties}>
+          <ListRow {...feedback(() => onSelect(item.key))}>{item.label}</ListRow>
         </li>)}
       </ul>
-      <ListRow variant="pale" onClick={onWriteProblem}
+      <ListRow variant="pale" {...feedback(onWriteProblem, 'pale')}
         icon={<img src={questionUrl} alt="" width="24" height="24" />}>
         다른 사례 찾아보기
       </ListRow>

@@ -9,3 +9,11 @@ html[data-catalog-app=true] .hh-home-preview-frame { width:min(100%,412px); heig
 .hh-catalog-page a { color:var(--color-primary); }
 .hh-catalog-list { list-style:none; margin:0; padding:0; }
 .hh-catalog-result [hidden] { display:none; }
+
+/* Briefly reveal the existing surface between A01 and B01; no loading screen. */
+html[data-catalog-app=true] .hh-catalog-frame { view-transition-name:yw-screen; }
+::view-transition-old(yw-screen) { animation:yw-screen-out 110ms ease-out both; }
+::view-transition-new(yw-screen) { animation:yw-screen-in 180ms ease-out 70ms both; }
+@keyframes yw-screen-out { to { opacity:0; } }
+@keyframes yw-screen-in { from { opacity:0; } to { opacity:1; } }
+@media(prefers-reduced-motion:reduce) { ::view-transition-old(yw-screen),::view-transition-new(yw-screen) { animation:none; } }

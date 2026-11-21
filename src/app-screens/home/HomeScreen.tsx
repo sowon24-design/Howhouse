@@ -1,3 +1,4 @@
+import { usePressFeedback } from '../../solutions/microinteraction/usePressFeedback'
 import { HomeIllustration } from './HomeIllustration'
 import { ListRow } from '../../components/ui'
 import { HomePressButton } from './HomePressButton'
@@ -40,6 +41,7 @@ export type HomeScreenProps = {
 }
 
 export function HomeScreen({ nickname, month, popularProblems, onProfile, onStartProblem, onCategory, onProblem, catalogOnly = false }: HomeScreenProps) {
+  const feedback = usePressFeedback()
   return <main className="hh-home" aria-label="어쩌집 홈">
     <header className="hh-home-header">
       <img src={logo} alt="어쩌집" />
@@ -63,7 +65,7 @@ export function HomeScreen({ nickname, month, popularProblems, onProfile, onStar
       <section className="hh-home-section" aria-labelledby="home-categories-title">
         <h2 id="home-categories-title">어떤 문제를 해결할까요?</h2>
         <div className="hh-home-categories">{homeCategories.map(category =>
-          <HomePressButton type="button" key={category.key} onClick={() => onCategory(category.key)}>
+          <HomePressButton type="button" key={category.key} {...feedback(() => onCategory(category.key), 'tile')}>
             <img src={category.image} alt="" /><span>{category.label}</span>
           </HomePressButton>)}</div>
       </section>
