@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-22",
+  "checks": [
+    "Banner press and outside cancellation",
+    "Banner opens search without delay",
+    "Space feedback and category navigation",
+    "Enter opens search",
+    "Popular problem arrow and detail navigation",
+    "Touch scroll cancellation clears feedback",
+    "Window blur clears held press",
+    "Reduced motion keeps state color without movement",
+    "360 / 412 / 768 px no horizontal overflow",
+    "No browser runtime errors"
+  ],
+  "limitations": [
+    "Android physical device not tested",
+    "Pointer cancellation includes synthetic event coverage"
+  ]
+}
