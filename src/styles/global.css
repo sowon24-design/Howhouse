@@ -12,6 +12,9 @@ body {
   font-weight: 400;
   font-synthesis: none;
   letter-spacing: 0;
+  /* Keep Korean words together; only split a word if it cannot fit on a line. */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
   color: var(--color-on-surface);
   background: var(--color-neutral);
 }
