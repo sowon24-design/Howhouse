@@ -10,7 +10,7 @@ import type { ResolutionStatus } from './resolution-message'
 import clock from './assets/b02-clock.svg'
 import dollar from './assets/b02-dollar.svg'
 import external from './assets/b02-external.svg'
-import { LocalFeedback } from './LocalFeedback'
+import warning from './assets/b02-warning.svg'
 import generatedResultDefault from './assets/generated-result-w10.png'
 import './b02.css'
 
@@ -73,10 +73,10 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo }: {
         <div>{data.title.trim() && <h1 title={data.title}>{data.title}</h1>}{data.description.trim() && <p>{data.description}</p>}</div>
         <div className="solutions-b02__facts">
           {data.duration.trim() && <div><img src={clock} alt="" /><span>예상 소요 시간</span><i /><strong>{displayDuration(data.duration)}</strong></div>}
-          {(data.responsibility.trim() || data.reference.trim()) && <div><img src={dollar} alt="" /><span>수리 비용 부담</span><i /><div className="solutions-b02__responsibility">
-            <strong>{displayResponsibility(data.responsibility)}</strong>
+          <div><img src={dollar} alt="" /><span>수리 비용 부담</span><i /><div className="solutions-b02__responsibility">
+            <strong>{displayResponsibility(data.responsibility, data.id)}</strong>
             {data.reference.trim()&&<CostReference text={data.reference}/>}
-          </div></div>}
+          </div></div>
         </div>
       </div>
       {(data.supplies.length > 0 || data.steps.length > 0) && <>
@@ -90,7 +90,9 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo }: {
           <VideoPreview key={data.id} url={data.videos[0].url} thumbnail={data.videos[0].thumbnail} externalIcon={external} onOpen={onOpenVideo} />
         </section>
       </>}
-      <LocalFeedback key={data.id ?? data.title}/>
+      <div className="solutions-b02__feedback solutions-b02__advisory text-caption-rg">
+        <p><span className="solutions-b02__warning"><img src={warning} alt=""/></span><span>미리 준비된 사례를 바탕으로 한 안내예요.<br/>상황에 따라 원인과 해결 방법이 다를 수 있어요.</span></p>
+      </div>
       <div className="solutions-b02__actions"><Button variant="pale" onClick={()=>setResolution('unsolved')}>해결이 어려워요</Button><Button onClick={()=>setResolution('solved')}>해결됐어요</Button></div>
     </main>
     <ResolutionSheet mode={resolution} onClose={()=>setResolution('closed')} onHome={onComplete} onContact={onContact} canContact={data.canContact} hasLandlordMessage={!!data.contacts.landlord.label.trim() && (data.contacts.landlord.solvedSentences?.length ? data.contacts.landlord.solvedSentences : data.contacts.landlord.sentences).some(text => !!text.trim())} hasCompany={!!data.contacts.company.label.trim()}/>

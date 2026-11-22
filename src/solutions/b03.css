@@ -3,22 +3,16 @@
 .solutions-b03__top { display:flex; flex-direction:column; gap:var(--space-6); }
 .solutions-b03__top h2 { margin:0 0 var(--space-2); }
 .solutions-b03__top h2 span { color:var(--color-primary); }
-.solutions-b03__top textarea { display:block; width:100%; min-height:248px; height:auto; field-sizing:content; resize:vertical; border:0; border-radius:var(--rounded-sm); background:var(--color-neutral); padding:var(--space-5); color:var(--color-on-surface); margin-top:var(--space-3); line-height:1.5; }
+.solutions-b03__top textarea { display:block; width:100%; min-height:248px; height:auto; field-sizing:content; resize:vertical; border:0; border-radius:var(--rounded-sm); background:var(--color-neutral); padding:var(--space-5); color:var(--color-on-surface); margin-top:0; line-height:1.5; }
 .solutions-b03__top textarea { max-height:320px; overflow-y:auto; resize:none; }
 .solutions-b03__top textarea:focus { outline:none; box-shadow:none; }
 .solutions-b03__top p,.solutions-b03__actions p { font-size:14px; line-height:1.4; color:var(--color-secondary); margin:var(--space-3) 0 0; }
-.solutions-b03__actions { position:relative; }
+.solutions-b03__actions { position:relative; display:flex; flex-direction:column; gap:var(--space-3); }
+.solutions-b03__edit-caption { display:flex; align-items:flex-start; gap:var(--space-1); }
+.solutions-b03__edit-caption>span { display:grid; place-items:center; width:16px; height:16px; flex:none; margin-top:2px; }
 .solutions-b03__actions p { text-align:center; }
 .solutions-b03__toast { position:absolute; bottom:calc(100% + var(--space-3)); left:0; right:0; display:flex; justify-content:center; pointer-events:none; }
 .solutions-b03__toast span { background:var(--color-on-surface); color:var(--color-surface); border-radius:var(--rounded-full); padding:var(--space-1) var(--space-3); font-size:14px; line-height:1.4; }
-.solutions-message-sheet { margin:auto auto 0; width:min(412px,100%); max-width:100%; max-height:calc(100dvh - 24px); overflow:auto; background:var(--color-surface); color:var(--color-on-surface); border:0; border-radius:var(--rounded-lg) var(--rounded-lg) 0 0; padding:var(--space-4) var(--space-6) 64px; }
-.solutions-message-sheet[open] { display:flex; flex-direction:column; gap:36px; }
-.solutions-message-sheet::backdrop { background:rgb(0 0 0 / .25); }
-.solutions-message-sheet__handle { width:80px; height:5px; border-radius:var(--rounded-full); background:var(--color-border); align-self:center; flex:none; }
-.solutions-message-sheet h2 { margin:0; text-align:center; }
-.solutions-message-sheet__sentences { display:flex; flex-direction:column; gap:var(--space-2); }
-.solutions-message-sheet__actions { display:flex; gap:var(--space-3); }
-.solutions-message-sheet__actions>* { flex:1 1 0; }
 
 .solutions-b03__toast span { animation:solutions-copy-pop 1500ms var(--ui-ease) both; transform-origin:center bottom; }
 @keyframes solutions-copy-pop {
@@ -27,3 +21,18 @@
   100% { opacity:0; transform:translateY(4px) scale(.98); }
 }
 @media(prefers-reduced-motion:reduce) { .solutions-b03__toast span { animation:none; } }
+
+/* Keep the helper text above the CTA while editing in a keyboard-sized viewport. */
+@media (pointer: coarse) and (max-height: 700px) {
+  .solutions-b03:has(textarea:focus) .solutions-b03__content { padding-bottom:var(--space-5); }
+  .solutions-b03:has(textarea:focus) .solutions-b03__actions { display:flex; flex-direction:column; flex:none; gap:var(--space-3); }
+  .solutions-b03:has(textarea:focus) .solutions-b03__actions > p { order:-1; margin:0; }
+  .solutions-b03:has(textarea:focus) .solutions-b03__top { overflow-y:auto; min-height:0; }
+}
+
+/* B03-specific recipient tabs; other screens retain the common TabBar design. */
+.solutions-b03__recipients .ui-tabs { height:52px; gap:var(--space-2); padding:0; background:transparent; border-radius:0; }
+.solutions-b03__recipients .ui-tab-indicator { display:none; }
+.solutions-b03__recipients .ui-tabs button { border-radius:var(--rounded-sm); background:var(--surface-white); font-weight:400; box-shadow:0 3px 12px #6683b51a; }
+.solutions-b03__recipients .ui-tabs button[aria-selected=true] { background:var(--button-pale); color:var(--color-primary); font-weight:500; }
+.solutions-b03__top textarea { background:var(--b03-message-background, #e9eef7); }

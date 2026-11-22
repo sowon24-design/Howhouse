@@ -47,6 +47,7 @@
 .ui-tone--pale:active:not(:disabled) { background: var(--button-pale-pressed); }
 .ui-list, .ui-message { width: 100%; display: flex; align-items: center; text-align: left; transition: background-color 120ms; }
 .ui-row-label { min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.ui-list.ui-tone--neutral { padding-left:var(--space-5); padding-right:var(--space-4); }
 .ui-list { gap: var(--space-3); padding: var(--space-4); min-height: 56px; border-radius: var(--rounded-full); font-size: 16px; line-height: 24px; font-weight: 500; }
 .ui-message { gap: 10px; padding: 10px var(--space-3); min-height: 44px; border-radius: var(--rounded-sm); font-size: 14px; line-height: 21px; font-weight: 400; }
 .ui-gnb { display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 var(--space-5); background: var(--color-surface); color: var(--color-on-surface); }

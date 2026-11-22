@@ -108,8 +108,10 @@ test('eight Figma categories partition 53 cases once, with deleted IDs absent',(
 test('dash responsibility explanation is hidden only in presentation, raw text retained',()=>{
   const raw=get('욕실·수도:3').responsibility
   assert.equal(raw,'- (원인이 환기 부족과 건물 하자로 갈려서)')
-  assert.equal(displayResponsibility(raw),'-')
-  assert.equal(displayResponsibility('-'),'-')
+  assert.equal(displayResponsibility(raw),'부담 주체 확인 필요')
+  assert.equal(displayResponsibility('-'),'부담 주체 확인 필요')
+  assert.equal(displayResponsibility(''),'부담 주체 확인 필요')
+  assert.equal(displayResponsibility(get('욕실·수도:11').responsibility, '욕실·수도:11'),'해당 없음')
   assert.equal(displayResponsibility('세입자'),'세입자')
   assert.equal(displayResponsibility('집주인 (참고)'),'집주인 (참고)')
 })

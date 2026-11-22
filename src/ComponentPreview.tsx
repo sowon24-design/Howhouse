@@ -44,10 +44,10 @@ export function ComponentPreview() {
           <div className="demo-solution-steps">
             <SolutionStep number={1} title="단계 제목" description="내용"
               materials={Array.from({ length: materialCount }, (_, i) => ({ id: String(i), label: '준비물' }))}
-              onMaterialClick={() => setResult('준비물 클릭 확인 · 실제 링크는 화면에서 연결합니다.')} />
+              />
             <SolutionStep number={1} title="단계 제목" description="내용" active={stepActive}
               materials={Array.from({ length: materialCount }, (_, i) => ({ id: String(i), label: '준비물' }))}
-              onMaterialClick={() => setResult('준비물 클릭 확인 · 실제 링크는 화면에서 연결합니다.')} />
+              />
           </div>
         </div>
       </article>
