@@ -281,3 +281,9 @@ Figma Make: 프로토타입 UI 및 기능 개선
 - 현재 main에는 의견 버튼 진입 경로가 없어 B02-3 모션은 완료 컴포넌트를 별도로 띄워 검증함. 의견 기능 자체를 복구한 작업과는 구분함.
 - 시연을 위해 과제 브랜치에서 보완한 버튼·이동 효과와 최종 PR #74의 반영 범위는 다름. 최종 서비스 선택은 B01 정적 일러스트·목록 등장, B02 완료 시트·소라게 모션임.
 - [개인 과제 및 수정 기록](https://www.figma.com/design/CVQ6OZ7YJtimoVn69BQeJM?node-id=188-2), [최종 적용 PR #74](https://github.com/sowon24-design/Howhouse/pull/74)에서 작업 근거를 확인할 수 있음.
+
+### 제출 자료
+
+- [마이크로 인터랙션 적용 시연 영상 (MP4)](assets/week12/microinteraction-demo-yeonwoo.mp4)
+- [어쩌집 접근성 현황 분석 및 개선 리포트 (PDF)](assets/week12/accessibility-analysis-and-improvement-report.pdf)
+- 영상은 과제 실습 시연 자료이며, 최종 main 반영 범위와 구분해 확인한다.

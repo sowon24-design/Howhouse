@@ -346,5 +346,6 @@ B01·B02 마이크로 인터랙션의 적용 영역과 동작 순서 선정, Fig
 - [B01 목록 순차 등장·정적 일러스트 유지 커밋](https://github.com/sowon24-design/Howhouse/commit/ecb2418)
 - [완료 시트·소라게 모션 적용 커밋](https://github.com/sowon24-design/Howhouse/commit/6b4151c)
 - [개인 과제 Figma 프레임 — 선정 이유·동작 정의·분석·수정 기록](https://www.figma.com/design/CVQ6OZ7YJtimoVn69BQeJM?node-id=188-2)
-- 시연 MP4는 개인 제출용으로 별도 제작했으며, 영상 파일을 GitHub 코드에 올린 것은 아님
+- [마이크로 인터랙션 적용 시연 영상 (MP4)](assets/week12/microinteraction-demo-yeonwoo.mp4) — 과제 실습 시연 자료이며, 최종 서비스에 채택한 효과의 범위는 위 최종 적용 기록 참고
+- [어쩌집 접근성 현황 분석 및 개선 리포트 (PDF)](assets/week12/accessibility-analysis-and-improvement-report.pdf) — 개선 현황 분석 자료를 이미지 대신 원본 파일 링크로 첨부
 - 실물 Android 기기에서의 모션 성능 및 추가 사용자 테스트는 이번 검증 범위에 포함하지 않음
