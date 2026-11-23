@@ -60,12 +60,9 @@
 .hh-home {
   --home-press-duration: 160ms;
   --home-banner-scale: .98;
-  --home-category-scale: .94;
 }
 .hh-home-banner { transition: transform var(--home-press-duration) var(--ui-ease), filter var(--home-press-duration) var(--ui-ease); }
 .hh-home-categories button img { transition: transform var(--home-press-duration) var(--ui-ease), filter var(--home-press-duration) var(--ui-ease); }
-.hh-home-banner[data-home-pressed=true]:not(:disabled) { transform: scale(var(--home-banner-scale)); }
-.hh-home-categories button[data-home-pressed=true]:not(:disabled) img { transform: scale(var(--home-category-scale)); }
 .hh-home-problem > .ui-asset { transition: transform var(--home-press-duration) var(--ui-ease); }
 .hh-home-problem[data-pressed=true]:not(:disabled) > .ui-asset { transform: translateX(var(--space-1)); }
 /* Explicit state wins over :active after touch cancellation or pointer exit. */

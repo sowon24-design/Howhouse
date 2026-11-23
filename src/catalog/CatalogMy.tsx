@@ -1,3 +1,4 @@
+import { useProfileMorph } from '../app-screens/micro-motion'
 import { CatalogContact } from './CatalogContact'
 import { GNB } from '../components/ui'
 import { catalogPolicy } from './policy'
@@ -10,10 +11,11 @@ import './my.css'
 
 export type CatalogMyPage = 'data' | 'ai' | 'contact'
 export function CatalogMy({nickname,onBack,onEdit,onPage,notice}:{nickname:string;onBack:()=>void;onEdit:()=>void;onPage:(page:CatalogMyPage)=>void;notice:string}) {
+  const profileMotion=useProfileMorph()
   return <main className="hh-my hh-catalog-my" aria-label="마이 페이지">
     <GNB title="마이 페이지" onBack={onBack}/>
     <div className="hh-my-content">
-      <section className="hh-my-profile" aria-label="내 프로필">
+      <section ref={profileMotion} className="hh-my-profile" aria-label="내 프로필">
         <div className="hh-my-identity"><h1>{nickname}</h1><button type="button" aria-label="닉네임 수정" onClick={onEdit}><img src={edit} alt=""/></button></div>
         <div className="hh-my-art"><img src={crab} alt=""/></div>
       </section>

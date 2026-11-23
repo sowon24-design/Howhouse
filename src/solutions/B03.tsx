@@ -1,4 +1,5 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { StreamingMessage } from './StreamingMessage'
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { Button, GNB, TabBar } from '../components/ui'
 import { initialDraft, copyMessageResult, editDraft, messageBody } from './message-model'
 import type { MessageDraft, Recipient } from './message-model'
@@ -20,9 +21,13 @@ async function writeClipboard(text:string) {
   finally {field.remove();previous?.focus({preventScroll:true})}
 }
 
-export function B03({recipients,onBack,resolution,contextual=false}:{recipients:readonly Recipient[];onBack:()=>void;resolution?:ResolutionStatus;contextual?:boolean}) {
+export function B03({recipients,onBack,resolution,contextual=false,visible=true}:{recipients:readonly Recipient[];onBack:()=>void;resolution?:ResolutionStatus;contextual?:boolean;visible?:boolean}) {
   const base=useId()
-  const [target,setTarget]=useState(recipients[0]?.id??'')
+  const initialTarget=recipients.find(recipient=>recipient.id==='landlord')?.id??recipients[0]?.id??''
+  const [target,setTarget]=useState(initialTarget)
+  // Catalog keeps B03 mounted to preserve drafts. Reset its tab while hidden,
+  // before the next visit can paint the previous recipient or start its reveal.
+  useLayoutEffect(()=>{if(!visible)setTarget(initialTarget)},[visible,initialTarget])
   const [drafts,setDrafts]=useState<Record<string,MessageDraft>>(()=>Object.fromEntries(recipients.map(r=>[r.id,contextual?resolutionDraft(r,resolution):initialDraft(r)])))
   const editedRecipients=useRef(new Set<string>())
   const appliedResolution=useRef(resolution)
@@ -63,10 +68,10 @@ export function B03({recipients,onBack,resolution,contextual=false}:{recipients:
     <GNB title="문의 메시지 작성하기" onBack={onBack}/>
     <main className="solutions-b03__content" onClick={event=>{if(!(event.target instanceof HTMLTextAreaElement) && document.activeElement instanceof HTMLTextAreaElement) document.activeElement.blur()}}>
       <div className="solutions-b03__top">
-        {recipients.length>1&&<div className="solutions-b03__recipients"><h2 className="text-body-sb">누구에게 보낼까요?</h2><TabBar label="문의 대상" options={recipients.map(r=>({value:r.id,label:r.id==='company'?'수리기사':r.label,panelId:`${base}-${r.id}`}))} value={target} onChange={value=>{setTarget(value);setToast('')}}/></div>}
+        {recipients.length>1&&<div className="solutions-b03__recipients"><h2 className="text-body-sb">누구에게 보낼까요?</h2><TabBar label="문의 대상" options={recipients.map(r=>({value:r.id,label:r.id==='company'?'수리기사':r.label,panelId:`${base}-${r.id}`}))} value={target} onChange={value=>{if(value===target)return;setTarget(value);setToast('')}}/></div>}
         {recipients.map(r=><section key={r.id} id={`${base}-${r.id}`} role="tabpanel" aria-label={r.label} hidden={target!==r.id}>
           <h2 className="text-body-sb"><span>{r.title}</span>에게 보낼 메시지</h2>
-          <textarea aria-label={`${r.label} 메시지 본문`} value={messageBody(drafts[r.id])} onChange={e=>{editedRecipients.current.add(r.id);setDrafts(previous=>({...previous,[r.id]:editDraft(previous[r.id],e.target.value)}))}}/>
+          <StreamingMessage visible={visible} label={`${r.label} 메시지 본문`} active={target===r.id} value={messageBody(drafts[r.id])} onChange={value=>{editedRecipients.current.add(r.id);setDrafts(previous=>({...previous,[r.id]:editDraft(previous[r.id],value)}))}}/>
           <p className="solutions-b03__edit-caption text-caption-rg"><span aria-hidden="true"><img src={info} alt=""/></span>메시지를 직접 수정할 수 있어요.</p>
         </section>)}
       </div>
@@ -74,8 +79,3 @@ export function B03({recipients,onBack,resolution,contextual=false}:{recipients:
     </main>
   </section>
 }
-
-
-
-
-

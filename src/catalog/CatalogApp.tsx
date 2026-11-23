@@ -1,3 +1,4 @@
+import { captureProfileReturn, clearProfileReturn } from '../app-screens/micro-motion'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Button } from '../components/ui'
 import { HomeScreen, type HomeCategoryKey } from '../app-screens/home/HomeScreen'
@@ -60,6 +61,7 @@ export default function CatalogApp() {
   const [onboardingKey, setOnboardingKey] = useState(0)
   const [hash, setHash] = useState(location.hash)
   const [query, setQuery] = useState('')
+  const recommendedQuery = useRef<string | null>(null)
   const [previewCaseId, setPreviewCaseId] = useState<string>(solutionCases[0]?.id ?? '')
   const [notice, setNotice] = useState('')
   const [contact, setContact] = useState(false)
@@ -78,7 +80,6 @@ export default function CatalogApp() {
     previousView.current = { hash, contact }
   }, [hash, contact, editing])
   const navigate = (path: string) => {
-    if (path === 'search') setQuery('')
     if (path === 'search' && !location.hash.startsWith('#case/') && location.hash !== '#search-results') {
       searchOrigin.current = location.hash.startsWith('#solutions/') ? location.hash.slice(1) : 'home'
     }
@@ -99,8 +100,12 @@ export default function CatalogApp() {
   const category = categories.find(item => hash === `#solutions/${encodeURIComponent(item.id)}`)?.id
   useEffect(() => {
     const update = (event: HashChangeEvent) => {
-      // Clear only A09 → A08; returning from a case to its results keeps the query.
-      if (new URL(event.oldURL).hash === '#search-results' && location.hash === '#search') setQuery('')
+      clearProfileReturn()
+      if (new URL(event.oldURL).hash === '#my' && new URL(event.newURL).hash === '#home') captureProfileReturn()
+      // Reset before rendering search, without flashing the outgoing results.
+      if (location.hash === '#search') setQuery('')
+      if (location.hash === '#search-results' && recommendedQuery.current !== null) setQuery(recommendedQuery.current)
+      recommendedQuery.current = null
       setHash(location.hash); setContact(false); setVisited(false); setResolution(undefined); setEditing(false); setNotice('')
     }
     window.addEventListener('hashchange', update)
@@ -170,7 +175,7 @@ export default function CatalogApp() {
   if (selected) return frame(<div className="hh-catalog-result">
     <div hidden={contact}><B02 data={selected} onBack={backFromCase} onComplete={home}
       onContact={value => {solutionScroll.current = { hash, top: frameRef.current?.scrollTop ?? 0 };setResolution(value);setVisited(true);setContact(true)}} onOpenVideo={() => {}} onPreviewOpinion={() => {}}/></div>
-    {visited && <div hidden={!contact}><B03 recipients={toMessageRecipients(selected,resolution==='solved')} resolution={resolution} onBack={() => setContact(false)}/></div>}
+    {visited && <div hidden={!contact}><B03 visible={contact} recipients={toMessageRecipients(selected,resolution==='solved')} resolution={resolution} onBack={() => setContact(false)}/></div>}
   </div>)
   if (category) return frame(<B01 categoryLabel={category} items={getCategoryCases(solutionCases, category).map(item=>({key:item.id,label:item.symptom}))}
     onSelect={id=>navigate(`case/${encodeURIComponent(id)}`)} onBack={home}/> )
@@ -181,5 +186,5 @@ export default function CatalogApp() {
   const results = hasQuery ? searchCases(solutionCases,query) : []
   return frame(<CatalogSearch key={hash} query={query} onChange={setQuery} showResults={hash === '#search-results'} results={results}
     onBack={hash === '#search-results' ? () => navigate('search') : backFromSearch}
-    onHome={home} onSubmit={() => navigate('search-results')} onSelect={id => navigate('case/'+encodeURIComponent(id))}/>)
+    onHome={home} onRecommend={word=>{recommendedQuery.current=word;navigate('search-results')}} onSubmit={() => navigate('search-results')} onSelect={id => navigate('case/'+encodeURIComponent(id))}/>)
 }

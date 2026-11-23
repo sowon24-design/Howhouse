@@ -144,3 +144,17 @@
 .ui-radio-on { border:1px solid var(--color-primary); border-radius:var(--rounded-full); display:grid; place-items:center; }
 .ui-radio-on .ui-asset { width:12px; height:12px; }
 .ui-radio-on input { inset:-1px; }
+
+/* W12: shared press/release spring; scale is independent of entrance transforms. */
+:is(.ui-button,.ui-list,.ui-message,.ui-arrow-button,.hh-home-banner,.hh-search-tags button,.hh-my-menu button,.hh-my-menu a) {
+  scale:1;
+  transition:background-color 160ms var(--ui-ease),color 160ms var(--ui-ease),filter 160ms var(--ui-ease),scale 320ms cubic-bezier(.22,1.65,.36,1);
+}
+:is(.ui-button,.ui-list,.ui-message,.ui-arrow-button,.hh-home-banner,.hh-search-tags button,.hh-my-menu button,.hh-my-menu a):is(:active,[data-pressed=true],[data-home-pressed=true]):not(:disabled):not([aria-disabled=true]):not([aria-busy=true]) {
+  scale:.96;
+  transition:background-color 0ms,color 0ms,filter 0ms,scale 90ms ease-out;
+}
+:is(.ui-button,.ui-list,.ui-message,.ui-arrow-button,.hh-home-banner,.hh-search-tags button,.hh-my-menu button,.hh-my-menu a):is(:disabled,[aria-disabled=true],[aria-busy=true]) { scale:1; }
+@media(prefers-reduced-motion:reduce) {
+  :is(.ui-button,.ui-list,.ui-message,.ui-arrow-button,.hh-home-banner,.hh-search-tags button,.hh-my-menu button,.hh-my-menu a) { scale:1!important; transition:none!important; }
+}
