@@ -1,0 +1,27 @@
+/* Final B02 completion sheets only: preserve existing shared dialog behavior. */
+
+.solutions-completion-art { position:relative; width:186px; height:163px; flex:none; overflow:hidden; }
+.solutions-completion-art img { position:absolute; display:block; max-width:none; object-fit:cover; }
+.solutions-completion-art .solutions-completion-art__body { width:189px; height:140.655px; left:0; top:11px; }
+.solutions-completion-art__left { position:absolute; left:28.23px; top:76.11px; width:86.433px; height:86.433px; }
+.solutions-completion-art__right { position:absolute; left:66.84px; top:28.29px; width:115.244px; height:172.866px; }
+.solutions-completion-art__left > div,.solutions-completion-art__right > div,.solutions-completion-art__file-pivot > div { position:relative; width:100%; height:100%; }
+.solutions-completion-art .solutions-completion-art__front { width:189px; height:142.211px; left:-28.23px; top:-65.11px; }
+.solutions-completion-art__file-pivot { position:absolute; left:25.93px; top:17.29px; width:97.957px; height:97.957px; }
+.solutions-completion-art .solutions-completion-art__file { width:55.432px; height:66.841px; left:36.88px; top:-10.08px; }
+.solutions-completion-art .solutions-completion-art__hand { width:42.64px; height:46.098px; left:52.44px; top:57.62px; }
+.solutions-sheet.solutions-completion-sheet { --dialog-duration:420ms; }
+.solutions-sheet.solutions-completion-sheet[data-motion=enter] { animation:yw-sheet-rise var(--dialog-duration) cubic-bezier(.16,1,.3,1) both; }
+.solutions-sheet.solutions-completion-sheet[data-motion=exit] { --dialog-duration:220ms; animation:ui-sheet-exit var(--dialog-duration) ease-in both; }
+.solutions-sheet.solutions-completion-sheet[data-motion=enter]::backdrop { animation:ui-fade-enter 240ms ease-out both; }
+@keyframes yw-sheet-rise {
+  from { transform:translateY(100%); }
+  to { transform:translateY(0); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .solutions-sheet.solutions-completion-sheet[data-motion],.solutions-sheet.solutions-completion-sheet[data-motion]::backdrop { animation:none; }
+}
+
+.solutions-opinion__thanks .solutions-completion-art img { position:absolute; object-fit:cover; max-width:none; }
+
+.solutions-sheet.solutions-completion-sheet[open] { will-change:transform; }
