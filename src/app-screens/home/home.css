@@ -55,3 +55,28 @@
 .hh-home .hh-home-problem {background:var(--color-neutral);box-shadow:none;}
 
 .hh-home-book .hh-home-search-icon { width:28px; height:28px; filter:brightness(0) invert(1); }
+
+/* Assignment motion, 2026-11-22. Geometry stays fixed; only visual layers move. */
+.hh-home {
+  --home-press-duration: 160ms;
+  --home-banner-scale: .98;
+  --home-category-scale: .94;
+}
+.hh-home-banner { transition: transform var(--home-press-duration) var(--ui-ease), filter var(--home-press-duration) var(--ui-ease); }
+.hh-home-categories button img { transition: transform var(--home-press-duration) var(--ui-ease), filter var(--home-press-duration) var(--ui-ease); }
+.hh-home-banner[data-home-pressed=true]:not(:disabled) { transform: scale(var(--home-banner-scale)); }
+.hh-home-categories button[data-home-pressed=true]:not(:disabled) img { transform: scale(var(--home-category-scale)); }
+.hh-home-problem > .ui-asset { transition: transform var(--home-press-duration) var(--ui-ease); }
+.hh-home-problem[data-pressed=true]:not(:disabled) > .ui-asset { transform: translateX(var(--space-1)); }
+/* Explicit state wins over :active after touch cancellation or pointer exit. */
+.hh-home :is(.hh-home-profile, .hh-home-banner)[data-home-pressed=false],
+.hh-home-categories button[data-home-pressed=false] img { filter: none; }
+.hh-home .hh-home-problem[data-pressed=false] { background: var(--color-neutral); }
+.hh-home :is(.hh-home-profile, .hh-home-banner)[data-home-pressed=false],
+.hh-home-categories button[data-home-pressed=false] img,
+.hh-home .hh-home-problem[data-pressed=false] { transition-duration: var(--home-press-duration); }
+@media (prefers-reduced-motion: reduce) {
+  .hh-home .hh-home-banner, .hh-home .hh-home-profile,
+  .hh-home .hh-home-categories button img, .hh-home .hh-home-problem,
+  .hh-home .hh-home-problem > .ui-asset { transition: none !important; transform: none !important; }
+}
