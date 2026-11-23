@@ -1,3 +1,4 @@
+import { useListEntrance } from '../app-screens/micro-motion'
 import { GNB, ListRow } from '../components/ui'
 import { getCaseListLabel } from './data/case-list-labels'
 import './b01.css'
@@ -34,6 +35,7 @@ export type B01Props = {
 }
 
 export function B01({ categoryLabel, items, onSelect, onWriteProblem, onBack }: B01Props) {
+  const list = useListEntrance(categoryLabel)
   const art = artwork[categoryLabel]
   return <section className="solutions-b01" aria-label={`${categoryLabel} 카테고리`}>
     <GNB title={`${categoryLabel} 카테고리`} onBack={onBack} />
@@ -44,7 +46,7 @@ export function B01({ categoryLabel, items, onSelect, onWriteProblem, onBack }: 
     </div>}
     <main className="solutions-b01__content">
       <h1 className="text-heading">나의 상황과<br />가장 비슷한 문제를 골라주세요.</h1>
-      <ul className="solutions-b01__list" aria-label="사례 목록">
+      <ul ref={list} className="solutions-b01__list" aria-label="사례 목록">
         {items.map(item => <li key={item.key}>
           <ListRow onClick={() => onSelect(item.key)}>{getCaseListLabel(item.key, item.label)}</ListRow>
         </li>)}

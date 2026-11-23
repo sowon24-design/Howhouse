@@ -1,3 +1,4 @@
+import { StreamingMessage } from './StreamingMessage'
 import { useEffect, useId, useRef, useState } from 'react'
 import { Button, GNB, TabBar } from '../components/ui'
 import { initialDraft, copyMessageResult, editDraft, messageBody } from './message-model'
@@ -31,6 +32,7 @@ export function B03({recipients,onBack,resolution,contextual=false}:{recipients:
     appliedResolution.current=resolution
     if(contextual)setDrafts(previous=>Object.fromEntries(recipients.map(r=>[r.id,editedRecipients.current.has(r.id)?previous[r.id]:resolutionDraft(r,resolution)])))
   },[resolution,contextual,recipients])
+  const [messageSequence,setMessageSequence]=useState(1)
   const [toast,setToast]=useState('')
   const [toastSequence,setToastSequence]=useState(0)
   const [copying,setCopying]=useState(false)
@@ -63,10 +65,10 @@ export function B03({recipients,onBack,resolution,contextual=false}:{recipients:
     <GNB title="문의 메시지 작성하기" onBack={onBack}/>
     <main className="solutions-b03__content" onClick={event=>{if(!(event.target instanceof HTMLTextAreaElement) && document.activeElement instanceof HTMLTextAreaElement) document.activeElement.blur()}}>
       <div className="solutions-b03__top">
-        {recipients.length>1&&<div className="solutions-b03__recipients"><h2 className="text-body-sb">누구에게 보낼까요?</h2><TabBar label="문의 대상" options={recipients.map(r=>({value:r.id,label:r.id==='company'?'수리기사':r.label,panelId:`${base}-${r.id}`}))} value={target} onChange={value=>{setTarget(value);setToast('')}}/></div>}
+        {recipients.length>1&&<div className="solutions-b03__recipients"><h2 className="text-body-sb">누구에게 보낼까요?</h2><TabBar label="문의 대상" options={recipients.map(r=>({value:r.id,label:r.id==='company'?'수리기사':r.label,panelId:`${base}-${r.id}`}))} value={target} onChange={value=>{if(value===target)return;setTarget(value);setMessageSequence(n=>n+1);setToast('')}}/></div>}
         {recipients.map(r=><section key={r.id} id={`${base}-${r.id}`} role="tabpanel" aria-label={r.label} hidden={target!==r.id}>
           <h2 className="text-body-sb"><span>{r.title}</span>에게 보낼 메시지</h2>
-          <textarea aria-label={`${r.label} 메시지 본문`} value={messageBody(drafts[r.id])} onChange={e=>{editedRecipients.current.add(r.id);setDrafts(previous=>({...previous,[r.id]:editDraft(previous[r.id],e.target.value)}))}}/>
+          <StreamingMessage label={`${r.label} 메시지 본문`} value={messageBody(drafts[r.id])} active={target===r.id} sequence={messageSequence} onChange={value=>{editedRecipients.current.add(r.id);setDrafts(previous=>({...previous,[r.id]:editDraft(previous[r.id],value)}))}}/>
           <p className="solutions-b03__edit-caption text-caption-rg"><span aria-hidden="true"><img src={info} alt=""/></span>메시지를 직접 수정할 수 있어요.</p>
         </section>)}
       </div>

@@ -70,7 +70,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo }: {
     {photos.length > 0 && <div ref={media} className="solutions-b02__media"><div className="solutions-b02__photos">{photos.map((photo, i) => <img key={i} src={photo.src} alt={photo.alt} />)}</div></div>}
     <main className="solutions-b02__content">
       <div className="solutions-b02__intro">
-        <div>{data.title.trim() && <h1 title={data.title}>{data.title}</h1>}{data.description.trim() && <p>{data.description}</p>}</div>
+        <div>{data.title.trim() && <h1 key={data.id ?? data.title} title={data.title} aria-label={data.title} className="solutions-b02__animated-title"><span aria-hidden="true">{data.title.split(/(\s+)/).map((word,wordIndex)=>word.trim()?<span className="solutions-b02__title-group" key={wordIndex}>{Array.from(word).map((character,index)=><span className="solutions-b02__title-word" key={index} style={{animationDelay:`${(Array.from(data.title.split(/(\s+)/).slice(0,wordIndex).join('').replace(/\s/g,'')).length+index)*75}ms`}}>{character}</span>)}</span>:word)}</span></h1>}{data.description.trim() && <p>{data.description}</p>}</div>
         <div className="solutions-b02__facts">
           {data.duration.trim() && <div><img src={clock} alt="" /><span>예상 소요 시간</span><i /><strong>{displayDuration(data.duration)}</strong></div>}
           <div><img src={dollar} alt="" /><span>수리 비용 부담</span><i /><div className="solutions-b02__responsibility">

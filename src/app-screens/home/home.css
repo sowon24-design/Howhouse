@@ -55,3 +55,9 @@
 .hh-home .hh-home-problem {background:var(--color-neutral);box-shadow:none;}
 
 .hh-home-book .hh-home-search-icon { width:28px; height:28px; filter:brightness(0) invert(1); }
+
+/* W12: icon-only press feedback; label and hit area remain stationary. */
+.hh-home-categories button > img { transition:transform 180ms cubic-bezier(.23,1,.32,1); }
+.hh-home-categories button[data-home-pressed=true] > img,
+.hh-home-categories button:active > img { transform:scale(.9); }
+@media(prefers-reduced-motion:reduce) { .hh-home-categories button > img { transition:none; transform:none!important; } }

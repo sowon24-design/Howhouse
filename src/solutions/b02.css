@@ -146,3 +146,11 @@
 .solutions-b02__video-placeholder { display:flex; height:100%; align-items:center; justify-content:center; padding-bottom:var(--space-64); background:var(--color-neutral); }
 .solutions-b02__video-preview-action { position:absolute; z-index:1; inset:auto var(--space-4) var(--space-4); display:flex; flex-direction:column; align-items:center; gap:var(--space-2); }
 .solutions-b02__video-preview-action p { margin:0; }
+
+/* Title-only word reveal; other B02 sections appear immediately. */
+.solutions-b02__title-word { display:inline-block; max-width:100%; animation:b02-title-word 433ms cubic-bezier(.16,1,.3,1) both; }
+@keyframes b02-title-word { from { opacity:0; transform:translateY(5px); filter:blur(3px); } to { opacity:1; transform:translateY(0); filter:blur(0); } }
+@media(prefers-reduced-motion:reduce) { .solutions-b02__title-word { animation:none; } }
+
+/* Keep Korean word wrapping while revealing individual syllables. */
+.solutions-b02__title-group { display:inline-block; max-width:100%; }
