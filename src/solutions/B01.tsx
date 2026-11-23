@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { GNB, ListRow } from '../components/ui'
 import { getCaseListLabel } from './data/case-list-labels'
 import './b01.css'
@@ -45,7 +46,7 @@ export function B01({ categoryLabel, items, onSelect, onWriteProblem, onBack }: 
     <main className="solutions-b01__content">
       <h1 className="text-heading">나의 상황과<br />가장 비슷한 문제를 골라주세요.</h1>
       <ul className="solutions-b01__list" aria-label="사례 목록">
-        {items.map(item => <li key={item.key}>
+        {items.map((item, index) => <li key={item.key} style={{'--case-order':index} as CSSProperties}>
           <ListRow onClick={() => onSelect(item.key)}>{getCaseListLabel(item.key, item.label)}</ListRow>
         </li>)}
       </ul>
