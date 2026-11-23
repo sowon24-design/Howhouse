@@ -1,3 +1,4 @@
+import { captureSearchMorph, captureProfileMorph, useProfileReturn } from '../micro-motion'
 import { HomeIllustration } from './HomeIllustration'
 import { ListRow } from '../../components/ui'
 import { HomePressButton } from './HomePressButton'
@@ -40,10 +41,11 @@ export type HomeScreenProps = {
 }
 
 export function HomeScreen({ nickname, month, popularProblems, onProfile, onStartProblem, onCategory, onProblem, catalogOnly = false }: HomeScreenProps) {
-  return <main className="hh-home" aria-label="어쩌집 홈">
+  const profileReturn=useProfileReturn()
+  return <main ref={profileReturn} className="hh-home" aria-label="어쩌집 홈">
     <header className="hh-home-header">
       <img src={logo} alt="어쩌집" />
-      <HomePressButton type="button" className="hh-home-profile" aria-label="마이 페이지" onClick={onProfile}><img src={profile} alt="" /></HomePressButton>
+      <HomePressButton type="button" className="hh-home-profile" aria-label="마이 페이지" onClick={event=>{if(catalogOnly)captureProfileMorph(event.currentTarget);onProfile()}}><img src={profile} alt="" /></HomePressButton>
     </header>
     <div className="hh-home-content">
       <div className="hh-home-greeting">
@@ -54,7 +56,7 @@ export function HomeScreen({ nickname, month, popularProblems, onProfile, onStar
         <div className="hh-home-art" aria-hidden="true">
           <HomeIllustration />
         </div>
-        <HomePressButton type="button" className="hh-home-banner" onClick={onStartProblem}>
+        <HomePressButton type="button" className="hh-home-banner" onClick={event=>{if(catalogOnly)captureSearchMorph(event.currentTarget);onStartProblem()}}>
           <span className="hh-home-book"><img className="hh-home-search-icon" src="/icons/figma/408-3710.svg" alt="" /></span>
           <span className="hh-home-banner-copy"><span>우리집 문제에 대한</span><strong>해결 방법을 찾아볼까요?</strong></span>
           <img src={arrow} alt="" />

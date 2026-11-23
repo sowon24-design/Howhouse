@@ -35,7 +35,6 @@ export function OnboardingScreen({ step, onStepChange, onContinue, catalogOnly =
         {[1, 2, 3].map(value => <span key={value} data-active={step === value} />)}
       </div>
     </div>}
-    <footer className="hh-onboarding-next"><Button onClick={() => step < 3 ? onStepChange(step + 1) : onContinue()}>{step === 0 ? '시작하기' : step === 3 ? '약관 동의하러 가기' : '다음으로'}</Button></footer>
+    <footer className="hh-onboarding-next"><Button key={step} className={step < 3 ? 'hh-intro-cta-release' : undefined} onClick={() => step < 3 ? onStepChange(step + 1) : onContinue()}>{step === 0 ? '시작하기' : step === 3 ? '약관 동의하러 가기' : '다음으로'}</Button></footer>
   </main>
 }
-

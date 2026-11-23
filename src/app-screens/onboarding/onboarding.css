@@ -40,3 +40,12 @@
   .hh-welcome-art { width:200px; }
 }
 @media(prefers-reduced-motion:reduce) { .hh-intro-progress span { transition:none; } .hh-welcome-art, .hh-intro-art, .hh-intro-copy h1, .hh-intro-copy p { animation:none; } }
+
+/* Welcome / first two stories: release immediately instead of carrying the
+   shared spring into the next story on the same mounted CTA. */
+.hh-onboarding-next .ui-button.hh-intro-cta-release:not([data-pressed=true]) {
+  scale:1;
+  background:var(--color-primary);
+  color:white;
+  transition:none;
+}
