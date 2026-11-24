@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import {prototypePolicy} from './prototype-policy'
 import { OnboardingScreen } from '../../app-screens/onboarding/OnboardingScreen'
 import { NicknameScreen } from '../../app-screens/onboarding/NicknameScreen'
 import { minimizeAndroidApp, useAndroidBack } from '../../app-screens/android-back'
@@ -9,12 +10,17 @@ import { PrototypeTermsScreen } from './PrototypeTermsScreen'
 export function PrototypeOnboarding({onComplete}:{onComplete:(nickname:string)=>void}){
  const [step,updateStep]=useState(()=>{try{if(import.meta.env.DEV&&new URLSearchParams(location.search).get('reset-onboarding')==='1'){saveIntroduction(localStorage,0);const url=new URL(location.href);url.searchParams.delete('reset-onboarding');history.replaceState(history.state,'',url);return 0}return readIntroduction(localStorage)}catch{return 0}})
  const [stage,setStage]=useState<'intro'|'terms'|'nickname'>('intro'),[nickname,setNickname]=useState('')
+ const complete=(name:string)=>{
+  // Both the explicit preview route and first-use route must satisfy the home setup gate.
+  try{localStorage.setItem('howhouse.catalog.profile.v1',JSON.stringify({nickname:name,ageConfirmed:true,policyVersion:prototypePolicy.version}))}catch{/* The caller retains its existing storage-error handling. */}
+  onComplete(name)
+ }
  const setStep=(next:number)=>{updateStep(next);try{saveIntroduction(localStorage,next)}catch{}}
  const start=()=>{setStage('intro');setStep(0)}
  const back=()=>{if(stage==='nickname')setStage('terms');else if(stage==='terms'){setStage('intro');setStep(3)}else if(step>0)setStep(step-1);else minimizeAndroidApp()}
  useAndroidBack(back)
  return <div className="hh-home-preview"><div className="hh-home-preview-frame hh-onboarding-frame">
-  {stage==='nickname'&&<NicknameScreen initialValue={nickname} onBack={back} onClose={start} onComplete={onComplete} onDraftChange={setNickname}/>}
+  {stage==='nickname'&&<NicknameScreen initialValue={nickname} onBack={back} onClose={start} onComplete={complete} onDraftChange={setNickname}/>}
   <div hidden={stage!=='terms'} style={{height:'100%'}}><PrototypeTermsScreen onBack={back} onClose={start} onContinue={()=>setStage('nickname')}/></div>
   {stage==='intro'&&<OnboardingScreen step={step} onStepChange={setStep} onContinue={()=>setStage('terms')}/>}
  </div></div>

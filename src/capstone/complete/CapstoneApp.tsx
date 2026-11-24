@@ -63,13 +63,14 @@ export default function CapstoneApp(){
  return <CommunityProvider owner={readProfile().nickname}><RecentCasesProvider><CapstoneRouter/></RecentCasesProvider></CommunityProvider>
 }
 function CapstoneRouter(){
+ const [setupActive,setSetupActive]=useState(false)
  const [hash,setHash]=useState(location.hash)
  useEffect(()=>{const sync=()=>setHash(location.hash);window.addEventListener('hashchange',sync);return()=>window.removeEventListener('hashchange',sync)},[])
  const canonical=mainRoute(hash),main=canonical!==null
  useEffect(()=>{if(canonical!==null&&canonical!==location.hash)location.replace(canonical)},[canonical])
  const rootRoute=canonical??hash
  const navigation=rootRoute==='#home'?'home':rootRoute==='#categories'||rootRoute==='#screen/336:27506'?'categories':rootRoute==='#community'||rootRoute==='#screen/336:28651'?'community':rootRoute==='#my'||rootRoute==='#screen/336:30827'?'my':null
- return <><div hidden={!main} data-capstone-main>{main&&<CatalogApp route={canonical!}/>}</div><div hidden={main}><ConnectivityBoundary>{(suspended,onConnectionLost)=><CompleteContent suspended={suspended||main} onConnectionLost={onConnectionLost}/>}</ConnectivityBoundary></div>{navigation&&<BottomNavigation selected={navigation}/>}</>
+ return <><div hidden={!main} data-capstone-main>{main&&<CatalogApp route={canonical!} onSetupChange={setSetupActive}/>}</div><div hidden={main}><ConnectivityBoundary>{(suspended,onConnectionLost)=><CompleteContent suspended={suspended||main} onConnectionLost={onConnectionLost}/>}</ConnectivityBoundary></div>{navigation&&!(main&&setupActive)&&<BottomNavigation selected={navigation}/>}</>
 }
 function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConnectionLost:()=>void}){
  const reduceMotion=useReducedMotion()
@@ -86,11 +87,11 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
  const communitySearch=screens[screen].name.startsWith('C')
  const history=communitySearch?postSearchHistory:caseSearchHistory
  const setHistory=communitySearch?setPostSearchHistory:setCaseSearchHistory
- const autoReviewReveal=useRef(false),autoReviewShown=useRef(false)
+ const autoReviewReveal=useRef(false),autoReviewShown=useRef(false),reviewOrigin=useRef<string|null>(null)
  const [draft,setDraft]=useState({kind:'',title:'',body:'',tags:''}),[postPhotos,setPostPhotos]=useState<string[]>([]),[comment,setComment]=useState('')
  const [editingPostId,setEditingPostId]=useState<string|null>(null)
  useEffect(()=>{
-  const compose=(event:Event)=>{const next=(event as CustomEvent<{kind:string;title:string;body:string;tags:string}>).detail;setEditingPostId(null);setPostPhotos([]);autoReviewReveal.current=true;autoReviewShown.current=false;setDraft(next);go(S.write)}
+  const compose=(event:Event)=>{const next=(event as CustomEvent<{kind:string;title:string;body:string;tags:string}>).detail;reviewOrigin.current=location.hash;setEditingPostId(null);setPostPhotos([]);autoReviewReveal.current=true;autoReviewShown.current=false;setDraft(next);go(S.write)}
   window.addEventListener('capstone-review-draft',compose)
   return()=>window.removeEventListener('capstone-review-draft',compose)
  })
@@ -143,7 +144,7 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
   const writing=(id:ScreenId)=>screens[id].name.startsWith('C02')
   const analyzing=(id:ScreenId)=>/^A0[2-7]/.test(screens[id].name)
   if(!previous.suspended&&writing(previous.screen)&&(suspended||!writing(screen))){
-   autoReviewReveal.current=false;setDraft({kind:'',title:'',body:'',tags:''});setPostPhotos([]);setEditingPostId(null);setWritePhotoMode(false)
+   autoReviewReveal.current=false;reviewOrigin.current=null;setDraft({kind:'',title:'',body:'',tags:''});setPostPhotos([]);setEditingPostId(null);setWritePhotoMode(false)
   }
   if(!previous.suspended&&analyzing(previous.screen)&&((suspended&&!activeRequest.current)||!analyzing(screen))){
    setAnalysisInput({analysisUserText:'',analysisUserPhotos:[]})
@@ -164,6 +165,7 @@ function CompleteContent({suspended,onConnectionLost}:{suspended:boolean;onConne
   }
  }
  function back(){
+  if(screen===S.write&&reviewOrigin.current){const origin=reviewOrigin.current;reviewOrigin.current=null;routeStack.current.pop();location.hash=origin;return}
   if(is(screen,[S.caseResults,S.caseEmpty,S.communityResults,S.communityEmpty])){
    routeStack.current=[];go(screens[screen].name.startsWith('C')?S.community:S.categories,true);return
   }

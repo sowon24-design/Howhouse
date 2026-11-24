@@ -2,7 +2,7 @@ import {presentResult} from './result-presentation'
 // Main CatalogApp controller/layout; only owner-approved prototype documents, onboarding and Figma additions differ.
 import { caseIdPart, recentCaseOrigin } from './recent-navigation'
 import { useRecentCases } from './RecentCases'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Button, GNB, ListRow } from '../../components/ui'
 import { PrototypeHomeScreen as HomeScreen } from './PrototypeHomeScreen'
 import type { HomeCategoryKey } from '../../app-screens/home/HomeScreen'
@@ -51,11 +51,12 @@ function readProfile(): Profile | undefined {
   } catch { /* First use or unavailable local storage. */ }
 }
 
-export default function CatalogApp({route}:{route:string}) {
+export default function CatalogApp({route,onSetupChange}:{route:string;onSetupChange?:(active:boolean)=>void}) {
   const { rememberExisting } = useRecentCases()
   useAndroidBackBridge()
   const [profile, setProfile] = useState(readProfile)
-  const [skipPolicyReview, setSkipPolicyReview] = useState(false)
+  const [skipPolicyReview, setSkipPolicyReview] = useState(()=>{try{return sessionStorage.getItem('howhouse.capstone.policy-dismissed')===catalogPolicy.version}catch{return false}})
+  const dismissPolicyReview=()=>{try{sessionStorage.setItem('howhouse.capstone.policy-dismissed',catalogPolicy.version)}catch{}setSkipPolicyReview(true)}
   const [onboardingKey, setOnboardingKey] = useState(0)
   const hash = route
   const [query, setQuery] = useState('')
@@ -64,7 +65,9 @@ export default function CatalogApp({route}:{route:string}) {
   const [visited, setVisited] = useState(false)
   const [resolution, setResolution] = useState<ResolutionStatus>()
   const [editing, setEditing] = useState(false)
-  const caseOrigin = useRef(recentCaseOrigin(location.hash) ?? 'search')
+  const setupActive=!profile||(profile.policyVersion!==catalogPolicy.version&&!skipPolicyReview)||editing
+  useLayoutEffect(()=>{onSetupChange?.(setupActive);return()=>onSetupChange?.(false)},[setupActive,onSetupChange])
+  const caseOrigin = useRef(recentCaseOrigin(location.hash) ?? 'home')
   const frameRef = useRef<HTMLDivElement>(null)
   useEffect(() => { frameRef.current?.scrollTo({top:0}) },[hash,contact,editing])
   const navigate = (path: string) => {
@@ -72,7 +75,7 @@ export default function CatalogApp({route}:{route:string}) {
       const origin = location.hash
       caseOrigin.current = origin === '#search' || origin === '#screen/336:29106' || origin.startsWith('#solutions/') ? origin.slice(1) : 'home'
     }
-    location.hash = path
+    location.hash = path.startsWith('case/') ? path.split('?')[0]+'?returnTo='+encodeURIComponent(caseOrigin.current) : path
   }
   const home = () => navigate('home')
   const backFromCase = () => navigate(caseOrigin.current)
@@ -109,7 +112,7 @@ export default function CatalogApp({route}:{route:string}) {
   const frame = (children: React.ReactNode) => <div className="hh-home-preview"><div ref={frameRef} className="hh-home-preview-frame hh-catalog-frame">{children}</div></div>
   if (!profile) return <CatalogOnboarding key={onboardingKey} onComplete={nickname => { saveProfile({nickname, ageConfirmed:true, policyVersion:catalogPolicy.version}); home() }}/>
   if (profile.policyVersion !== catalogPolicy.version && !skipPolicyReview) return frame(<TermsView
-    onBack={() => setSkipPolicyReview(true)} onClose={() => setSkipPolicyReview(true)}
+    onBack={dismissPolicyReview} onClose={dismissPolicyReview}
     onContinue={() => saveProfile({...profile, policyVersion:catalogPolicy.version})}
     documents={{service:<PolicyBody paragraphs={catalogPolicy.terms}/>, privacy:<PolicyBody paragraphs={catalogPolicy.privacy}/>}}/>)
   if (editing) return frame(<NicknameScreen mode="edit" initialValue={profile.nickname} onBack={() => setEditing(false)} onComplete={nickname => {saveProfile({...profile,nickname});setEditing(false)}}/>)
