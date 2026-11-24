@@ -8,6 +8,7 @@
     "dev": "vite --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "build": "npm run typecheck && vite build",
+    "build:capstone:vercel": "npm run typecheck && vite build --config vite.capstone.config.ts --mode capstone --configLoader runner",
     "preview": "vite preview --host 127.0.0.1",
     "android:sync": "npm run build && cap sync android",
     "android:sync:trial": "npm run build -- --mode trial && cap sync android",

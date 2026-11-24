@@ -5,6 +5,7 @@ export function resolveAnalysisBaseUrl(explicit?: string, environmentValue = imp
   const value = explicit ?? environmentValue
   if (value === undefined || value === '') return defaultAnalysisBaseUrl
   const raw = value.trim()
+  if (raw === 'same-origin' && typeof window !== 'undefined' && window.location.protocol === 'https:') return window.location.origin
   let url: URL
   try { url = new URL(raw) } catch { throw new Error('분석 API 주소는 절대 URL이어야 합니다.') }
   const localHttp = url.protocol === 'http:' && ['127.0.0.1', 'localhost', '[::1]', '10.0.2.2'].includes(url.hostname)

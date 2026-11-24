@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "VITE_CAPSTONE_API_BASE_URL=same-origin npm run build:capstone:vercel",
+  "outputDirectory": "dist-capstone",
+  "functions": {
+    "api/index.mjs": {
+      "maxDuration": 120,
+      "includeFiles": "src/solutions/data/**/*.csv"
+    }
+  },
+  "rewrites": [
+    { "source": "/session", "destination": "/api/index?route=session" },
+    { "source": "/health", "destination": "/api/index?route=health" },
+    { "source": "/api/analysis/match", "destination": "/api/index?route=match" },
+    { "source": "/api/youtube/thumbnail", "destination": "/api/index?route=thumbnail" },
+    { "source": "/", "destination": "/capstone.html" }
+  ]
+}
