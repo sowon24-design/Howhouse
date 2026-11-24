@@ -5,7 +5,7 @@
   "functions": {
     "api/index.mjs": {
       "maxDuration": 120,
-      "includeFiles": "src/solutions/data/**/*.csv"
+      "includeFiles": "src/{analysis,solutions/data,youtube,catalog}/**"
     }
   },
   "rewrites": [
