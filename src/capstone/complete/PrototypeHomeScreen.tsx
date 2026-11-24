@@ -22,9 +22,10 @@ function HomeStories(){
 }
 /** Keep all main home content; append only the owner-requested Figma section. */
 export function PrototypeHomeScreen(props:HomeScreenProps){
- const home=HomeScreen({...props,onStartProblem:()=>{const banner=document.querySelector<HTMLElement>('.hh-home-banner');if(banner)captureProblemMorph(banner);location.hash='screen/1042:10739'}})
+ const home=HomeScreen({...props,catalogOnly:false,onStartProblem:()=>{const banner=document.querySelector<HTMLElement>('.hh-home-banner');if(banner)captureProblemMorph(banner);location.hash='screen/1042:10739'}})
  function adapt(node:ReactNode):ReactNode {
   if(!isValidElement<Props>(node))return node
+  if(node.props['aria-labelledby']==='home-categories-title'||node.props.className==='hh-home-profile')return null
   if(node.type==='img'&&node.props.alt==='어쩌집')return cloneElement(node,{src:logo})
   if(node.props.children===undefined)return node
   const children=Children.map(node.props.children,adapt)
