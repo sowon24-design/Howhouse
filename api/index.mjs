@@ -15,7 +15,8 @@ function setup() {
   const secret = process.env.CAPSTONE_SESSION_SECRET
   if (!secret || secret.length < 32) throw Error('Session signing secret required.')
   const catalog = loadCapstoneCatalog()
-  const ledger = createVercelQuota({ url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN })
+  const ledger = createVercelQuota({ url: process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN })
   const analyze = createAnalysisService({ config, catalog, ledger })
   services = { config, secret, catalog, ledger, analyze }
   return services

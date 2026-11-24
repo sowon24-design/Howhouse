@@ -8,7 +8,7 @@ Vercel Hobby의 개인·비상업 시연과 Upstash Redis Free를 사용한다. 
 - `OPENAI_MODEL`: `gpt-6.1-terra`
 - `CAPSTONE_SESSION_SECRET`: 무작위 32자 이상 문자열
 - `HOWHOUSE_YOUTUBE_API_KEY`: 기존 제한된 Google API 키
-- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`: 무료 Redis 저장소의 REST 연결 값
+- `KV_REST_API_URL`, `KV_REST_API_TOKEN`: Vercel의 Upstash 무료 Redis 연결에서 자동 생성됨
 
 `/health`는 시연 활성 여부를, `/session`은 잔여 예약 횟수를 반환한다. 원본 글·사진·답변은 Redis에 넣지 않는다. Redis에는 기간별 사용 횟수와 무작위 요청 ID의 예약 여부만 저장한다. 데이터베이스 저장이 없으므로 같은 입력을 다시 분석하면 새 횟수를 쓴다. Vercel의 기본 요청 크기 제한 4.5 MB 때문에 사진을 여러 장 올린 큰 요청은 실패할 수 있다.
 
