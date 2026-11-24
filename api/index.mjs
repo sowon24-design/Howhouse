@@ -43,7 +43,9 @@ export default async function handler(req, res) {
   const path = { session: '/session', health: '/health', match: '/api/analysis/match', thumbnail: '/api/youtube/thumbnail' }[route]
   if (!path || !/^[a-z0-9.-]+$/.test(host) || req.headers.origin && req.headers.origin !== origin || req.headers['sec-fetch-site'] === 'cross-site') return send(res, 403, { code: 'forbidden' })
   if (route === 'thumbnail') {
-    req.url = `/api/youtube/thumbnail?${new URL(req.url, origin).searchParams.toString().replace(/^route=thumbnail&?/, '')}`
+    const params = new URL(req.url, origin).searchParams
+    params.delete('route')
+    req.url = `/api/youtube/thumbnail?${params.toString()}`
     req.headers.origin = origin
     try {
       const handled = await createCapstoneYoutubeHandler({ apiKey: process.env.HOWHOUSE_YOUTUBE_API_KEY?.trim(), publicHost: host })(req, res)
