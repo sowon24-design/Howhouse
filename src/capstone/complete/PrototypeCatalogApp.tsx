@@ -1,5 +1,6 @@
+import {presentResult} from './result-presentation'
 // Main CatalogApp controller/layout; only owner-approved prototype documents, onboarding and Figma additions differ.
-import { caseIdPart, isRecentCaseHash, recentListPath } from './recent-navigation'
+import { caseIdPart, recentCaseOrigin } from './recent-navigation'
 import { useRecentCases } from './RecentCases'
 import { useEffect, useRef, useState } from 'react'
 import { Button, GNB, ListRow } from '../../components/ui'
@@ -10,7 +11,7 @@ import { catalogIntroductionKey } from '../../catalog/onboarding-progress'
 import { NicknameScreen } from '../../app-screens/onboarding/NicknameScreen'
 import { minimizeAndroidApp, useAndroidBack, useAndroidBackBridge } from '../../app-screens/android-back'
 import { B01 } from '../../solutions/B01'
-import { B02 } from '../../solutions/B02'
+import { CapstoneSolution as B02 } from './CapstoneSolution'
 import { B03 } from './PrototypeB03'
 import { categories, getCategoryCases, getSolutionById, solutionCases, type CategoryId } from '../../solutions/data'
 import { toMessageRecipients } from '../../solutions/message-model'
@@ -50,26 +51,26 @@ function readProfile(): Profile | undefined {
   } catch { /* First use or unavailable local storage. */ }
 }
 
-export default function CatalogApp() {
+export default function CatalogApp({route, skipPolicyReview, onDismissPolicyReview}:{route:string; skipPolicyReview:boolean; onDismissPolicyReview:()=>void}) {
   const { rememberExisting } = useRecentCases()
   useAndroidBackBridge()
   const [profile, setProfile] = useState(readProfile)
-  const [skipPolicyReview, setSkipPolicyReview] = useState(false)
+
   const [onboardingKey, setOnboardingKey] = useState(0)
-  const [hash, setHash] = useState(location.hash)
+  const hash = route
   const [query, setQuery] = useState('')
   const [notice, setNotice] = useState('')
   const [contact, setContact] = useState(false)
   const [visited, setVisited] = useState(false)
   const [resolution, setResolution] = useState<ResolutionStatus>()
   const [editing, setEditing] = useState(false)
-  const caseOrigin = useRef(isRecentCaseHash(location.hash) ? recentListPath : 'search')
+  const caseOrigin = useRef(recentCaseOrigin(location.hash) ?? 'search')
   const frameRef = useRef<HTMLDivElement>(null)
   useEffect(() => { frameRef.current?.scrollTo({top:0}) },[hash,contact,editing])
   const navigate = (path: string) => {
     if (path.startsWith('case/')) {
       const origin = location.hash
-      caseOrigin.current = origin === '#search' || origin.startsWith('#solutions/') ? origin.slice(1) : 'home'
+      caseOrigin.current = origin === '#search' || origin === '#screen/336:29106' || origin.startsWith('#solutions/') ? origin.slice(1) : 'home'
     }
     location.hash = path
   }
@@ -83,7 +84,7 @@ export default function CatalogApp() {
   useEffect(() => { if (selected && profile) rememberExisting(selected.id) }, [selected?.id, profile?.nickname, rememberExisting])
   const category = categories.find(item => hash === `#solutions/${encodeURIComponent(item.id)}`)?.id
   useEffect(() => {
-    const update = () => { setHash(location.hash); setContact(false); setVisited(false); setResolution(undefined); setEditing(false); setNotice('') }
+    const update = () => { setContact(false); setVisited(false); setResolution(undefined); setEditing(false); setNotice('') }
     window.addEventListener('hashchange', update)
     if (!location.hash || location.hash === '#') location.replace('#home')
     return () => window.removeEventListener('hashchange', update)
@@ -108,7 +109,7 @@ export default function CatalogApp() {
   const frame = (children: React.ReactNode) => <div className="hh-home-preview"><div ref={frameRef} className="hh-home-preview-frame hh-catalog-frame">{children}</div></div>
   if (!profile) return <CatalogOnboarding key={onboardingKey} onComplete={nickname => { saveProfile({nickname, ageConfirmed:true, policyVersion:catalogPolicy.version}); home() }}/>
   if (profile.policyVersion !== catalogPolicy.version && !skipPolicyReview) return frame(<TermsView
-    onBack={() => setSkipPolicyReview(true)} onClose={() => setSkipPolicyReview(true)}
+    onBack={onDismissPolicyReview} onClose={onDismissPolicyReview}
     onContinue={() => saveProfile({...profile, policyVersion:catalogPolicy.version})}
     documents={{service:<PolicyBody paragraphs={catalogPolicy.terms}/>, privacy:<PolicyBody paragraphs={catalogPolicy.privacy}/>}}/>)
   if (editing) return frame(<NicknameScreen mode="edit" initialValue={profile.nickname} onBack={() => setEditing(false)} onComplete={nickname => {saveProfile({...profile,nickname});setEditing(false)}}/>)
@@ -126,9 +127,9 @@ export default function CatalogApp() {
     {notice && <p role="status">{notice}</p>}
   </main>)
   if (selected) return frame(<div className="hh-catalog-result">
-    <div hidden={contact}><B02 data={selected} onBack={backFromCase} onComplete={home}
+    <div hidden={contact}><B02 recordData={selected} data={presentResult(selected)} onBack={backFromCase} onComplete={home}
       onContact={value => {setResolution(value);setVisited(true);setContact(true)}} onOpenVideo={() => {}} onPreviewOpinion={() => {}}/></div>
-    {visited && <div hidden={!contact}><B03 recipients={toMessageRecipients(selected,resolution==='solved')} resolution={resolution} onBack={() => setContact(false)}/></div>}
+    {visited && <div hidden={!contact}><B03 visible={contact} recipients={toMessageRecipients(selected,resolution==='solved')} resolution={resolution} onBack={() => setContact(false)}/></div>}
   </div>)
   if (category) return frame(<B01 categoryLabel={category} items={getCategoryCases(solutionCases, category).map(item=>({key:item.id,label:item.symptom}))}
     onSelect={id=>navigate(`case/${encodeURIComponent(id)}`)} onBack={home} onWriteProblem={()=>navigate('search')}/> )

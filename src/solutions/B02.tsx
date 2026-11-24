@@ -16,9 +16,9 @@ import './b02.css'
 
 /** View data only. This is NOT the team's final analysis response / sheet schema. */
 export type B02ViewData = Omit<SolutionView, 'id' | 'field' | 'number' | 'category' | 'symptom'> & { id?: string }
-export function B02({ data, onBack, onContact, onComplete, onOpenVideo }: {
+export function B02({ data, onBack, onContact, onComplete, onOpenVideo, onSolved }: {
   data: B02ViewData; onBack?: () => void; onContact: (resolution?: ResolutionStatus) => void; onComplete?: () => void
-  onOpenVideo: (url: string) => void; onPreviewOpinion: () => void
+  onSolved?: () => void; onOpenVideo: (url: string) => void; onPreviewOpinion: () => void
 }) {
   // Presentation-only fallback; never ask the model to generate asset paths.
   const photos = data.source === 'generated'
@@ -91,7 +91,7 @@ export function B02({ data, onBack, onContact, onComplete, onOpenVideo }: {
         </section>
       </>}
       <LocalFeedback key={data.id ?? data.title}/>
-      <div className="solutions-b02__actions"><Button variant="pale" onClick={()=>setResolution('unsolved')}>해결이 어려워요</Button><Button onClick={()=>setResolution('solved')}>해결됐어요</Button></div>
+      <div className="solutions-b02__actions"><Button variant="pale" onClick={()=>setResolution('unsolved')}>해결이 어려워요</Button><Button onClick={()=>onSolved?onSolved():setResolution('solved')}>해결됐어요</Button></div>
     </main>
     <ResolutionSheet mode={resolution} onClose={()=>setResolution('closed')} onHome={onComplete} onContact={onContact} canContact={data.canContact} hasLandlordMessage={!!data.contacts.landlord.label.trim() && (data.contacts.landlord.solvedSentences?.length ? data.contacts.landlord.solvedSentences : data.contacts.landlord.sentences).some(text => !!text.trim())} hasCompany={!!data.contacts.company.label.trim()}/>
   </section>

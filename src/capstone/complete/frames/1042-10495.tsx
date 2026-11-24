@@ -44,17 +44,17 @@ export default function A04() {
               <motion.div className="cg0 cg269" data-node-id="1042:10547" data-name="Group"  style={{ transformOrigin: '50% 50%' }} transformTemplate={(_, generated) => `var(--motion-layout-transform, translate(0px)) ${generated === 'none' ? '' : generated}`} initial={{ opacity: 0, scale: 0, y: 10.784, }} animate={{ opacity: [0, 1, 1, 0, 0], scale: [0, 0, 1, 1], y: [10.784, 0, 0, -10.637, -10.637], }} transition={{ opacity: { duration: 2, times: [0, 0.1024, 0.7418, 0.9262, 1], ease: [[0.5, 0, 0.5, 1], [0.5, 0, 0.5, 1], [0.5, 0, 0.5, 1], "linear"], repeat: Infinity }, scale: { duration: 2, times: [0, 0.0056, 0.3163, 1], ease: ["linear", [0.7, -0.4, 0.4, 1.4], "linear"], repeat: Infinity }, y: { duration: 2, times: [0, 0.15, 0.7418, 0.9262, 1], ease: "linear", repeat: Infinity }, }}>
                 <img alt="" className="cg0 cg1 cg2 cg3 cg4" src={imgGroup} />
               </motion.div>
-              <motion.div className="cg0 cg270 cg271 cg272 cg273 cg274" data-node-id="1042:10559" data-name="image 252"  style={{ transformOrigin: '243.64445209503174% 38.119176030159%' }} transformTemplate={(_, generated) => `var(--motion-layout-transform, translate(0px)) ${generated === 'none' ? '' : generated}`} initial={{ y: 0, }} animate={{ y: [0, 4, 0, 4, 0, 0], }} transition={{ duration: 2, times: [0, 0.1343, 0.4774, 0.7207, 0.9262, 1], ease: [[0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], "linear"], repeat: Infinity, }}>
+              <motion.div className="cg0 cg270 cg271 cg272 cg273 cg274" data-node-id="1042:10559" data-name="image 252"  style={{ transformOrigin: '243.64445209503174% 38.119176030159%', top: 'calc(50% + 44.5px)', translate: '0 -50%' }} transformTemplate={(_, generated) => `var(--motion-layout-transform, translate(0px)) ${generated === 'none' ? '' : generated}`} initial={{ y: 0, }} animate={{ y: [0, 4, 0, 4, 0, 0], }} transition={{ duration: 2, times: [0, 0.1343, 0.4774, 0.7207, 0.9262, 1], ease: [[0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], "linear"], repeat: Infinity, }}>
                 <div className="cg0 cg2 cg20 cg31">
                   <img alt="" className="cg0 cg275 cg276 cg3 cg277 cg278" src={imgImage252} />
                 </div>
               </motion.div>
-              <motion.div className="cg0 cg270 cg279 cg280 cg281 cg274" data-node-id="1042:10566" data-name="image 259"  style={{ transformOrigin: '50% 50%' }} transformTemplate={(_, generated) => `var(--motion-layout-transform, translate(0px)) ${generated === 'none' ? '' : generated}`} initial={{ y: 4, }} animate={{ y: [4, 1, 7, 1, 4, 4], }} transition={{ duration: 2, times: [0, 0.2192, 0.4362, 0.6481, 0.8839, 1], ease: [[0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], "linear"], repeat: Infinity, }}>
+              <motion.div className="cg0 cg270 cg279 cg280 cg281 cg274" data-node-id="1042:10566" data-name="image 259"  style={{ transformOrigin: '50% 50%', top: 'calc(50% + 24px)', translate: '0 -50%' }} transformTemplate={(_, generated) => `var(--motion-layout-transform, translate(0px)) ${generated === 'none' ? '' : generated}`} initial={{ y: 4, }} animate={{ y: [4, 1, 7, 1, 4, 4], }} transition={{ duration: 2, times: [0, 0.2192, 0.4362, 0.6481, 0.8839, 1], ease: [[0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], [0.45, 1.45, 0.8, 1], "linear"], repeat: Infinity, }}>
                 <div className="cg0 cg2 cg20 cg31">
                   <img alt="" className="cg0 cg275 cg282 cg3 cg283 cg278" src={imgImage259} />
                 </div>
               </motion.div>
-              <div className="cg284 cg0 cg6 cg285 cg35 cg40 cg286 cg287 cg288" data-node-id="1042:10567" style={{ containerType: "size" }}>
+              <div className="cg284 cg0 cg6 cg285 cg35 cg40 cg286 cg287 cg288" data-node-id="1042:10567" style={{ containerType: "size", top: "calc(50% + 30.61px)" }}>
                 <div className="cg42 cg289 cg290 cg291">
                   <div className="cg9 cg4" data-name="image 252">
                     <div className="cg0 cg2 cg20 cg31">

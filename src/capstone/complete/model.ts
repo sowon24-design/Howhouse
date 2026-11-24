@@ -1,6 +1,6 @@
 export const postKinds = ['도움 요청','자취 팁','수리 책임','해결 후기','기타'] as const
 export type PostKind = typeof postKinds[number]
-export type CommunityPost = {id:string;kind:PostKind;title:string;body:string;author:string;mine:boolean;likes:number;liked:boolean;created:number;tags:string[];photos:string[];comments:{id:string;author:string;body:string;mine:boolean}[]}
+export type CommunityPost = {id:string;kind:PostKind;title:string;body:string;author:string;mine:boolean;likes:number;liked:boolean;created:number;tags:string[];photos:string[];comments:{id:string;author:string;body:string;mine:boolean;created:number}[]}
 export const sampleBody = '직접 해보니 한 번에 해결하려 하기보다 상태를 먼저 확인하고 순서대로 진행하는 게 가장 중요했어요. 비슷한 상황이라면 무리하지 않는 선에서 참고해보세요.'
 /** Fictional demo posts. No real user posts, contact details or remote storage. */
 export function initialPosts(owner='김서윤'):CommunityPost[]{
@@ -19,14 +19,14 @@ export function initialPosts(owner='김서윤'):CommunityPost[]{
   ['기타','자취방 공구는 어디까지 준비해 두나요?','줄자, 장갑, 손전등 정도만 두고 있는데 수납 공간이 부족해서 더 늘리지는 않으려고 해요. 고장 난 기기를 분해하는 용도보다는 상태를 확인하고 기록할 때 쓰고 있어요.\n\n전기나 가스 문제는 직접 수리하지 않고 전문가에게 문의하려고요. 작은 집에서 자주 쓰는 기본 물건이 무엇인지 궁금해요.','한평정리',false,4,['준비물','수납','자취생활'],['손전등은 정전 때도 필요해서 충전 상태를 확인해 두고 있어요.']],
  ]
  const now=Date.now()
- return rows.map(([kind,title,body,author,mine,likes,tags,replies],i)=>({id:'demo-'+i,kind,title,body,author,mine,likes,liked:false,created:now-(i+1)*45*60*1000,tags,photos:[],comments:replies.map((body,j)=>({id:`demo-${i}-reply-${j}`,author:j===0?'이웃소라게':'차근차근',body,mine:!mine&&i%3===1&&j===0}))}))
+ return rows.map(([kind,title,body,author,mine,likes,tags,replies],i)=>({id:'demo-'+i,kind,title,body,author,mine,likes,liked:false,created:now-(i+1)*45*60*1000,tags,photos:[],comments:replies.map((body,j)=>({id:`demo-${i}-reply-${j}`,author:j===0?'이웃소라게':'차근차근',body,created:now-(i+1)*30*60*1000+j*60000,mine:!mine&&i%3===1&&j===0}))}))
 }
-export function postTime(created:number){const minutes=Math.max(0,Math.floor((Date.now()-created)/60000));return minutes<1?'방금 전':minutes<60?`${minutes}분 전`:minutes<1440?`${Math.floor(minutes/60)}시간 전`:`${Math.floor(minutes/1440)}일 전`}
+export function postTime(created:number){if(!Number.isFinite(created))return '방금 전';const minutes=Math.max(0,Math.floor((Date.now()-created)/60000));return minutes<1?'방금 전':minutes<60?`${minutes}분 전`:minutes<1440?`${Math.floor(minutes/60)}시간 전`:`${Math.floor(minutes/1440)}일 전`}
 export function canPublish(kind:string,title:string,body:string,photos:readonly unknown[],tags:readonly string[]){return (postKinds as readonly string[]).includes(kind)&&!!title.trim()&&title.length<=60&&!!body.trim()&&body.length<=1000&&photos.length<=5&&tags.length<=5}
 export function findPosts(posts:readonly CommunityPost[],query:string,kind:string,sort:'popular'|'recommended'|'recent'){
  const words=query.trim().normalize('NFKC').toLocaleLowerCase().split(/\s+/).filter(Boolean)
  return posts.filter(p=>(kind==='전체'||p.kind===kind)&&words.every(w=>[p.title,p.body,...p.tags].join(' ').normalize('NFKC').toLocaleLowerCase().includes(w))).sort((a,b)=>sort==='popular'?b.likes-a.likes||b.created-a.created:sort==='recommended'?(b.likes+b.comments.length)-(a.likes+a.comments.length)||b.created-a.created:b.created-a.created)
 }
 export function toggleLike(post:CommunityPost):CommunityPost{return {...post,liked:!post.liked,likes:Math.max(0,post.likes+(post.liked?-1:1))}}
-export function rememberQuery(history:readonly string[],query:string){const q=query.trim().slice(0,60);return q?[q,...history.filter(x=>x!==q)].slice(0,10):[...history]}
+export function rememberQuery(history:readonly string[],query:string){const q=query.trim().slice(0,60);return q?[q,...history.filter(x=>x!==q)].slice(0,5):[...history]}
 export function validNickname(name:string){return name.trim().length>=1&&name.trim().length<=10&&/^[가-힣A-Za-z0-9 ]+$/.test(name.trim())}

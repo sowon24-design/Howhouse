@@ -1,7 +1,8 @@
+import {presentResult} from './result-presentation'
 // Original result flow with the owner-requested recipient tab adapter.
 import {showDeveloperTools} from '../../analysis/release-mode'
 import { useState } from 'react'
-import { B02 } from '../../solutions/B02'
+import { CapstoneSolution as B02 } from './CapstoneSolution'
 import type { B02ViewData } from '../../solutions/B02'
 import { B03 } from './PrototypeB03'
 import { toMessageRecipients } from '../../solutions/message-model'
@@ -19,11 +20,11 @@ export function AnalysisResultFlow({ data, onHome, onBack=onHome, onConnectionLo
   return <div className="hh-home-preview">
     <div className="hh-home-preview-frame hh-solutions-frame">
       <div className="hh-solutions-layer" inert={contact} aria-hidden={contact}>
-        <B02 data={data} onBack={onBack} onComplete={onHome}
+        <B02 recordData={data.id?{...data,id:data.id}:undefined} data={presentResult(data)} onBack={onBack} onComplete={onHome}
           onContact={status => { setResolution(status);setVisited(true);setContact(true) }} onOpenVideo={() => {}} onPreviewOpinion={() => {}} />
       </div>
       {visited && <div className="hh-solutions-layer hh-solutions-front" hidden={!contact} inert={!contact} aria-hidden={!contact}>
-        <B03 key={data.source === 'existing' ? String(resolution) : undefined} recipients={toMessageRecipients(data,resolution==='solved')} resolution={resolution} contextual={data.source === 'generated'} onBack={() => setContact(false)} />
+        <B03 visible={contact} key={data.source === 'existing' ? String(resolution) : undefined} recipients={toMessageRecipients(data,resolution==='solved')} resolution={resolution} contextual={data.source === 'generated'} onBack={() => setContact(false)} />
       </div>}
     </div>
     {showDeveloperTools && <details className="hh-home-preview-tools hh-preview-disclosure"><summary>개발용 안내·테스트 도구</summary><div className="hh-preview-disclosure-panel">
