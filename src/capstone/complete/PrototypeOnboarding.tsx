@@ -7,7 +7,7 @@ import { PrototypeTermsScreen } from './PrototypeTermsScreen'
 
 /** Original onboarding screens, with the owner-requested AI consent surface. */
 export function PrototypeOnboarding({onComplete}:{onComplete:(nickname:string)=>void}){
- const [step,updateStep]=useState(()=>{try{return readIntroduction(localStorage)}catch{return 0}})
+ const [step,updateStep]=useState(()=>{try{if(import.meta.env.DEV&&new URLSearchParams(location.search).get('reset-onboarding')==='1'){saveIntroduction(localStorage,0);const url=new URL(location.href);url.searchParams.delete('reset-onboarding');history.replaceState(history.state,'',url);return 0}return readIntroduction(localStorage)}catch{return 0}})
  const [stage,setStage]=useState<'intro'|'terms'|'nickname'>('intro'),[nickname,setNickname]=useState('')
  const setStep=(next:number)=>{updateStep(next);try{saveIntroduction(localStorage,next)}catch{}}
  const start=()=>{setStage('intro');setStep(0)}

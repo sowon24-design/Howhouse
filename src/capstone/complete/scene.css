@@ -2,7 +2,7 @@
 :where(.cg-frame,.cg-frame *){border-width:0;border-style:solid}
 .cg-scene{height:100%;width:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;isolation:isolate;scrollbar-width:none}.cg-scene::-webkit-scrollbar{display:none}
 .cg-frame{width:100%!important;height:auto!important;min-height:100%;border-radius:0!important;overflow:visible!important;position:relative}
-.cg-frame p,.cg-frame ul,.cg-frame li{margin:0}.cg-frame ul{padding:0}.cg-frame img{display:block}:where(.cg-frame button){font:inherit;border-style:solid;border-width:0;letter-spacing:inherit}:where(.cg-action){background-color:transparent;padding:0;text-align:inherit;color:inherit}.cg-action{cursor:pointer}.cg-action:focus-visible,.cg-input:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}.cg-action:active{filter:brightness(.95)}
+.cg-frame p,.cg-frame ul,.cg-frame li{margin:0}.cg-frame ul{padding:0}.cg-frame img{display:block}:where(.cg-frame button){font:inherit;border-style:solid;border-width:0;letter-spacing:inherit}:where(.cg-action){background-color:transparent;padding:0;text-align:inherit;color:inherit}.cg-action{cursor:pointer}.cg-action:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}.cg-action:active{filter:brightness(.95)}
 .cg-bottom-nav{position:fixed!important;bottom:0!important;left:50%!important;right:auto!important;translate:-50% 0;width:min(100%,412px)!important;z-index:30}
 .cg-frame>[data-cg-overlay]{position:fixed!important;left:max(24px,calc((100vw - 364px)/2))!important;right:max(24px,calc((100vw - 364px)/2))!important;z-index:80;max-height:90dvh;overflow-y:auto;margin:0;max-width:none;color:inherit;outline:0}
 .cg-frame>[data-cg-sheet=true]{left:max(0px,calc((100vw - 412px)/2))!important;right:max(0px,calc((100vw - 412px)/2))!important}
@@ -11,7 +11,7 @@
 .cg-sheet-handle{touch-action:none;cursor:grab}.cg-sheet-handle:after{content:"";position:absolute;inset:-14px -8px}
 .cg-duration-wheel{height:200px;width:176px;overflow-y:auto;scroll-snap-type:y mandatory;padding:80px 0;scrollbar-width:none;overscroll-behavior:contain}.cg-duration-wheel::-webkit-scrollbar{display:none}.cg-duration-wheel button{display:block;height:40px;width:176px;background:transparent;scroll-snap-align:center;font-size:16px;line-height:24px;padding:8px 16px;color:#19212e;border:0}
 .cg-frame>[data-name="CommunityDetail"]{position:fixed!important;top:auto!important;bottom:24px!important;left:max(24px,calc((100vw - 364px)/2))!important;right:max(24px,calc((100vw - 364px)/2))!important;z-index:35}
-.cg-input{font:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;border:0;background:transparent;padding:0;margin:0;outline:none;resize:none;min-width:0;width:100%;display:block}.cg-input::placeholder{color:inherit;opacity:1}.cg-selected{background-color:var(--color-primary)!important;color:white!important}.cg-selected p{color:white!important}
+.cg-input{font:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;border:0;background:transparent;padding:0;margin:0;outline:none;resize:none;min-width:0;width:100%;display:block}.cg-input::placeholder{color:var(--color-secondary);opacity:1}.cg-selected{background-color:var(--color-primary)!important;color:white!important}.cg-selected p{color:white!important}
 .cg-frame [data-ready=true]{background-color:var(--color-primary)!important}.cg-frame [data-ready=false]{background-color:var(--color-border)!important;cursor:default}.cg-radio-row[aria-checked=true]>:first-child{border:5px solid var(--color-primary)!important}.cg-check-row[aria-checked=true]>:first-child{background:var(--color-primary)!important}
 .cg-community-rows{width:100%}.cg-new-photo{position:relative;width:82px;height:82px;border-radius:12px;overflow:hidden}.cg-new-photo img{width:100%;height:100%;object-fit:cover}.cg-photo-list{display:flex;gap:8px;flex-wrap:wrap}.cg-native-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .cg-community-card{display:flex;flex-direction:column;gap:12px;width:100%;padding:12px 0 20px;background:transparent;border-bottom:1px solid #d7dee7!important;text-align:left;color:#19212e;cursor:pointer}.cg-community-card-main{display:flex;align-items:start;gap:12px;width:100%}.cg-community-card-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}.cg-community-card-copy strong{font-size:16px;line-height:24px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cg-community-card-copy>span{font-size:14px;line-height:21px;color:#5f6979;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.cg-community-card-photo{width:70px;height:70px;object-fit:cover;border-radius:12px}.cg-community-card-meta{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:500;line-height:20px;color:#5f6979}.cg-community-card-meta>span{display:flex;align-items:center;gap:4px}.cg-community-card-meta img{width:16px;height:16px}.cg-community-card-meta i{height:8px;width:1px;background:#d7dee7}.cg-photo-remove{position:absolute;right:4px;top:4px;border-radius:50%;width:20px;height:20px;background:#f8faff;display:grid;place-items:center;padding:0}.cg-history-tag{display:flex;align-items:center;gap:8px;background:#ddeaff;border-radius:100px;min-height:44px;padding:8px 12px;color:#1157ce}.cg-history-tag button{padding:0;background:none;color:inherit}.cg-history-tag img{width:16px;height:16px}.cg-activity-case{display:block;text-align:left;background:transparent;border:0;width:100%;padding:12px 0;font:inherit;color:inherit}
@@ -43,7 +43,7 @@
 .cg-frame [data-name="Search"]>[data-node-id="408:3708"]{flex:0 0 24px;width:24px;height:24px}
 .cg-post-image{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
 /* Figma C01 floating action: viewport anchor independent of list length/filter. */
-.cg-frame>[data-node-id="336:28711"]{position:fixed!important;bottom:124px!important;right:max(16px,calc((100vw - 412px)/2 + 16px))!important;z-index:31}
+.cg-frame:not(.cg-write-floating)>[data-node-id="336:28711"]{position:fixed!important;bottom:124px!important;right:max(16px,calc((100vw - 412px)/2 + 16px))!important;z-index:31}
 .cg-home-stories.cg-frame{min-height:0}
 .cg-comment{display:flex;flex-direction:column;gap:8px;padding:8px 0;width:100%;min-width:0;font-family:inherit;font-style:normal;letter-spacing:0}
 .cg-comment-header{display:flex;align-items:flex-start;gap:12px;width:100%}
@@ -85,3 +85,80 @@
   box-shadow:inset 1px 1px 1px rgba(255,255,255,.64),inset -1px -1px 1px rgba(255,255,255,.12);
 }
 .cg-recent-content{justify-content:flex-start;gap:12px}
+
+/* Figma action sheets must sit above, and never participate in, the background scroll. */
+.cg-frame>.cg-overlay[data-cg-sheet=true]{top:auto!important;bottom:0!important;height:auto!important;max-height:90dvh;overscroll-behavior:contain;background:var(--color-surface);padding-bottom:max(40px,env(safe-area-inset-bottom,0px));isolation:isolate}
+.cg-frame>.cg-scrim{width:auto!important;height:auto!important;left:max(0px,calc((100vw - 412px)/2))!important;right:max(0px,calc((100vw - 412px)/2))!important;top:0!important;bottom:0!important;touch-action:none;scale:1!important;filter:none!important}
+.cg-sheet-handle{position:relative;user-select:none;flex-shrink:0}
+
+.cg-frame>.cg-overlay:not([data-cg-sheet=true]){top:50%!important;bottom:auto!important;translate:0 -50%}
+.cg-frame:has(.cg-comment-composer){padding-bottom:calc(108px + env(safe-area-inset-bottom,0px))!important}
+.cg-write-floating.cg-frame{position:fixed;z-index:32;right:max(16px,calc((100vw - 412px)/2 + 16px));bottom:124px;width:auto!important;min-height:0;background:transparent}
+/* Suppress native touch/text selection without hiding keyboard focus. */
+.cg-sort,.cg-sort *{-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.cg-sort button{appearance:none;-webkit-appearance:none}
+.cg-sort[data-pointer-focus=true] button:focus,.cg-sort button:focus:not(:focus-visible){outline:none!important}
+.cg-frame [data-radio-option],.cg-frame [data-radio-option]:active{scale:1!important;transform:none!important;transition:none!important}
+.cg-report-reason-input{display:block;box-sizing:border-box;width:100%;height:52px;border:0;border-radius:12px;background:var(--color-neutral,#e9eef7);padding:8px 12px;font:inherit;font-size:16px;line-height:24px;color:var(--color-on-surface);outline:none}.cg-report-reason-input::placeholder{color:#5f6979;opacity:1}
+
+/* My preview exposes the next card; the full history remains a grid. */
+.cg-recent-carousel{display:flex;min-width:0;max-width:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:none;overscroll-behavior-x:contain}
+.cg-recent-carousel::-webkit-scrollbar{display:none}
+.cg-recent-carousel>.cg-recent-card{width:220px;min-width:220px;flex:0 0 220px;scroll-snap-align:start}
+/* Fade the blur itself to avoid a hard boundary against the photograph. */
+.cg-recent-card>[data-node-id="441:16418"]{background:linear-gradient(to bottom,transparent,#000);-webkit-backdrop-filter:blur(4.3px);backdrop-filter:blur(4.3px);-webkit-mask-image:linear-gradient(to bottom,transparent,#000 70%);mask-image:linear-gradient(to bottom,transparent,#000 70%)}
+
+/* Neutral list rows: only the leading inset increases from 16px to 20px. */
+[data-capstone-prototype="true"] .ui-list.ui-tone--neutral{padding-left:calc(var(--space-4) + 4px)}
+
+/* Align all prototype search fields with neutral list labels. */
+.cg-frame [data-name="Search"],.cg-frame[data-screen-id="336:28651"] [data-node-id="336:28682"]{padding-left:20px}
+
+/* Home circles move with the content, retaining the adjusted vertical centers. */
+[data-capstone-prototype="true"] .hh-home-content{
+ background-image:radial-gradient(ellipse 184px 144px at 111.2% calc(46.47% - 300px),rgba(212,248,255,.1),rgba(130,246,255,.05) 50%,rgba(48,245,255,0)),radial-gradient(ellipse 210px 230px at 1.7% calc(54.46% - 300px),rgba(0,81,255,.06),rgba(54,154,255,0));
+}
+
+/* Community detail GNB follows scroll direction without shifting the post layout. */
+.cg-frame:is([data-screen-id="336:29273"],[data-screen-id="336:29511"]){overflow:visible}
+.cg-frame:is([data-screen-id="336:29273"],[data-screen-id="336:29511"])>[data-name="GNB"]{position:sticky;top:0;z-index:3;background:var(--color-surface);transition:transform var(--ui-motion) var(--ui-ease)}
+.cg-frame:is([data-screen-id="336:29273"],[data-screen-id="336:29511"])>[data-name="GNB"][data-scroll-hidden="true"]{transform:translateY(-100%);pointer-events:none}
+@media(prefers-reduced-motion:reduce){.cg-frame>[data-name="GNB"][data-scroll-hidden]{transition:none}}
+
+.cg-profile-perspective{width:100%;flex-shrink:0;perspective:900px}
+
+.cg-review-reveal{width:100%}.cg-review-reveal .solutions-message-stream{margin-top:0}.cg-review-reveal .solutions-message-stream__words span{animation-duration:200ms}
+
+/* Category shadows must escape the grid and its content wrapper. */
+.cg-frame[data-screen-id="336:27506"] [data-name="Cases / Content"],.cg-frame[data-screen-id="336:27506"] [data-name="Categories"]{overflow:visible}
+
+.cg-recent-character{position:absolute;inset:0;background:var(--color-surface);display:flex;justify-content:center;align-items:center}.cg-recent-character img{width:100%;height:100%;object-fit:contain;padding:4px 12px 22px}
+
+/* Profile images fill the circular frame instead of retaining exported image offsets. */
+.cg-frame [data-name="image 262"]{inset:0!important;width:100%!important;height:100%!important;transform:none!important;position:absolute!important}
+.cg-frame [data-name="image 262"] img{width:100%!important;height:100%!important;inset:0!important;object-fit:cover;object-position:center}
+.cg-frame[data-screen-id="441:16314"] [data-cg-sheet=true] [data-name="Button"]{width:100%;min-width:0}
+.cg-frame [data-name="자취 기간 · iOS 휠 피커"]{position:relative;isolation:isolate;overflow:hidden}
+.cg-frame [data-name="선택 행"]{top:80px!important;height:40px!important;pointer-events:none;z-index:0}
+.cg-duration-wheel{position:relative;z-index:1;touch-action:pan-y}
+.cg-duration-wheel button{transition:opacity 180ms ease,color 180ms ease;font-variant-numeric:tabular-nums}
+.cg-duration-wheel button[aria-selected=true]{color:var(--color-on-surface);font-weight:600}
+
+.cg-frame [data-name="image 262"]{translate:none!important}
+.cg-duration-wheel button{appearance:none;border-radius:8px}.cg-duration-wheel button:focus:not(:focus-visible){outline:none}
+
+/* Highlight immediately as a row overlaps the selection band; no settling delay. */
+.cg-duration-wheel button{transition:none;font-weight:500}
+.cg-duration-wheel button[aria-selected=true]{font-weight:500}
+.cg-duration-wheel button[data-in-selection=true]{font-weight:600;color:var(--color-on-surface)}
+
+/* Uploaded avatars share the same cover crop; only their parent corner shape differs. */
+.cg-frame [data-name="image 8"]:has([data-custom-avatar]){position:absolute!important;inset:0!important;width:100%!important;height:100%!important;translate:none!important;transform:none!important}
+.cg-frame [data-custom-avatar]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;translate:none!important;transform:none!important}
+
+/* Let recent cards reach the screen edge while keeping the heading aligned. */
+.cg-frame[data-screen-id="336:30827"] [data-name="My / Scroll content"]{overflow:visible}
+.cg-frame[data-screen-id="336:30827"] .cg-recent-carousel{width:calc(100% + 48px);max-width:none;margin-inline:-24px;padding-inline:24px;scroll-padding-inline:24px}
+
+/* Let the community chip rail reach the viewport edges while retaining swipe scrolling. */
+.cg-frame:is([data-screen-id="336:28651"],[data-screen-id="336:29043"]) [data-name="Categories"]:has(>[data-name="Chip"]){width:calc(100% + 48px);max-width:none;margin-inline:-24px;padding-inline:24px;scroll-padding-inline:24px;overscroll-behavior-x:contain}

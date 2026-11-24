@@ -19,7 +19,6 @@ export function PrototypeTermsScreen({ onBack, onClose, onContinue }: { onBack: 
   const [age, setAge] = useState(false)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
-  const ready = false // UI review only: no server consent, authentication or AI activation.
   function leave(action:()=>void){ action() }
   async function proceed(){
     if(!service||!age||busy)return
@@ -41,7 +40,6 @@ export function PrototypeTermsScreen({ onBack, onClose, onContinue }: { onBack: 
         {(['processing', 'overseas'] as const).map(kind => <div className="hh-terms-row" key={kind}><Checkbox disabled={busy} variant="stroke" label={consentCheckboxLabels('onboarding')[kind]} checked={choices[kind]} onChange={event => setChoices({ ...choices, [kind]: event.target.checked })} /><button type="button" className="hh-terms-view" aria-label={`${consentTitles[kind]} 보기`} onClick={() => show(kind)}>보기</button></div>)}
       </div>
       {error && <p role="alert">{error}</p>}
-      {!ready && <p role="status">AI 분석은 최종 안내 준비 후 이용할 수 있어요. 지금은 기존 사례를 볼 수 있어요.</p>}
     </div>
     <footer className="hh-onboarding-next"><Button disabled={!service || !age || busy} onClick={() => { void proceed() }}>{busy ? '동의 확인 중' : '동의하고 시작하기'}</Button></footer>
     <Dialog open={open} onClose={() => setOpen(false)} label={consentTitles[sheet]} className="ui-action-sheet hh-terms-sheet" closeOnBackdrop swipeDismiss>

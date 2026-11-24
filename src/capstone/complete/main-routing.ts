@@ -1,7 +1,7 @@
 /** Legacy Figma review links must not replace overlapping main screens. */
 export function mainRoute(hash: string): string | null {
   if (hash.startsWith('#frame/')) return null
-  if (['', '#', '#home', '#search', '#onboarding'].includes(hash)
+  if (['', '#', '#home'].includes(hash)
     || hash.startsWith('#solutions/') || hash.startsWith('#case/')) {
     return hash === '#onboarding' ? '#home' : hash || '#home'
   }
@@ -14,7 +14,7 @@ export function mainRoute(hash: string): string | null {
   }
   if (categories[id]) return '#solutions/' + encodeURIComponent(categories[id])
   // Result/message links without a selected result return to main's case finder.
-  if (['336:28787','336:29106','336:29193','336:28859','336:28971',
+  if ([
     '1042:11167','1042:13133','1042:13183','1042:13231','1042:13276',
     '1042:13324','1042:13371','1042:13715','1042:13830','1042:13929',
     '1042:14028','1042:14147','1042:14266'].includes(id)) return '#search'

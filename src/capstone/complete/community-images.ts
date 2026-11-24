@@ -17,5 +17,5 @@ export const communityImages=[drain,heating,room,leak,fridge,bathroom,supplies,w
 export function attachSeedPhotos(posts:CommunityPost[]):CommunityPost[]{return posts.map(post=>{
  if(post.photos.length)return post
  const index=/^demo-(\d+)$/.exec(post.id)?.[1]
- return index!==undefined&&communityImages[Number(index)]?{...post,photos:[communityImages[Number(index)]]}:post
+ return index!==undefined&&Number(index)%2===0&&communityImages[Number(index)]?{...post,photos:[communityImages[Number(index)]]}:post
 })}

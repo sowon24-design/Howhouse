@@ -83,7 +83,7 @@ export default function B01() {
           해결책 모아보기
         </p>
       </div>
-      <div className="cg5 cg6 cg14 cg156 cg8 cg48 cg157 cg158 cg58 cg9 cg10 cg11" data-node-id="336:27536" data-name="Cases / Content">
+      <div className="cg5 cg6 cg14 cg156 cg8 cg48 cg157 cg63 cg58 cg9 cg10 cg11" data-node-id="336:27536" data-name="Cases / Content">
         <div className="cg125 cg5 cg6 cg56 cg35 cg57 cg48 cg126 cg127 cg159 cg9 cg160 cg10 cg11" data-node-id="462:5212" data-name="Search">
           <p className="cg12 cg25 cg16 cg18 cg9 cg10 cg161 cg21 cg24" data-node-id="I462:5212;431:14494">
             어떤 문제를 찾고 있나요?

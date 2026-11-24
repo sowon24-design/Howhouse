@@ -14,14 +14,14 @@ export function generatedRecent(data:GeneratedSolution, viewedAt=Date.now()):Rec
 export function restoreGenerated(entry:Extract<RecentEntry,{source:'generated'}>):GeneratedSolution {
   return toGeneratedSolution(entry.content,entry.id.slice('generated:'.length))
 }
-export function readRecent(raw:string|null):RecentEntry[] {
+export function readRecent(raw:string|null,limit=10):RecentEntry[] {
   try {
     const values:unknown=JSON.parse(raw??'[]');if(!Array.isArray(values))return []
     const result:RecentEntry[]=[]
     for(const item of values){if(!item||typeof item!=='object'||typeof item.id!=='string'||!Number.isFinite(item.viewedAt)||result.some(e=>e.id===item.id))continue
       if(item.source==='existing'&&!item.id.startsWith('generated:'))result.push({source:'existing',id:item.id,viewedAt:item.viewedAt})
       else if(item.source==='generated'&&item.id.startsWith('generated:')&&isGeneratedContent(item.content))result.push({source:'generated',id:item.id,viewedAt:item.viewedAt,content:item.content})
-      if(result.length===10)break
+      if(result.length===limit)break
     }return result
   }catch{return []}
 }
