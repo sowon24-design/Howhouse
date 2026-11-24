@@ -162,3 +162,6 @@
 
 /* Let the community chip rail reach the viewport edges while retaining swipe scrolling. */
 .cg-frame:is([data-screen-id="336:28651"],[data-screen-id="336:29043"]) [data-name="Categories"]:has(>[data-name="Chip"]){width:calc(100% + 48px);max-width:none;margin-inline:-24px;padding-inline:24px;scroll-padding-inline:24px;overscroll-behavior-x:contain}
+
+/* Keep the last category row clear of the fixed bottom navigation on short screens. */
+.cg-frame[data-screen-id="336:27506"] [data-name="Cases / Content"]{padding-bottom:calc(160px + env(safe-area-inset-bottom,0px))}
